@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجاهزية - Seen Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .timeline { position: relative; max-width: 800px; margin: 0 auto; padding: 20px 0; }
+        .timeline::after { content: ''; position: absolute; width: 4px; background-color: var(--gold); top: 0; bottom: 0; right: 50%; margin-right: -2px; }
+        .tl-container { padding: 10px 40px; position: relative; background-color: inherit; width: 50%; }
+        .tl-container::after { content: ''; position: absolute; width: 20px; height: 20px; right: -10px; background-color: var(--emerald); border: 4px solid var(--gold); top: 15px; border-radius: 50%; z-index: 1; }
+        .tl-left { right: 0; }
+        .tl-right { right: 50%; }
+        .tl-right::after { right: -10px; } /* Adjust for RTL */
+        .tl-content { padding: 20px; background-color: var(--card-bg); border-radius: 6px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        @media screen and (max-width: 600px) {
+            .timeline::after { right: 31px; }
+            .tl-container { width: 100%; padding-right: 70px; padding-left: 25px; }
+            .tl-container::after { right: 21px; }
+            .tl-right { right: 0%; }
+        }
+    </style>
+</head>
+<body>
+    <div id="progress-bar"></div>
+    <div class="watermark" id="watermark"></div>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <svg width="30" height="30" viewBox="0 0 100 100"><path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" fill="#0F5132"/><path d="M50 25 L75 37.5 L75 62.5 L50 75 L25 62.5 L25 37.5 Z" fill="#D4AF37"/></svg>
+                Seen Automation
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+            <div class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="overview.html">من نحن</a>
+                <a href="opportunity.html">الفرصة</a>
+                <a href="solution.html">الحل</a>
+                <a href="readiness.html" class="active">الجاهزية</a>
+                <a href="financials.html">المالية</a>
+                <a href="business-plan.html">خطة العمل</a>
+                <a href="pitch.html">Pitch Deck</a>
+                <a href="team.html">الفريق</a>
+                <a href="roadmap.html">خريطة الطريق</a>
+                <a href="contact.html">التواصل</a>
+                <a href="dataroom/index.html">غرفة البيانات</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>حالة الجاهزية</h1>
+            <p>لم نبدأ من الصفر. المستودع المعرفي والتشغيلي مكتمل وجاهز للتنفيذ.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>المستودع المعرفي (49 ملف)</h2>
+            <table>
+                <thead><tr><th>المجلد</th><th>عدد الملفات</th><th>الحالة</th></tr></thead>
+                <tbody>
+                    <tr><td>00_master (الأساسيات)</td><td>5</td><td>✅ مكتمل</td></tr>
+                    <tr><td>01_strategy (الاستراتيجية)</td><td>6</td><td>✅ مكتمل</td></tr>
+                    <tr><td>02_market (السوق)</td><td>4</td><td>✅ مكتمل</td></tr>
+                    <tr><td>03_operations (العمليات)</td><td>7</td><td>✅ مكتمل</td></tr>
+                    <tr><td>04_launch (الانطلاق)</td><td>6</td><td>✅ مكتمل</td></tr>
+                    <tr><td>05_security (الأمن)</td><td>3</td><td>✅ مكتمل</td></tr>
+                    <tr><td>06_legal (القانوني)</td><td>9</td><td>✅ مكتمل</td></tr>
+                    <tr><td>07_migration (الهجرة)</td><td>7</td><td>✅ مكتمل</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>العتاد الفيزيائي (Hardware)</h2>
+            <p style="text-align: center; margin-bottom: 20px;">تم تحليل 8 فئات للابتوبات و 5 فئات للـ Mini PCs لضمان أعلى كفاءة لتشغيل نماذج AI محلياً (حتى 120B) ضمن ميزانية $12,000.</p>
+            <div class="file-cards">
+                <div class="file-card green"><h3>💻 لابتوب Unified Memory</h3><p>HP ZBook Ultra / ASUS ROG Flow (128GB RAM موحدة)</p></div>
+                <div class="file-card green"><h3>🖥️ Mini PC عالي الأداء</h3><p>Minisforum MS-S1 Max (Ryzen AI Max+ 395)</p></div>
+                <div class="file-card green"><h3>🛡️ الأمان والعزل</h3><p>Docker Container معزول لكل عميل + Doppler لإدارة المفاتيح</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>الخط الزمني للإنجازات</h2>
+            <div class="timeline">
+                <div class="tl-container tl-left">
+                    <div class="tl-content">
+                        <h3>الشهر 1-2</h3>
+                        <p>تأسيس الهوية، بناء المستودع المعرفي (49 ملف)، وتحديد استراتيجية المضاربة.</p>
+                    </div>
+                </div>
+                <div class="tl-container tl-right">
+                    <div class="tl-content">
+                        <h3>الشهر 3</h3>
+                        <p>تسجيل الكيان القانوني في ماليزيا، وتأمين البنية التحتية التقنية (n8n, Supabase).</p>
+                    </div>
+                </div>
+                <div class="tl-container tl-left">
+                    <div class="tl-content">
+                        <h3>الشهر 4</h3>
+                        <p>إطلاق بوابة المستثمرين، وبدء اختبار النماذج الأولية (25 هجمة + 100 سؤال هلوسة).</p>
+                    </div>
+                </div>
+                <div class="tl-container tl-right">
+                    <div class="tl-content">
+                        <h3>الشهر 5-6</h3>
+                        <p>اكتساب أول 5 عملاء (Seen Engineering)، وتطبيق نظام Error Node بشكل كامل.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/app.js"></script>
+</body>
+</html>
