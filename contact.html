@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التواصل - Seen Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+    <div id="progress-bar"></div>
+    <div class="watermark" id="watermark"></div>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <svg width="30" height="30" viewBox="0 0 100 100"><path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" fill="#0F5132"/><path d="M50 25 L75 37.5 L75 62.5 L50 75 L25 62.5 L25 37.5 Z" fill="#D4AF37"/></svg>
+                Seen Automation
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+            <div class="nav-links">
+                <a href="index.html">الرئيسية</a>
+                <a href="overview.html">من نحن</a>
+                <a href="opportunity.html">الفرصة</a>
+                <a href="solution.html">الحل</a>
+                <a href="readiness.html">الجاهزية</a>
+                <a href="financials.html">المالية</a>
+                <a href="business-plan.html">خطة العمل</a>
+                <a href="pitch.html">Pitch Deck</a>
+                <a href="team.html">الفريق</a>
+                <a href="roadmap.html">خريطة الطريق</a>
+                <a href="contact.html" class="active">التواصل</a>
+                <a href="dataroom/index.html">غرفة البيانات</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>تواصل معنا</h1>
+            <p>سواء كنت مستثمراً، عميلاً محتملاً، أو موهبة تبحث عن الانضمام، نحن هنا للاستماع.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container" style="max-width: 600px;">
+            <div class="kpi-card" style="text-align: right;">
+                <form onsubmit="event.preventDefault(); alert('شكراً لتواصلك! سنرد عليك في أقرب وقت.');">
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">الاسم الكامل</label>
+                        <input type="text" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text);">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">البريد الإلكتروني</label>
+                        <input type="email" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text);">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">نوع الاستفسار</label>
+                        <select style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text);">
+                            <option>استفسار استثماري</option>
+                            <option>طلب خدمة (عميل)</option>
+                            <option>شراكة استراتيجية</option>
+                            <option>توظيف</option>
+                            <option>أخرى</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">الرسالة</label>
+                        <textarea rows="5" required style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 5px; background: var(--bg); color: var(--text);"></textarea>
+                    </div>
+                    <button type="submit" class="cta-btn" style="width: 100%; border: none; cursor: pointer;">إرسال الرسالة</button>
+                </form>
+                
+                <div style="margin-top: 30px; text-align: center; border-top: 1px solid var(--border); padding-top: 20px;">
+                    <p style="font-weight: bold; margin-bottom: 10px;">أو تواصل مباشرة عبر:</p>
+                    <p>📧 <a href="mailto:hello@seen-agency.com" style="color: var(--emerald); text-decoration: none;">hello@seen-agency.com</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/app.js"></script>
+</body>
+</html>
