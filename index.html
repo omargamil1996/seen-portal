@@ -1,79 +1,11 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="ar">
+<html dir="rtl" lang="ar" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seen Automation - بوابة المستثمر</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --emerald: #0F5132;
-            --gold: #D4AF37;
-            --cream: #FFF8E7;
-            --charcoal: #2C2C2C;
-            --sand: #E8D5B7;
-            --bg: #FFF8E7;
-            --text: #2C2C2C;
-            --card-bg: #FFFFFF;
-        }
-        [data-theme="dark"] {
-            --bg: #1a1a1a;
-            --text: #F5F5DC;
-            --card-bg: #2C2C2C;
-            --cream: #2C2C2C;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg); color: var(--text); transition: background 0.3s, color 0.3s; line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
-        
-        #progress-bar { position: fixed; top: 0; right: 0; height: 4px; background: var(--gold); width: 0%; z-index: 1000; transition: width 0.1s; }
-        
-        nav { position: sticky; top: 0; background: var(--card-bg); padding: 15px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 999; }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 1.5rem; color: var(--emerald); display: flex; align-items: center; gap: 10px; }
-        .theme-toggle { background: none; border: 2px solid var(--emerald); color: var(--emerald); padding: 5px 15px; border-radius: 20px; cursor: pointer; font-family: 'Tajawal'; }
-        
-        section { padding: 60px 0; border-bottom: 1px solid var(--sand); }
-        h2 { color: var(--emerald); font-size: 2rem; margin-bottom: 30px; text-align: center; }
-        
-        .hero { text-align: center; padding: 80px 0; }
-        .badge { background: var(--gold); color: #fff; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; display: inline-block; margin-bottom: 20px; }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 20px; color: var(--emerald); }
-        .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px; }
-        .kpi-card { background: var(--card-bg); padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 4px solid var(--gold); }
-        .kpi-value { font-size: 2rem; font-weight: 800; color: var(--emerald); }
-        
-        .slider-container { margin: 20px 0; }
-        .slider-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; }
-        input[type=range] { width: 100%; accent-color: var(--emerald); }
-        
-        .fin-outputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
-        .fin-card { background: var(--emerald); color: #fff; padding: 15px; border-radius: 8px; text-align: center; }
-        .fin-card .val { font-size: 1.5rem; font-weight: bold; color: var(--gold); }
-        
-        .deck-container { position: relative; max-width: 800px; margin: 0 auto; background: var(--card-bg); border-radius: 10px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .slide { display: none; padding: 40px; text-align: center; min-height: 300px; }
-        .slide.active { display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .deck-controls { display: flex; justify-content: center; gap: 20px; padding: 20px; background: var(--cream); }
-        .deck-btn { background: var(--emerald); color: #fff; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-family: 'Tajawal'; }
-        .dots { display: flex; justify-content: center; gap: 5px; margin-top: 10px; }
-        .dot { width: 10px; height: 10px; background: #ccc; border-radius: 50%; cursor: pointer; }
-        .dot.active { background: var(--gold); }
-
-        .file-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 30px; }
-        .file-card { padding: 20px; border-radius: 10px; text-align: center; border: 2px solid transparent; }
-        .file-card.green { border-color: #28a745; background: rgba(40, 167, 69, 0.1); }
-        .file-card.yellow { border-color: #ffc107; background: rgba(255, 193, 7, 0.1); }
-        .file-card.red { border-color: #dc3545; background: rgba(220, 53, 69, 0.1); }
-
-        .watermark { position: fixed; bottom: 10px; left: 10px; font-size: 0.8rem; color: rgba(0,0,0,0.1); pointer-events: none; z-index: 9999; transform: rotate(-15deg); }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 1.8rem; }
-            .kpis { grid-template-columns: 1fr 1fr; }
-            .fin-outputs { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
     <div id="progress-bar"></div>
@@ -81,11 +13,25 @@
 
     <nav>
         <div class="container nav-content">
-            <div class="logo">
+            <a href="index.html" class="logo">
                 <svg width="30" height="30" viewBox="0 0 100 100"><path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" fill="#0F5132"/><path d="M50 25 L75 37.5 L75 62.5 L50 75 L25 62.5 L25 37.5 Z" fill="#D4AF37"/></svg>
                 Seen Automation
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="تبديل الوضع">🌙 / ☀️</button>
+            <div class="nav-links">
+                <a href="index.html" class="active">الرئيسية</a>
+                <a href="overview.html">من نحن</a>
+                <a href="opportunity.html">الفرصة</a>
+                <a href="solution.html">الحل</a>
+                <a href="readiness.html">الجاهزية</a>
+                <a href="financials.html">المالية</a>
+                <a href="business-plan.html">خطة العمل</a>
+                <a href="pitch.html">Pitch Deck</a>
+                <a href="team.html">الفريق</a>
+                <a href="roadmap.html">خريطة الطريق</a>
+                <a href="contact.html">التواصل</a>
+                <a href="dataroom/index.html">غرفة البيانات</a>
             </div>
-            <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
         </div>
     </nav>
 
@@ -94,266 +40,49 @@
             <span class="badge">ما قبل الإطلاق</span>
             <h1>أول وكالة أتمتة AI حلال في العالم العربي — بوابة الهندسة</h1>
             <p>نبني حلولاً تُحرر الطاقات البشرية بنموذج Zero-Friction ومعمارية القلعة والرماح.</p>
-            <div class="kpis">
-                <div class="kpi-card"><div class="kpi-value" data-target="3.5">0</div><div>TAM ($B)</div></div>
-                <div class="kpi-card"><div class="kpi-value" data-target="20">0</div><div>عملاء Y1</div></div>
-                <div class="kpi-card"><div class="kpi-value" data-target="82.5">0</div><div>الطلب (K SAR)</div></div>
-                <div class="kpi-card"><div class="kpi-value" data-target="19.3">0</div><div>LTV:CAC</div></div>
-            </div>
-        </div>
-    </section>
-
-    <section id="overview">
-        <div class="container">
-            <h2>نظرة عامة</h2>
-            <div style="text-align: center; margin-bottom: 30px;">
-                <svg width="100%" height="200" viewBox="0 0 800 200">
-                    <rect x="350" y="50" width="100" height="100" fill="#0F5132" rx="10"/>
-                    <text x="400" y="105" fill="#FFF" text-anchor="middle" font-size="16">القلعة (Seen)</text>
-                    <line x1="400" y1="100" x2="200" y2="50" stroke="#D4AF37" stroke-width="3"/>
-                    <line x1="400" y1="100" x2="600" y2="50" stroke="#D4AF37" stroke-width="3"/>
-                    <line x1="400" y1="100" x2="200" y2="150" stroke="#D4AF37" stroke-width="3"/>
-                    <line x1="400" y1="100" x2="600" y2="150" stroke="#D4AF37" stroke-width="3"/>
-                    <circle cx="200" cy="50" r="20" fill="#D4AF37"/><text x="200" y="55" fill="#000" text-anchor="middle" font-size="12">هندسة</text>
-                    <circle cx="600" cy="50" r="20" fill="#D4AF37"/><text x="600" y="55" fill="#000" text-anchor="middle" font-size="12">طب</text>
-                    <circle cx="200" cy="150" r="20" fill="#D4AF37"/><text x="200" y="155" fill="#000" text-anchor="middle" font-size="12">قانون</text>
-                    <circle cx="600" cy="150" r="20" fill="#D4AF37"/><text x="600" y="155" fill="#000" text-anchor="middle" font-size="12">تعليم</text>
-                </svg>
-            </div>
-            <div class="kpi-card" style="max-width: 600px; margin: 0 auto; text-align: right;">
-                <h3>المؤسس: عمر محمد جميل باعبدالله</h3>
-                <p>مهندس ميكانيكي، خبرة في تحسين العمليات الهندسية وسلاسل الإمداد. يقود الرؤية التشغيلية والتقنية.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="financials">
-        <div class="container">
-            <h2>النمذجة المالية التفاعلية</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
-                <div>
-                    <div class="slider-container">
-                        <div class="slider-label"><span>السعر الشهري (ARPU)</span><span id="val-price">3500 SAR</span></div>
-                        <input type="range" id="price" min="1000" max="10000" step="100" value="3500">
-                    </div>
-                    <div class="slider-container">
-                        <div class="slider-label"><span>نسبة التسرب (Churn)</span><span id="val-churn">6%</span></div>
-                        <input type="range" id="churn" min="1" max="20" step="1" value="6">
-                    </div>
-                    <div class="slider-container">
-                        <div class="slider-label"><span>تكلفة الاكتساب (CAC)</span><span id="val-cac">1500 SAR</span></div>
-                        <input type="range" id="cac" min="500" max="5000" step="100" value="1500">
-                    </div>
-                    <div class="slider-container">
-                        <div class="slider-label"><span>العملاء الجدد / شهر</span><span id="val-new">2.3</span></div>
-                        <input type="range" id="new_cust" min="1" max="10" step="0.1" value="2.3">
-                    </div>
-                    <div class="slider-container">
-                        <div class="slider-label"><span>هامش الربح</span><span id="val-margin">70%</span></div>
-                        <input type="range" id="margin" min="50" max="90" step="5" value="70">
-                    </div>
-                    <div class="slider-container">
-                        <div class="slider-label"><span>التكاليف الثابتة</span><span id="val-fixed">3500 SAR</span></div>
-                        <input type="range" id="fixed" min="1000" max="10000" step="500" value="3500">
-                    </div>
-                </div>
-                <div>
-                    <div class="fin-outputs">
-                        <div class="fin-card"><div>LTV</div><div class="val" id="out-ltv">0</div></div>
-                        <div class="fin-card"><div>LTV:CAC</div><div class="val" id="out-ltv-cac">0</div></div>
-                        <div class="fin-card"><div>استرداد CAC</div><div class="val" id="out-payback">0 شهر</div></div>
-                        <div class="fin-card"><div>MRR شهر 12</div><div class="val" id="out-mrr12">0</div></div>
-                        <div class="fin-card"><div>MRR شهر 36</div><div class="val" id="out-mrr36">0</div></div>
-                        <div class="fin-card"><div>نقطة التعادل</div><div class="val" id="out-breakeven">شهر 0</div></div>
-                    </div>
-                    <div style="margin-top: 20px; background: var(--card-bg); padding: 20px; border-radius: 10px;">
-                        <h4>توزيع استخدام الأموال (SAR 82,500)</h4>
-                        <div style="display: flex; height: 30px; border-radius: 15px; overflow: hidden; margin-top: 10px;">
-                            <div style="width: 60%; background: var(--emerald); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem;">60% تشغيل</div>
-                            <div style="width: 40%; background: var(--gold); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.9rem;">40% تسويق</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="ask">
-        <div class="container">
-            <h2>الطلب والملفات</h2>
-            <div style="text-align: center; margin-bottom: 40px;">
-                <h3 style="color: var(--emerald); font-size: 2.5rem;">SAR 82,500 ($22,000)</h3>
-                <p>هيكل المضاربة: 15% من كل بيعة حتى استرداد رأس المال، ثم 15% لمدة 36 شهر.<br>
-                Buyout: بعد 24 شهر × 1.5 | المدة القصوى: 15 سنة</p>
-            </div>
+            <a href="financials.html" class="cta-btn">استكشف النمذجة المالية</a>
             
-            <div class="deck-container">
-                <div id="slides"></div>
-                <div class="deck-controls">
-                    <button class="deck-btn" onclick="prevSlide()">السابق</button>
-                    <button class="deck-btn" onclick="nextSlide()">التالي</button>
+            <div class="kpis">
+                <div class="kpi-card">
+                    <div class="kpi-value" data-target="3.5">0</div>
+                    <div>TAM ($B)</div>
                 </div>
-                <div class="dots" id="deck-dots"></div>
+                <div class="kpi-card">
+                    <div class="kpi-value" data-target="20">0</div>
+                    <div>عملاء Y1</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" data-target="82.5">0</div>
+                    <div>الطلب (K SAR)</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" data-target="19.3">0</div>
+                    <div>LTV:CAC</div>
+                </div>
             </div>
+        </div>
+    </section>
 
+    <section>
+        <div class="container" style="text-align: center;">
+            <h2>لماذا Seen Automation؟</h2>
             <div class="file-cards">
                 <div class="file-card green">
-                    <h3>🟢 عام</h3>
-                    <p>One-Pager, Pitch Deck (نسخة مختصرة)</p>
-                    <button class="deck-btn" style="margin-top: 10px;">تحميل</button>
+                    <h3>🛡️ حلال 100%</h3>
+                    <p>هيكل مضاربة شرعي، خالٍ من الربا والمجالات المحرمة.</p>
                 </div>
-                <div class="file-card yellow">
-                    <h3>🟡 NDA مطلوب</h3>
-                    <p>Financial Model, Cap Table, SOW Templates</p>
-                    <button class="deck-btn" style="margin-top: 10px;">طلب وصول</button>
+                <div class="file-card green">
+                    <h3>⚡ Zero-Friction</h3>
+                    <p>أتمتة تعمل داخل أدواتك الحالية (WhatsApp, Email) دون تعقيد.</p>
                 </div>
-                <div class="file-card red">
-                    <h3>🔴 لا يُنشر</h3>
-                    <p>System Prompts, Security Details, Source Code</p>
-                    <button class="deck-btn" style="margin-top: 10px; opacity: 0.5;" disabled>مقيد</button>
+                <div class="file-card green">
+                    <h3>🏰 معمارية القلعة</h3>
+                    <p>منصة أم موحدة تدعم تخصصات متعددة (الهندسة، الطب، القانون).</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <script>
-        const DATA = {
-            slides: [
-                "1. الغلاف: Seen Automation AI Agency",
-                "2. المشكلة: 7.6 ساعة/أسبوع مهدرة = 44 يوم/سنة",
-                "3. الحل: AI Backend Pipelines + Zero-Friction",
-                "4. لماذا الآن؟ Vision 2030 + 56.25% زيادة إنفاق AI",
-                "5. حجم السوق: TAM $3.5B | SAM $1.95B | SOM $320K",
-                "6. نموذج العمل: باقات + 15-20% من التأسيس شهرياً",
-                "7. الجاهزية: 49 ملف استراتيجي + 25 هجمة أمنية",
-                "8. المنافسون: تفوق في السعر، التخصص، والامتثال الشرعي",
-                "9. الميزة التنافسية: حلال 100% + Error Node System",
-                "10. استراتيجية الدخول: Landing Bot + Confirmation Call",
-                "11. الفريق: عمر محمد جميل باعبدالله (المؤسس)",
-                "12. المالية: نمو مستدام وهامش 70%+",
-                "13. الطلب: SAR 82,500 مضاربة شرعية",
-                "14. التواصل: hello@seen-agency.com"
-            ]
-        };
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const investor = urlParams.get('investor');
-        if (investor) {
-            document.getElementById('watermark').innerText = 'سري - ' + decodeURIComponent(investor);
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            body.setAttribute('data-theme', body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        }
-
-        let currentSlide = 0;
-        function renderSlides() {
-            const container = document.getElementById('slides');
-            const dots = document.getElementById('deck-dots');
-            DATA.slides.forEach((text, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'slide ' + (index === 0 ? 'active' : '');
-                slide.innerHTML = '<h3>' + text + '</h3>';
-                container.appendChild(slide);
-                
-                const dot = document.createElement('div');
-                dot.className = 'dot ' + (index === 0 ? 'active' : '');
-                dot.onclick = () => goToSlide(index);
-                dots.appendChild(dot);
-            });
-        }
-        function goToSlide(n) {
-            const slides = document.querySelectorAll('.slide');
-            const dots = document.querySelectorAll('.dot');
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide].classList.remove('active');
-            currentSlide = n;
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide].classList.add('active');
-        }
-        function nextSlide() { goToSlide((currentSlide + 1) % DATA.slides.length); }
-        function prevSlide() { goToSlide((currentSlide - 1 + DATA.slides.length) % DATA.slides.length); }
-        renderSlides();
-
-        function calculate() {
-            const price = parseFloat(document.getElementById('price').value);
-            const churn = parseFloat(document.getElementById('churn').value) / 100;
-            const cac = parseFloat(document.getElementById('cac').value);
-            const newCust = parseFloat(document.getElementById('new_cust').value);
-            const margin = parseFloat(document.getElementById('margin').value) / 100;
-            const fixed = parseFloat(document.getElementById('fixed').value);
-
-            document.getElementById('val-price').innerText = price + ' SAR';
-            document.getElementById('val-churn').innerText = (churn * 100) + '%';
-            document.getElementById('val-cac').innerText = cac + ' SAR';
-            document.getElementById('val-new').innerText = newCust;
-            document.getElementById('val-margin').innerText = (margin * 100) + '%';
-            document.getElementById('val-fixed').innerText = fixed + ' SAR';
-
-            const ltv = (price * margin) / churn;
-            const ltvCac = ltv / cac;
-            const payback = cac / (price * margin);
-            
-            let customers = 0;
-            let mrr12 = 0;
-            let mrr36 = 0;
-            let breakeven = 0;
-            let cumulativeProfit = -cac;
-
-            for (let m = 1; m <= 36; m++) {
-                customers = (customers * (1 - churn)) + newCust;
-                const mrr = customers * price;
-                if (m === 12) mrr12 = mrr;
-                if (m === 36) mrr36 = mrr;
-                
-                const monthlyProfit = (mrr * margin) - fixed - (newCust * cac);
-                cumulativeProfit += monthlyProfit;
-                if (breakeven === 0 && cumulativeProfit >= 0) {
-                    breakeven = m;
-                }
-            }
-
-            document.getElementById('out-ltv').innerText = Math.round(ltv).toLocaleString() + ' SAR';
-            document.getElementById('out-ltv-cac').innerText = ltvCac.toFixed(1) + 'x';
-            document.getElementById('out-payback').innerText = payback.toFixed(1) + ' شهر';
-            document.getElementById('out-mrr12').innerText = Math.round(mrr12).toLocaleString() + ' SAR';
-            document.getElementById('out-mrr36').innerText = Math.round(mrr36).toLocaleString() + ' SAR';
-            document.getElementById('out-breakeven').innerText = breakeven > 0 ? 'شهر ' + breakeven : '> 36';
-        }
-
-        ['price', 'churn', 'cac', 'new_cust', 'margin', 'fixed'].forEach(id => {
-            document.getElementById(id).addEventListener('input', calculate);
-        });
-        calculate();
-
-        window.onscroll = function() {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.getElementById("progress-bar").style.width = scrolled + "%";
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const target = parseFloat(entry.target.getAttribute('data-target'));
-                    let current = 0;
-                    const increment = target / 50;
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= target) {
-                            entry.target.innerText = target;
-                            clearInterval(timer);
-                        } else {
-                            entry.target.innerText = current.toFixed(1);
-                        }
-                    }, 30);
-                    observer.unobserve(entry.target);
-                }
-            });
-        });
-        document.querySelectorAll('.kpi-value').forEach(el => observer.observe(el));
-    </script>
+    <script src="assets/app.js"></script>
 </body>
 </html>
