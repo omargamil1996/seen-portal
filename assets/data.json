@@ -1,0 +1,120 @@
+{
+  "kpis": {
+    "tam": 3.5,
+    "clients_y1": 20,
+    "ask_sar": 82.5,
+    "ltv_cac": 19.3
+  },
+  "financials": {
+    "default_price": 3500,
+    "default_churn": 6,
+    "default_cac": 1500,
+    "default_new": 2.3,
+    "default_margin": 70,
+    "default_fixed": 3500
+  },
+  "competitors": [
+    {
+      "name": "UiPath",
+      "price": "SAR 10K-50K",
+      "specialty": "جزئي",
+      "halal": "لا"
+    },
+    {
+      "name": "PROVEN Consult",
+      "price": "SAR 75K+",
+      "specialty": "لا",
+      "halal": "لا"
+    },
+    {
+      "name": "Hivekind",
+      "price": "$50-99/س",
+      "specialty": "لا",
+      "halal": "لا"
+    },
+    {
+      "name": "Wakeb",
+      "price": "$25-49/س",
+      "specialty": "لا",
+      "halal": "لا"
+    },
+    {
+      "name": "aTeam Soft",
+      "price": "$15K-40K",
+      "specialty": "لا",
+      "halal": "لا"
+    },
+    {
+      "name": "Alwajeez",
+      "price": "SAR 7,999/شهر",
+      "specialty": "لا",
+      "halal": "لا"
+    },
+    {
+      "name": "Calq",
+      "price": "مجاني-مدفوع",
+      "specialty": "نعم (AEC)",
+      "halal": "لا"
+    },
+    {
+      "name": "AIQ",
+      "price": "SAR 8,812/مستخدم",
+      "specialty": "نعم (طاقة)",
+      "halal": "لا"
+    },
+    {
+      "name": "Elm",
+      "price": "حكومي",
+      "specialty": "جزئي",
+      "halal": "لا"
+    },
+    {
+      "name": "Seen Automation",
+      "price": "SAR 600-5K",
+      "specialty": "نعم (هندسي)",
+      "halal": "100%"
+    }
+  ],
+  "packages": [
+    {
+      "name": "Starter",
+      "setup": "3,000-5,000",
+      "monthly": "600-1,000",
+      "sla": "30 دقيقة"
+    },
+    {
+      "name": "Growth",
+      "setup": "6,000-10,000",
+      "monthly": "1,200-2,000",
+      "sla": "15 دقيقة"
+    },
+    {
+      "name": "Enterprise",
+      "setup": "15,000-25,000",
+      "monthly": "3,000-5,000",
+      "sla": "5 دقائق"
+    },
+    {
+      "name": "Lead-Gen",
+      "setup": "1,000-3,000",
+      "monthly": "300-600",
+      "sla": "30 دقيقة"
+    }
+  ],
+  "pitch_slides": [
+    "1. الغلاف: Seen Automation AI Agency",
+    "2. المشكلة: 7.6 ساعة/أسبوع مهدرة = 44 يوم/سنة",
+    "3. الحل: AI Backend Pipelines + Zero-Friction",
+    "4. لماذا الآن؟ Vision 2030 + 56.25% زيادة إنفاق AI",
+    "5. حجم السوق: TAM $3.5B | SAM $1.95B | SOM $320K",
+    "6. نموذج العمل: باقات + 15-20% من التأسيس شهرياً",
+    "7. الجاهزية: 49 ملف استراتيجي + 25 هجمة أمنية",
+    "8. المنافسون: تفوق في السعر، التخصص، والامتثال الشرعي",
+    "9. الميزة التنافسية: حلال 100% + Error Node System",
+    "10. استراتيجية الدخول: Landing Bot + Confirmation Call",
+    "11. الفريق: عمر محمد جميل باعبدالله (المؤسس)",
+    "12. المالية: نمو مستدام وهامش 70%+",
+    "13. الطلب: SAR 82,500 مضاربة شرعية",
+    "14. التواصل: hello@seen-agency.com"
+  ]
+}
