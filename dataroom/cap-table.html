@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هيكل الملكية - Seen Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div id="progress-bar"></div>
+    <div class="watermark" id="watermark"></div>
+    <nav>
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">Seen Automation</a>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+            <div class="nav-links">
+                <a href="../index.html">الرئيسية</a>
+                <a href="index.html" class="active">غرفة البيانات</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>هيكل الملكية (Cap Table)</h1>
+            <p>توزيع الحقوق والملكية في المراحل المختلفة.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container" style="max-width: 800px;">
+            <div class="kpi-card" style="text-align: right; margin-bottom: 30px; border: 2px solid orange;">
+                <h3 style="color: orange;">🔒 محتوى محمي</h3>
+                <p>تفاصيل Cap Table الكاملة متاحة فقط بعد توقيع NDA.</p>
+                <table style="margin-top: 20px; opacity: 0.7;">
+                    <thead>
+                        <tr>
+                            <th>المرحلة</th>
+                            <th>المالك القانوني</th>
+                            <th>الحقوق التشغيلية</th>
+                            <th>حصة الممول</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ما قبل الاستثمار</td>
+                            <td>أحمد (100%)</td>
+                            <td>عمر (حقوق مؤسس)</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>بعد المضاربة</td>
+                            <td>أحمد (100%)</td>
+                            <td>عمر (حقوق مؤسس)</td>
+                            <td>15% من الإيراد (حتى الاسترداد + 36 شهر)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="margin-top: 15px; font-size: 0.9rem;">* ملاحظة: صاحب التمويل في هيكل المضاربة لا يملك أسهمًا، بل حصة في الإيراد فقط، مما يحافظ على استقلالية القرار التشغيلي.</p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <a href="../contact.html" class="cta-btn">طلب توقيع NDA للوصول الكامل</a>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <a href="index.html" class="cta-btn" style="background: var(--charcoal);">العودة للفهرس</a>
+            </div>
+        </div>
+    </section>
+
+    <script src="../assets/app.js"></script>
+</body>
+</html>
