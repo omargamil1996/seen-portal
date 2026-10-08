@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غرفة البيانات - Seen Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+    <div id="progress-bar"></div>
+    <div class="watermark" id="watermark"></div>
+    <nav>
+        <div class="container nav-content">
+            <a href="../index.html" class="logo">
+                <svg width="30" height="30" viewBox="0 0 100 100"><path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" fill="#0F5132"/><path d="M50 25 L75 37.5 L75 62.5 L50 75 L25 62.5 L25 37.5 Z" fill="#D4AF37"/></svg>
+                Seen Automation
+            </a>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+            <div class="nav-links">
+                <a href="../index.html">الرئيسية</a>
+                <a href="../overview.html">من نحن</a>
+                <a href="../opportunity.html">الفرصة</a>
+                <a href="../solution.html">الحل</a>
+                <a href="../readiness.html">الجاهزية</a>
+                <a href="../financials.html">المالية</a>
+                <a href="../business-plan.html">خطة العمل</a>
+                <a href="../pitch.html">Pitch Deck</a>
+                <a href="../team.html">الفريق</a>
+                <a href="../roadmap.html">خريطة الطريق</a>
+                <a href="../contact.html">التواصل</a>
+                <a href="index.html" class="active">غرفة البيانات</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>غرفة البيانات (Data Room)</h1>
+            <p>مستودع آمن ومنظم للوثائق القانونية والمالية. يتطلب بعض الأقسام مستوى وصول محدد.</p>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>فهرس الملفات ومستويات الوصول</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>المستند</th>
+                        <th>الوصف</th>
+                        <th>مستوى الوصول</th>
+                        <th>الإجراء</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="legal.html" style="color: var(--emerald);">الوثائق القانونية</a></td>
+                        <td>NDA, MSA, SOW, SLA, DPA Templates</td>
+                        <td><span style="color: green;">🟢 عام</span></td>
+                        <td><a href="legal.html" class="deck-btn" style="padding: 5px 15px; font-size: 0.9rem;">عرض</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="agreements.html" style="color: var(--emerald);">اتفاقيات التأسيس</a></td>
+                        <td>Partner Agreement, Mudarabah Structure</td>
+                        <td><span style="color: orange;">🟡 NDA مطلوب</span></td>
+                        <td><button class="deck-btn" style="padding: 5px 15px; font-size: 0.9rem;" onclick="alert('يرجى توقيع NDA أولاً عبر صفحة التواصل.')">طلب وصول</button></td>
+                    </tr>
+                    <tr>
+                        <td><a href="cap-table.html" style="color: var(--emerald);">هيكل الملكية (Cap Table)</a></td>
+                        <td>الهيكل الحالي وهيكل ما بعد المضاربة</td>
+                        <td><span style="color: orange;">🟡 NDA مطلوب</span></td>
+                        <td><button class="deck-btn" style="padding: 5px 15px; font-size: 0.9rem;" onclick="alert('يرجى توقيع NDA أولاً عبر صفحة التواصل.')">طلب وصول</button></td>
+                    </tr>
+                    <tr>
+                        <td>System Prompts & Security</td>
+                        <td>تفاصيل الهجمات، أكواد المصدر، إعدادات النماذج</td>
+                        <td><span style="color: red;">🔴 مقيد تماماً</span></td>
+                        <td><button class="deck-btn" disabled style="padding: 5px 15px; font-size: 0.9rem; opacity: 0.5;">غير متاح</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <script src="../assets/app.js"></script>
+</body>
+</html>
