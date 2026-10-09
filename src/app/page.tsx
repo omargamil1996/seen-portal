@@ -10,9 +10,10 @@ import {
   LayoutDashboard, Wallet, FileText, Target, Map as MapIcon,
   AlertTriangle, Cpu, FileCheck, Globe, SkipBack, SkipForward,
   ChevronDown, TrendingUp, Shield, Users, Clock, DollarSign,
-  BarChart3, PieChart as PieChartIcon, Activity, CheckCircle2,
-  Layers, Server, Eye, Download, Settings, BookOpen, Briefcase,
-  Moon, Sun, ArrowRight, ShieldCheck,
+  BarChart3, PieChart as PieChartIcon, Activity, CheckCircle2, XCircle,
+  ArrowUpRight, Layers, Server, Lock, Eye, Download, Settings,
+  BookOpen, Briefcase, Calendar, CreditCard, ShieldCheck, 
+  Zap, Sparkles, Volume2, Bell, Save, Trash2, Info
 } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
