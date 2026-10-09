@@ -196,7 +196,7 @@ export const DATA = {
       y1: { revenue: 384000, costs: 106800, profit: 277200 },
       y2: { revenue: 600000, costs: 144000, profit: 456000 },
       y3: { revenue: 936000, costs: 195000, profit: 741000 },
-    },,
+    },
     projections: {
       y1: { revenue: 384000, costs: 106800, profit: 277200 },
       y2: { revenue: 600000, costs: 144000, profit: 456000 },
