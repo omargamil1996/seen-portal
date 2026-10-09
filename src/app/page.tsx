@@ -1542,186 +1542,193 @@ function HardwareView({ t, lang }: any) {
 
 
 function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
+  // Enhanced slide designs with backgrounds, icons, and better layout
+  const slideDesigns = [
+    { bg: "from-emerald via-emerald-dark to-emerald", icon: "🏢", accent: "gold" },      // Cover
+    { bg: "from-red-900 via-red-800 to-red-900", icon: "⚠️", accent: "white" },        // Problem
+    { bg: "from-emerald via-emerald-dark to-gold", icon: "💡", accent: "gold" },        // Solution
+    { bg: "from-blue-900 via-blue-800 to-blue-900", icon: "🚀", accent: "gold" },      // Why Now
+    { bg: "from-purple-900 via-purple-800 to-emerald", icon: "📊", accent: "gold" },   // Market
+    { bg: "from-gold-dark via-gold to-amber-600", icon: "💰", accent: "white" },       // Model
+    { bg: "from-emerald-dark via-emerald to-gold", icon: "✅", accent: "white" },      // Readiness
+    { bg: "from-slate-900 via-slate-800 to-emerald", icon: "🎯", accent: "gold" },     // Competitors
+    { bg: "from-gold via-amber-500 to-emerald", icon: "⭐", accent: "white" },         // Edge
+    { bg: "from-blue-900 via-indigo-800 to-purple-900", icon: "📈", accent: "gold" },  // GTM
+    { bg: "from-emerald via-emerald-dark to-slate-900", icon: "👥", accent: "gold" },  // Team
+    { bg: "from-gold-dark via-gold to-emerald", icon: "📊", accent: "white" },         // Financials
+    { bg: "from-emerald via-emerald-dark to-gold", icon: "💎", accent: "gold" },       // Ask
+    { bg: "from-slate-900 via-emerald-dark to-gold", icon: "🌟", accent: "gold" },     // Vision
+  ];
+
+  const currentSlide = DATA.pitchSlides[slideIdx];
+  const currentDesign = slideDesigns[slideIdx];
+  const lines = (lang === "ar" ? currentSlide.content_ar : currentSlide.content_en).split("\n").filter((l: string) => l.trim());
+
   return (
     <div className="space-y-6">
       <SectionHeader 
         icon={FileCheck} 
-        title={lang === "ar" ? "طلب الاستثمار" : "Investment Ask"} 
-        subtitle={lang === "ar" ? "هيكل مضاربة شرعي متوافق مع معايير AAOIFI" : "Sharia-compliant Mudarabah structure aligned with AAOIFI standards"} 
+        title={lang === "ar" ? "طلب الاستثمار" : "The Ask"} 
+        subtitle={lang === "ar" ? "عرض تقديمي احترافي من 14 شريحة" : "Professional 14-slide pitch deck"} 
       />
 
-      {/* Main Ask Hero */}
-      <Card className="p-10 text-center overflow-hidden relative" hover={false}>
-        <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald noise" />
-        <div className="relative z-10 text-white">
-          <p className="text-sm font-semibold text-gold-light uppercase tracking-widest mb-3">
-            {lang === "ar" ? "طلب الاستثمار" : "Investment Ask"}
-          </p>
-          <div className="text-7xl font-bold font-amiri text-gold mb-4 animate-pulse-gold rounded-2xl inline-block px-8 py-2">
-            SAR {DATA.ask.amount.toLocaleString()}
-          </div>
-          <div className="text-2xl text-white/80 mb-4 font-semibold">
-            ≈ USD {DATA.ask.amount_usd.toLocaleString()}
-          </div>
-          <div className="inline-flex items-center gap-2 bg-gold/20 backdrop-blur-sm px-6 py-3 rounded-full border border-gold/30">
-            <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-            <span className="text-gold font-semibold">{lang === "ar" ? DATA.ask.structure_ar : DATA.ask.structure_en}</span>
-          </div>
-        </div>
-      </Card>
-
-      {/* Mudarabah Structure - 3 Phases */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-6 border-emerald/30 bg-gradient-to-br from-emerald/5 to-transparent">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald font-bold font-amiri text-xl">1</div>
+      {/* Main Slide Deck */}
+      <Card className="overflow-hidden" hover={false}>
+        <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald/10 flex items-center justify-center text-emerald font-bold text-sm">
+              {slideIdx + 1}
+            </div>
             <div>
-              <h3 className="font-bold text-emerald dark:text-gold">Phase 1</h3>
-              <p className="text-xs text-gray-500">{lang === "ar" ? "حتى استرداد رأس المال" : "Until capital recovery"}</p>
+              <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
+                <Eye size={16} /> Pitch Deck
+              </h3>
+              <p className="text-xs text-gray-500">{DATA.pitchSlides.length} {lang === "ar" ? "شريحة" : "slides"}</p>
             </div>
           </div>
-          <div className="text-4xl font-bold text-emerald font-amiri mb-2">{DATA.ask.phase1}%</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? `${DATA.ask.phase1}% من الأرباح للمستثمر حتى يتم استرداد كامل رأس المال.`
-              : `${DATA.ask.phase1}% of profits to investor until full capital is recovered.`}
-          </p>
-        </Card>
-
-        <Card className="p-6 border-gold/30 bg-gradient-to-br from-gold/5 to-transparent">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold font-bold font-amiri text-xl">2</div>
-            <div>
-              <h3 className="font-bold text-emerald dark:text-gold">Phase 2</h3>
-              <p className="text-xs text-gray-500">{lang === "ar" ? `لمدة ${DATA.ask.phase2_months} شهر` : `For ${DATA.ask.phase2_months} months`}</p>
-            </div>
-          </div>
-          <div className="text-4xl font-bold text-gold-dark dark:text-gold font-amiri mb-2">{DATA.ask.phase2}%</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? `${DATA.ask.phase2}% من الأرباح للمستثمر لمدة ${DATA.ask.phase2_months} شهراً بعد استرداد رأس المال.`
-              : `${DATA.ask.phase2}% of profits to investor for ${DATA.ask.phase2_months} months after capital recovery.`}
-          </p>
-        </Card>
-
-        <Card className="p-6 border-accent/30 bg-gradient-to-br from-accent/5 to-transparent">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent font-bold font-amiri text-xl">★</div>
-            <div>
-              <h3 className="font-bold text-emerald dark:text-gold">{lang === "ar" ? "خيار الشراء" : "Buyout Option"}</h3>
-              <p className="text-xs text-gray-500">{lang === "ar" ? `بعد ${DATA.ask.buyout_months} شهر` : `After ${DATA.ask.buyout_months} months`}</p>
-            </div>
-          </div>
-          <div className="text-4xl font-bold text-accent font-amiri mb-2">×{DATA.ask.buyout_multiple}</div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? `يمكن للمؤسس شراء حصة المستثمر بعد ${DATA.ask.buyout_months} شهراً بقيمة ${DATA.ask.buyout_multiple}x من الاستثمار الأصلي.`
-              : `Founder can buy out investor's share after ${DATA.ask.buyout_months} months at ${DATA.ask.buyout_multiple}x the original investment.`}
-          </p>
-        </Card>
-      </div>
-
-      {/* Key Terms */}
-      <Card className="p-6">
-        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
-          <FileText size={18} />
-          {lang === "ar" ? "الشروط الرئيسية" : "Key Terms"}
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            { label_ar: "المدة القصوى", label_en: "Max Duration", value: `${DATA.ask.max_years} ${lang === "ar" ? "سنة" : "years"}`, icon: Clock },
-            { label_ar: "استرداد رأس المال", label_en: "Capital Recovery", value: `${DATA.ask.phase1}%`, icon: DollarSign },
-            { label_ar: "نسبة الأرباح بعد الاسترداد", label_en: "Post-Recovery Profit Share", value: `${DATA.ask.phase2}%`, icon: TrendingUp },
-            { label_ar: "نقطة Buyout", label_en: "Buyout Point", value: `${DATA.ask.buyout_months} ${lang === "ar" ? "شهراً" : "months"}`, icon: Target },
-          ].map((term, i) => (
-            <div key={i} className="bg-muted/30 dark:bg-dark-muted/30 p-4 rounded-xl border border-border flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-emerald/10 flex items-center justify-center text-emerald">
-                <term.icon size={18} />
-              </div>
-              <div>
-                <div className="text-xs text-gray-500">{lang === "ar" ? term.label_ar : term.label_en}</div>
-                <div className="font-bold text-emerald dark:text-gold">{term.value}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* ROI Projection */}
-      <Card className="p-6 bg-gradient-to-br from-gold/5 to-emerald/5">
-        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4">
-          {lang === "ar" ? "العائد المتوقع للمستثمر" : "Expected Investor Return"}
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border text-center">
-            <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "الاستثمار" : "Investment"}</div>
-            <div className="text-2xl font-bold text-emerald">${DATA.ask.amount_usd.toLocaleString()}</div>
-          </div>
-          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border text-center">
-            <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "العائد المتوقع (Y3)" : "Expected Return (Y3)"}</div>
-            <div className="text-2xl font-bold text-gold-dark dark:text-gold">~$45K</div>
-          </div>
-          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border text-center">
-            <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "معدل العائد" : "ROI"}</div>
-            <div className="text-2xl font-bold text-accent">~3.5x</div>
-          </div>
-          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border text-center">
-            <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "فترة الاسترداد" : "Payback Period"}</div>
-            <div className="text-2xl font-bold text-emerald">~18 {lang === "ar" ? "شهراً" : "mo"}</div>
-          </div>
-        </div>
-        <p className="text-xs text-gray-500 mt-4 text-center italic">
-          * {lang === "ar" ? "تقدير مبني على السيناريو الأساسي في النموذج المالي. النتائج الفعلية قد تختلف." : "Estimate based on base-case financial model. Actual results may vary."}
-        </p>
-      </Card>
-
-      {/* Pitch Deck */}
-      <Card className="overflow-hidden">
-        <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center">
-          <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
-            <Eye size={16} /> Pitch Deck ({DATA.pitchSlides.length} {lang === "ar" ? "شريحة" : "slides"})
-          </h3>
           <div className="flex items-center gap-2">
-            <button onClick={() => setSlideIdx(Math.max(0, slideIdx - 1))} className="p-2 rounded-lg hover:bg-muted dark:hover:bg-dark-muted"><SkipBack size={16} /></button>
-            <span className="text-xs font-mono text-gray-500">{slideIdx + 1}/{DATA.pitchSlides.length}</span>
-            <button onClick={() => setSlideIdx(Math.min(DATA.pitchSlides.length - 1, slideIdx + 1))} className="p-2 rounded-lg hover:bg-muted dark:hover:bg-dark-muted"><SkipForward size={16} /></button>
+            <button 
+              onClick={() => setSlideIdx(Math.max(0, slideIdx - 1))} 
+              disabled={slideIdx === 0}
+              className="p-2 rounded-lg hover:bg-muted dark:hover:bg-dark-muted disabled:opacity-30 transition-all"
+            >
+              <SkipBack size={16} />
+            </button>
+            <span className="text-xs font-mono text-gray-500 min-w-[50px] text-center">
+              {slideIdx + 1}/{DATA.pitchSlides.length}
+            </span>
+            <button 
+              onClick={() => setSlideIdx(Math.min(DATA.pitchSlides.length - 1, slideIdx + 1))} 
+              disabled={slideIdx === DATA.pitchSlides.length - 1}
+              className="p-2 rounded-lg hover:bg-muted dark:hover:bg-dark-muted disabled:opacity-30 transition-all"
+            >
+              <SkipForward size={16} />
+            </button>
           </div>
         </div>
-        <div className="bg-dark-bg text-white p-10 min-h-[300px] flex flex-col items-center justify-center text-center">
-          <h3 className="text-2xl font-amiri font-bold text-gold mb-6">{lang === "ar" ? DATA.pitchSlides[slideIdx].title_ar : DATA.pitchSlides[slideIdx].title_en}</h3>
-          <p className="text-lg text-white/90 whitespace-pre-line leading-relaxed max-w-2xl">{lang === "ar" ? DATA.pitchSlides[slideIdx].content_ar : DATA.pitchSlides[slideIdx].content_en}</p>
-          <div className="flex gap-1.5 mt-8">
-            {DATA.pitchSlides.map((_, i) => (
-              <button key={i} onClick={() => setSlideIdx(i)} className={cn("h-1.5 rounded-full transition-all", i === slideIdx ? "w-8 bg-gold" : "w-1.5 bg-gray-600 hover:bg-gray-500")} />
+
+        {/* Slide Display */}
+        <div 
+          className={cn(
+            "relative min-h-[500px] flex flex-col items-center justify-center p-10 overflow-hidden bg-gradient-to-br",
+            currentDesign.bg
+          )}
+        >
+          {/* Background Pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute top-10 left-10 text-[200px] leading-none">{currentDesign.icon}</div>
+            <div className="absolute bottom-10 right-10 text-[150px] leading-none opacity-50">{currentDesign.icon}</div>
+          </div>
+          <div className="absolute inset-0 noise opacity-20" />
+
+          {/* Slide Number */}
+          <div className="absolute top-4 left-4 text-gold text-xs font-mono bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-gold/30">
+            SLIDE {slideIdx + 1} / {DATA.pitchSlides.length}
+          </div>
+
+          {/* Slide Content */}
+          <motion.div 
+            key={slideIdx}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="relative z-10 text-center max-w-3xl"
+          >
+            <div className="text-6xl mb-6">{currentDesign.icon}</div>
+            <h2 className={cn(
+              "text-3xl md:text-5xl font-amiri font-bold mb-6",
+              currentDesign.accent === "gold" ? "text-gold" : "text-white"
+            )}>
+              {lang === "ar" ? currentSlide.title_ar : currentSlide.title_en}
+            </h2>
+            <div className="space-y-4">
+              {lines.map((line: string, i: number) => (
+                <motion.p 
+                  key={i}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.1 }}
+                  className={cn(
+                    "text-lg md:text-2xl font-semibold",
+                    currentDesign.accent === "gold" ? "text-white/90" : "text-gold/90"
+                  )}
+                >
+                  {line}
+                </motion.p>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Navigation Arrows */}
+          <button 
+            onClick={() => setSlideIdx(Math.max(0, slideIdx - 1))}
+            disabled={slideIdx === 0}
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 disabled:opacity-30 transition-all"
+          >
+            <SkipBack size={20} className="text-white" />
+          </button>
+          <button 
+            onClick={() => setSlideIdx(Math.min(DATA.pitchSlides.length - 1, slideIdx + 1))}
+            disabled={slideIdx === DATA.pitchSlides.length - 1}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 disabled:opacity-30 transition-all"
+          >
+            <SkipForward size={20} className="text-white" />
+          </button>
+        </div>
+
+        {/* Slide Thumbnails */}
+        <div className="p-4 bg-muted/20 dark:bg-dark-muted/20 border-t border-border">
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            {DATA.pitchSlides.map((slide: any, i: number) => (
+              <button
+                key={i}
+                onClick={() => setSlideIdx(i)}
+                className={cn(
+                  "shrink-0 w-16 h-12 rounded-lg text-[10px] font-bold flex flex-col items-center justify-center gap-0.5 transition-all border",
+                  i === slideIdx 
+                    ? "bg-emerald text-white border-gold shadow-lg scale-110" 
+                    : "bg-card dark:bg-dark-card border-border hover:border-emerald text-gray-500"
+                )}
+              >
+                <span className="text-base">{slideDesigns[i].icon}</span>
+                <span>{i + 1}</span>
+              </button>
             ))}
           </div>
         </div>
       </Card>
 
-      {/* Call to Action */}
-      <Card className="p-8 text-center bg-gradient-to-br from-emerald via-emerald-dark to-emerald text-white relative overflow-hidden">
-        <div className="absolute inset-0 noise opacity-10" />
-        <div className="relative z-10">
-          <h3 className="text-2xl font-bold font-amiri mb-3 text-gold">
-            {lang === "ar" ? "جاهز للاستثمار؟" : "Ready to Invest?"}
-          </h3>
-          <p className="text-white/90 mb-6 max-w-xl mx-auto">
-            {lang === "ar" 
-              ? "تواصل معنا اليوم لمناقشة الشروط وتوقيع اتفاقية عدم الإفصاح."
-              : "Contact us today to discuss terms and sign the NDA."}
-          </p>
-          <a 
-            href="mailto:hello@seen-agency.com"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gold text-emerald-dark rounded-xl font-bold hover:bg-gold-light transition-all shadow-lg"
-          >
-            hello@seen-agency.com
-          </a>
+      {/* Slide List for Quick Access */}
+      <Card className="p-6">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <FileText size={16} /> {lang === "ar" ? "فهرس الشرائح" : "Slide Index"}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          {DATA.pitchSlides.map((slide: any, i: number) => (
+            <button
+              key={i}
+              onClick={() => setSlideIdx(i)}
+              className={cn(
+                "flex items-center gap-3 p-3 rounded-lg text-right transition-all border",
+                i === slideIdx
+                  ? "bg-emerald/10 border-emerald text-emerald dark:text-gold"
+                  : "bg-muted/30 dark:bg-dark-muted/30 border-border hover:border-emerald/50 hover:bg-muted/50"
+              )}
+            >
+              <div className="w-8 h-8 rounded-lg bg-emerald/10 flex items-center justify-center text-emerald font-bold text-sm shrink-0">
+                {i + 1}
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="font-bold text-sm truncate">{lang === "ar" ? slide.title_ar : slide.title_en}</div>
+                <div className="text-xs text-gray-500 truncate">{slideDesigns[i].icon} {slideDesigns[i].bg.split(" ")[0].replace("from-", "")}</div>
+              </div>
+            </button>
+          ))}
         </div>
       </Card>
     </div>
   );
 }
-
 
 function DataRoomView({ t, lang }: any) {
   const [selectedCat, setSelectedCat] = useState<string>("all");
