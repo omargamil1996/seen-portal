@@ -4,7 +4,7 @@ import { DATA_ROOM_FILES } from "@/components/DataRoomVault";
 
 export default function BriefcasePage() {
   return (
-    <main className="min-h-screen bg-white text-neutral-900 print:bg-white">
+    <div className="min-h-screen bg-white text-neutral-900 print:bg-white"> text-neutral-900 print:bg-white">
       <style>{`
         @page { size: A4; margin: 14mm; }
         @media print {
@@ -238,6 +238,6 @@ export default function BriefcasePage() {
           © 2026 {DATA.company.name_en}. Confidential investor briefcase. Static edition generated from verified project documentation.
         </footer>
       </div>
-    </main>
+    </div>
   );
 }
