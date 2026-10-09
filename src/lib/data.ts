@@ -53,43 +53,150 @@ export const DATA = {
     fixedCosts: 3500,
     newCustomers: 2.3,
     useOfFunds: {
-      total: 15000,
+      total: 22000,
       currency: "USD",
       breakdown: [
         {
           category_ar: "العتاد والأجهزة (CapEx)",
-          category_en: "Hardware & Equipment (CapEx)",
-          percentage: 67,
+          category_en: "Hardware & Equipment",
+          percentage: 45,
           amount: 10000,
-          description_ar: "شراء سيرفرات محلية، أجهزة اختبار، وعتاد لبناء بيئة تشغيل مستقلة وقوية كأصل ثابت للشركة.",
-          description_en: "Purchase local servers, testing equipment, and hardware to build an independent operating environment as a fixed company asset.",
+          description_ar: "سيرفرات محلية، أجهزة اختبار، لابتوب HP ZBook Ultra، Mini PC Minisforum، شاشات، UPS.",
+          description_en: "Local servers, testing equipment, HP ZBook Ultra laptop, Minisforum Mini PC, displays, UPS.",
+          icon: "💻"
         },
         {
-          category_ar: "البحث والتطوير والخوادم (R&D)",
-          category_en: "Research & Development (R&D)",
-          percentage: 20,
-          amount: 3000,
-          description_ar: "اشتراكات Supabase، خدمات API لنماذج الذكاء الاصطناعي، استضافة n8n، وتطوير خطوط الأتمتة.",
-          description_en: "Supabase subscriptions, AI model API services, n8n hosting, and automation pipeline development.",
+          category_ar: "البنية السحابية",
+          category_en: "Cloud Infrastructure",
+          percentage: 11,
+          amount: 2500,
+          description_ar: "Supabase Pro، n8n Cloud، Vercel Pro، Doppler Secrets، Storage للنسخ الاحتياطي.",
+          description_en: "Supabase Pro, n8n Cloud, Vercel Pro, Doppler Secrets, backup storage.",
+          icon: "☁️"
+        },
+        {
+          category_ar: "ذكاء اصطناعي وAPIs",
+          category_en: "AI Models & APIs",
+          percentage: 9,
+          amount: 2000,
+          description_ar: "اشتراكات Qwen، DeepSeek، OpenAI backup، خدمات LLM إضافية لمدة 12 شهر.",
+          description_en: "Qwen, DeepSeek, OpenAI backup subscriptions, additional LLM services for 12 months.",
+          icon: "🤖"
         },
         {
           category_ar: "التسويق والاستحواذ",
           category_en: "Marketing & Acquisition",
-          percentage: 13,
-          amount: 2000,
-          description_ar: "حملات مستهدفة للقطاع الهندسي، إنتاج محتوى، تحسين صفحة الهبوط، وأدوات قياس أولية.",
-          description_en: "Targeted engineering-sector campaigns, content production, landing-page optimization, and basic measurement tooling.",
+          percentage: 14,
+          amount: 3000,
+          description_ar: "حملات LinkedIn مستهدفة للقطاع الهندسي، محتوى عالي الجودة، تحسين SEO، Landing Page.",
+          description_en: "Targeted LinkedIn campaigns for engineering sector, high-quality content, SEO, Landing Page.",
+          icon: "📣"
         },
         {
-          category_ar: "العمليات الشهرية (OpEx)",
-          category_en: "Monthly Operations (OpEx)",
-          percentage: 0,
-          amount: 0,
-          description_ar: "لا رواتب موظفين في هذه المرحلة. التكاليف التشغيلية الشهرية تغطى من الإيرادات أو الاحتياطي عند الحاجة.",
-          description_en: "No employee salaries at this stage. Monthly operating costs are covered from revenue or reserve when needed.",
+          category_ar: "قانوني وامتثال",
+          category_en: "Legal & Compliance",
+          percentage: 7,
+          amount: 1500,
+          description_ar: "تسجيل الكيان الماليزي، مراجعة شرعية للعقود، NDA/MSA/SOW templates.",
+          description_en: "Malaysian entity registration, Sharia contract review, NDA/MSA/SOW templates.",
+          icon: "⚖️"
         },
-      ],
+        {
+          category_ar: "أدوات برمجية",
+          category_en: "Tools & Software",
+          percentage: 5,
+          amount: 1000,
+          description_ar: "JetBrains، Figma، Notion Team، Looker Studio Pro، أدوات التطوير.",
+          description_en: "JetBrains, Figma, Notion Team, Looker Studio Pro, development tools.",
+          icon: "🛠️"
+        },
+        {
+          category_ar: "احتياطي طوارئ",
+          category_en: "Contingency Reserve",
+          percentage: 5,
+          amount: 1000,
+          description_ar: "احتياطي للطوارئ غير المتوقعة، صيانة، وتكاليف إضافية محتملة.",
+          description_en: "Reserve for unexpected emergencies, maintenance, and potential additional costs.",
+          icon: "🛡️"
+        },
+        {
+          category_ar: "سيولة تشغيلية شهرية",
+          category_en: "Monthly OpEx Buffer",
+          percentage: 4,
+          amount: 1000,
+          description_ar: "Buffer للسيولة التشغيلية في الأشهر الأولى قبل تحقيق الإيراد الكافي.",
+          description_en: "Operational liquidity buffer for the first months before sufficient revenue.",
+          icon: "💵"
+        }
+      ]
     },
+    revenueStreams: [
+      { name_ar: "رسوم التأسيس (Setup)", name_en: "Setup Fees", percentage: 35, amount: 134400, color: "#0F5132" },
+      { name_ar: "اشتراكات شهرية", name_en: "Monthly Retainers", percentage: 45, amount: 172800, color: "#D4AF37" },
+      { name_ar: "استضافة ومدد", name_en: "Hosting & Retainers", percentage: 12, amount: 46080, color: "#F97316" },
+      { name_ar: "تطوير مخصص", name_en: "Custom Development", percentage: 8, amount: 30720, color: "#B8962E" }
+    ],
+    scenarios: [
+      { 
+        name_ar: "متحفظ", name_en: "Conservative",
+        clients_y1: 12, clients_y3: 30, 
+        mrr_y1: 19200, mrr_y3: 48000,
+        revenue_y1: 230400, revenue_y3: 576000,
+        probability: 25
+      },
+      { 
+        name_ar: "أساسي (المتوقع)", name_en: "Base (Expected)",
+        clients_y1: 20, clients_y3: 50, 
+        mrr_y1: 32000, mrr_y3: 80000,
+        revenue_y1: 384000, revenue_y3: 960000,
+        probability: 50
+      },
+      { 
+        name_ar: "متفائل", name_en: "Optimistic",
+        clients_y1: 30, clients_y3: 80, 
+        mrr_y1: 48000, mrr_y3: 128000,
+        revenue_y1: 576000, revenue_y3: 1536000,
+        probability: 25
+      }
+    ],
+    cashFlow: [
+      { month: 1, revenue: 0, costs: 8500, profit: -8500, cumulative: -8500 },
+      { month: 2, revenue: 8000, costs: 7000, profit: 1000, cumulative: -7500 },
+      { month: 3, revenue: 16000, costs: 7500, profit: 8500, cumulative: 1000 },
+      { month: 4, revenue: 22000, costs: 8000, profit: 14000, cumulative: 15000 },
+      { month: 5, revenue: 26000, costs: 8500, profit: 17500, cumulative: 32500 },
+      { month: 6, revenue: 29000, costs: 9000, profit: 20000, cumulative: 52500 },
+      { month: 7, revenue: 32000, costs: 9500, profit: 22500, cumulative: 75000 },
+      { month: 8, revenue: 34000, costs: 10000, profit: 24000, cumulative: 99000 },
+      { month: 9, revenue: 36000, costs: 10500, profit: 25500, cumulative: 124500 },
+      { month: 10, revenue: 38000, costs: 11000, profit: 27000, cumulative: 151500 },
+      { month: 11, revenue: 40000, costs: 11500, profit: 28500, cumulative: 180000 },
+      { month: 12, revenue: 43000, costs: 12000, profit: 31000, cumulative: 211000 }
+    ],
+    unitEconomics: [
+      { metric_ar: "متوسط سعر التأسيس", metric_en: "Average Setup Fee", value: "SAR 6,720", color: "emerald" },
+      { metric_ar: "ARPU الشهري", metric_en: "Monthly ARPU", value: "SAR 1,600", color: "gold" },
+      { metric_ar: "تكلفة الاكتساب (CAC)", metric_en: "CAC", value: "SAR 1,500", color: "accent" },
+      { metric_ar: "عمر العميل المتوقع", metric_en: "Expected Customer Lifetime", value: "18 شهر", color: "emerald" },
+      { metric_ar: "القيمة الدائمة (LTV)", metric_en: "LTV", value: "SAR 29,000", color: "gold" },
+      { metric_ar: "نسبة LTV:CAC", metric_en: "LTV:CAC Ratio", value: "19.3x", color: "accent" },
+      { metric_ar: "فترة استرداد CAC", metric_en: "CAC Payback", value: "0.9 شهر", color: "emerald" },
+      { metric_ar: "نسبة التسرب الشهرية", metric_en: "Monthly Churn", value: "6%", color: "red" },
+      { metric_ar: "هامش الربح الإجمالي", metric_en: "Gross Margin", value: "70%", color: "gold" },
+      { metric_ar: "صافي هامش الربح", metric_en: "Net Profit Margin", value: "45%", color: "accent" }
+    ],
+    breakEven: {
+      month: 2,
+      fixed_costs: 3500,
+      contribution_margin: 1120,
+      description_ar: "نقطة التعادل التشغيلية تُحقق في الشهر الثاني، حيث يتجاوز الإيراد المتكرر التكاليف الثابتة الشهرية البالغة SAR 3,500. هذا ممكن بفضل هامش الربح الإجمالي 70% الذي يتيح تغطية سريعة للتكاليف.",
+      description_en: "Operational break-even is achieved in month 2, where recurring revenue exceeds fixed monthly costs of SAR 3,500. This is possible thanks to the 70% gross margin enabling rapid cost coverage."
+    },
+    projections: {
+      y1: { revenue: 384000, costs: 106800, profit: 277200 },
+      y2: { revenue: 600000, costs: 144000, profit: 456000 },
+      y3: { revenue: 936000, costs: 195000, profit: 741000 },
+    },,
     projections: {
       y1: { revenue: 384000, costs: 106800, profit: 277200 },
       y2: { revenue: 600000, costs: 144000, profit: 456000 },
