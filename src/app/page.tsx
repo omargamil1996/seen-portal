@@ -404,15 +404,54 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
 
 function BusinessPlanView({ t, lang }: any) {
   return (
-    <div className="space-y-4">
-      <SectionHeader icon={FileText} title={lang === "ar" ? "خطة العمل الشاملة" : "Comprehensive Business Plan"} subtitle={`${DATA.businessPlan.length} ${lang === "ar" ? "أقسام" : "sections"}`} />
+    <div className="space-y-6">
+      <SectionHeader icon={FileText} title={lang === "ar" ? "خطة العمل الشاملة" : "Comprehensive Business Plan"} subtitle={lang === "ar" ? `${DATA.businessPlan.length} قسماً استراتيجياً وتشغيلياً بمحتوى كامل ومفصل` : `${DATA.businessPlan.length} strategic and operational sections with complete detailed content`} />
+      
+      {/* Stats banner */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+        <div className="bg-gradient-to-br from-emerald/5 to-emerald/10 p-4 rounded-xl border border-emerald/20 text-center">
+          <div className="text-2xl font-bold text-emerald">{DATA.businessPlan.length}</div>
+          <div className="text-xs text-gray-600 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div>
+        </div>
+        <div className="bg-gradient-to-br from-gold/5 to-gold/10 p-4 rounded-xl border border-gold/20 text-center">
+          <div className="text-2xl font-bold text-gold-dark dark:text-gold">AR + EN</div>
+          <div className="text-xs text-gray-600 mt-1">{lang === "ar" ? "ثنائي اللغة" : "Bilingual"}</div>
+        </div>
+        <div className="bg-gradient-to-br from-accent/5 to-accent/10 p-4 rounded-xl border border-accent/20 text-center">
+          <div className="text-2xl font-bold text-accent">49+</div>
+          <div className="text-xs text-gray-600 mt-1">{lang === "ar" ? "ملف استراتيجي" : "Strategic Files"}</div>
+        </div>
+        <div className="bg-gradient-to-br from-emerald/5 to-gold/5 p-4 rounded-xl border border-emerald/20 text-center">
+          <div className="text-2xl font-bold text-emerald">100%</div>
+          <div className="text-xs text-gray-600 mt-1">{lang === "ar" ? "جاهز للتنفيذ" : "Ready to Execute"}</div>
+        </div>
+      </div>
+
       {DATA.businessPlan.map((sec, i) => (
-        <motion.details key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="group bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card overflow-hidden">
+        <motion.details 
+          key={i} 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }} 
+          transition={{ delay: i * 0.03 }} 
+          open={i < 4}
+          className="group bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card overflow-hidden open:shadow-elevated open:border-emerald/30"
+        >
           <summary className="p-6 cursor-pointer flex justify-between items-center select-none hover:bg-muted/50 dark:hover:bg-dark-muted/50 transition-colors">
-            <div className="flex items-center gap-4"><span className="w-8 h-8 rounded-lg bg-emerald/10 dark:bg-emerald/20 text-emerald dark:text-gold flex items-center justify-center text-sm font-bold font-amiri">{i + 1}</span><span className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? sec.title_ar : sec.title_en}</span></div>
+            <div className="flex items-center gap-4">
+              <span className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-gold flex items-center justify-center text-sm font-bold font-amiri shadow-md">{i + 1}</span>
+              <div>
+                <span className="text-lg font-bold text-emerald dark:text-gold block">{lang === "ar" ? sec.title_ar : sec.title_en}</span>
+                <span className="text-xs text-gray-500">{lang === "ar" ? sec.title_en : sec.title_ar}</span>
+              </div>
+            </div>
             <ChevronDown size={20} className="text-gray-400 transition-transform duration-300 group-open:rotate-180 text-accent" />
           </summary>
-          <div className="details-content px-6 pb-6 pt-0"><div className="border-t border-border/50 dark:border-dark-border/50 pt-4 text-gray-700 dark:text-gray-300 leading-[1.9] text-sm whitespace-pre-line">{lang === "ar" ? sec.content_ar : sec.content_en}</div></div>
+          <div className="details-content px-6 pb-6 pt-0">
+            <div className="border-t border-border/50 dark:border-dark-border/50 pt-4 text-gray-700 dark:text-gray-300 leading-[2] text-sm whitespace-pre-line">
+              {lang === "ar" ? sec.content_ar : sec.content_en}
+            </div>
+          </div>
         </motion.details>
       ))}
     </div>
