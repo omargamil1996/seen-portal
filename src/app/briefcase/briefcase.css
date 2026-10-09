@@ -1,0 +1,124 @@
+/* Briefcase Print Styles */
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  .page-break {
+    page-break-before: always;
+  }
+  
+  .print-section {
+    page-break-inside: avoid;
+  }
+}
+
+/* Screen-only styles */
+@media screen {
+  .sheet {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px;
+    font-family: 'Cairo', system-ui, sans-serif;
+  }
+}
+
+/* Print styles */
+@media print {
+  .sheet {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+/* Common styles */
+.brand { color: #0F5132; }
+.gold { color: #B8962E; }
+.accent { color: #F97316; }
+
+.box {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  margin: 10px 0;
+  background: #fafafa;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tiny {
+  font-size: 10px;
+  color: #6b7280;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin: 8px 0;
+}
+
+th, td {
+  border: 1px solid #e5e7eb;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+th {
+  background: #0F5132;
+  color: white;
+}
+
+ul {
+  padding-right: 16px;
+  margin: 6px 0;
+}
+
+li {
+  margin: 3px 0;
+  font-size: 11px;
+}
+
+h1 { font-size: 28px; }
+h2 { 
+  font-size: 20px; 
+  margin-top: 20px; 
+  color: #0F5132; 
+  border-bottom: 2px solid #D4AF37; 
+  padding-bottom: 4px; 
+}
+h3 { 
+  font-size: 14px; 
+  color: #0F5132; 
+  margin: 8px 0 4px; 
+}
+p { 
+  font-size: 11px; 
+  line-height: 1.55; 
+}
