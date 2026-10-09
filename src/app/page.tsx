@@ -1117,20 +1117,46 @@ function HardwareView({ t, lang }: any) {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
-              <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">💻 {lang === "ar" ? "اللابتوب" : "Laptop"}</div>
-              <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.laptop}</div>
-              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.laptop_price.toLocaleString()}</div>
+            {/* Laptop with image */}
+            <div className="bg-white/10 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm">
+              <img 
+                src="https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=250&fit=crop" 
+                alt="HP ZBook Ultra"
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-4">
+                <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">💻 {lang === "ar" ? "اللابتوب" : "Laptop"}</div>
+                <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.laptop}</div>
+                <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.laptop_price.toLocaleString()}</div>
+              </div>
             </div>
-            <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
-              <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🖥️ Mini PC</div>
-              <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.minipc}</div>
-              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.minipc_price.toLocaleString()}</div>
+            
+            {/* Mini PC with image */}
+            <div className="bg-white/10 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm">
+              <img 
+                src="https://images.unsplash.com/photo-1625842268584-8f3296236761?w=400&h=250&fit=crop" 
+                alt="Minisforum MS-S1 Max"
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-4">
+                <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🖥️ Mini PC</div>
+                <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.minipc}</div>
+                <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.minipc_price.toLocaleString()}</div>
+              </div>
             </div>
-            <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
-              <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🔌 {lang === "ar" ? "الإكسسوارات" : "Accessories"}</div>
-              <div className="font-bold text-sm mb-2 leading-relaxed">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</div>
-              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.accessories_price.toLocaleString()}</div>
+            
+            {/* Accessories with image */}
+            <div className="bg-white/10 border border-white/10 rounded-xl overflow-hidden backdrop-blur-sm">
+              <img 
+                src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=250&fit=crop" 
+                alt="Accessories"
+                className="w-full h-32 object-cover"
+              />
+              <div className="p-4">
+                <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🔌 {lang === "ar" ? "الإكسسوارات" : "Accessories"}</div>
+                <div className="font-bold text-sm mb-2 leading-relaxed">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</div>
+                <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.accessories_price.toLocaleString()}</div>
+              </div>
             </div>
           </div>
 
@@ -1151,69 +1177,127 @@ function HardwareView({ t, lang }: any) {
         </div>
       </Card>
 
-      {/* Comparison Tables */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="overflow-hidden">
-          <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-emerald/5 to-transparent">
-            <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
-              <Cpu size={16} /> {lang === "ar" ? "فئات اللابتوب (5)" : "Laptop Categories (5)"}
-            </h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead className="bg-muted/50 dark:bg-dark-muted/50">
-                <tr>
-                  <th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th>
-                  <th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th>
-                  <th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th>
-                  <th className="p-3 text-right">{lang === "ar" ? "قدرة AI" : "AI Capacity"}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {DATA.hardware.laptops.map((l, i) => (
-                  <tr key={i} className={cn(
-                    "border-b border-border/50 dark:border-dark-border/50 transition-colors",
-                    l.category.includes("⭐") ? "bg-gold/5 dark:bg-gold/10" : "hover:bg-muted/20"
-                  )}>
-                    <td className="p-3 font-semibold text-emerald dark:text-gold">{l.category}</td>
-                    <td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td>
-                    <td className="p-3 text-accent font-bold">{l.price}</td>
-                    <td className="p-3 text-gray-500">{l.ai}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+      {/* Laptop Categories - EXPANDABLE CARDS */}
+      <Card className="overflow-hidden">
+        <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-emerald/5 to-transparent">
+          <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2 text-lg">
+            <Cpu size={20} /> {lang === "ar" ? "فئات اللابتوب (5 فئات)" : "Laptop Categories (5)"}
+          </h3>
+        </div>
+        <div className="divide-y divide-border dark:divide-dark-border">
+          {DATA.hardware.laptops.map((l: any, i: number) => (
+            <motion.details
+              key={i}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className={cn(
+                "group",
+                l.category.includes("⭐") && "bg-gradient-to-l from-gold/5 to-transparent"
+              )}
+            >
+              <summary className="p-5 cursor-pointer flex justify-between items-center select-none hover:bg-muted/30 dark:hover:bg-dark-muted/30 transition-colors">
+                <div className="flex items-center gap-4 flex-1">
+                  <img 
+                    src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=100&h=100&fit=crop" 
+                    alt={l.category}
+                    className="w-16 h-16 rounded-lg object-cover border-2 border-border"
+                  />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-emerald dark:text-gold mb-1 flex items-center gap-2">
+                      {l.category}
+                      {l.category.includes("⭐") && <span className="text-gold">⭐ {lang === "ar" ? "موصى به" : "Recommended"}</span>}
+                    </h4>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{l.specs}</p>
+                    <div className="flex gap-3 text-xs">
+                      <span className="text-accent font-bold">{l.price}</span>
+                      <span className="text-gray-500">|</span>
+                      <span className="text-gray-600 dark:text-gray-400">{lang === "ar" ? "قدرة AI" : "AI Capacity"}: {l.ai}</span>
+                    </div>
+                  </div>
+                </div>
+                <ChevronDown size={20} className="text-gray-400 transition-transform duration-300 group-open:rotate-180 text-accent shrink-0" />
+              </summary>
+              
+              <div className="details-content px-5 pb-5 pt-0">
+                <div className="border-t border-border/50 dark:border-dark-border/50 pt-4 grid grid-cols-2 gap-4">
+                  <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                    <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "المعالج" : "CPU"}</div>
+                    <div className="font-bold text-sm">{l.specs.split(',')[0]}</div>
+                  </div>
+                  <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                    <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "الذاكرة" : "RAM"}</div>
+                    <div className="font-bold text-sm">{l.specs.split(',')[1] || "N/A"}</div>
+                  </div>
+                  <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                    <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "السعر" : "Price"}</div>
+                    <div className="font-bold text-sm text-accent">{l.price}</div>
+                  </div>
+                  <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                    <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "قدرة AI" : "AI Capacity"}</div>
+                    <div className="font-bold text-sm text-emerald">{l.ai}</div>
+                  </div>
+                </div>
+              </div>
+            </motion.details>
+          ))}
+        </div>
+      </Card>
 
-        <Card className="overflow-hidden">
-          <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-gold/5 to-transparent">
-            <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
-              <Layers size={16} /> {lang === "ar" ? "فئات Mini PC (5)" : "Mini PC Categories (5)"}
-            </h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs">
-              <thead className="bg-muted/50 dark:bg-dark-muted/50">
-                <tr>
-                  <th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th>
-                  <th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th>
-                  <th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {DATA.hardware.minipc.map((l, i) => (
-                  <tr key={i} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors">
-                    <td className="p-3 font-semibold text-emerald dark:text-gold">{l.category}</td>
-                    <td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td>
-                    <td className="p-3 text-accent font-bold">{l.price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      </div>
+      {/* Mini PC Categories - EXPANDABLE CARDS */}
+      <Card className="overflow-hidden">
+        <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-gold/5 to-transparent">
+          <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2 text-lg">
+            <Layers size={20} /> {lang === "ar" ? "فئات Mini PC (5 فئات)" : "Mini PC Categories (5)"}
+          </h3>
+        </div>
+        <div className="divide-y divide-border dark:divide-dark-border">
+          {DATA.hardware.minipc.map((l: any, i: number) => (
+            <motion.details
+              key={i}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="group"
+            >
+              <summary className="p-5 cursor-pointer flex justify-between items-center select-none hover:bg-muted/30 dark:hover:bg-dark-muted/30 transition-colors">
+                <div className="flex items-center gap-4 flex-1">
+                  <img 
+                    src="https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=100&h=100&fit=crop" 
+                    alt={l.category}
+                    className="w-16 h-16 rounded-lg object-cover border-2 border-border"
+                  />
+                  <div className="flex-1">
+                    <h4 className="font-bold text-emerald dark:text-gold mb-1">{l.category}</h4>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">{l.specs}</p>
+                    <div className="text-xs text-accent font-bold">{l.price}</div>
+                  </div>
+                </div>
+                <ChevronDown size={20} className="text-gray-400 transition-transform duration-300 group-open:rotate-180 text-accent shrink-0" />
+              </summary>
+              
+              <div className="details-content px-5 pb-5 pt-0">
+                <div className="border-t border-border/50 dark:border-dark-border/50 pt-4 grid grid-cols-2 gap-4">
+                  <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                    <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "المعالج" : "CPU"}</div>
+                    <div className="font-bold text-sm">{l.specs.split(',')[0]}</div>
+                  </div>
+                  <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                    <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "الذاكرة" : "RAM"}</div>
+                    <div className="font-bold text-sm">{l.specs.split(',')[1] || "N/A"}</div>
+                  </div>
+                  <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg col-span-2">
+                    <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "السعر" : "Price"}</div>
+                    <div className="font-bold text-sm text-accent">{l.price}</div>
+                  </div>
+                </div>
+              </div>
+            </motion.details>
+          ))}
+        </div>
+      </Card>
 
       {/* Why Unified Memory */}
       <Card className="p-6 bg-gradient-to-br from-emerald/5 to-gold/5 dark:from-emerald/10 dark:to-gold/10 border-emerald/20">
@@ -1223,19 +1307,19 @@ function HardwareView({ t, lang }: any) {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
           <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border">
-            <div className="text-2xl mb-2">🚀</div>
+            <div className="text-3xl mb-2">🚀</div>
             <div className="font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? "نماذج 120B" : "120B Models"}</div>
-            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "تشغيل نماذج ضخمة بكفاءة عالية" : "Run massive models with high efficiency"}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "تشغيل نماذج ضخمة بكفاءة عالية بدون GPU منفصل" : "Run massive models efficiently without separate GPU"}</p>
           </div>
           <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border">
-            <div className="text-2xl mb-2">💰</div>
+            <div className="text-3xl mb-2">💰</div>
             <div className="font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? "توفير كبير" : "Major Savings"}</div>
-            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "بدلاً من شراء GPU بقيمة 10K+" : "Instead of $10K+ GPU purchase"}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "بدلاً من شراء GPU بقيمة 10K+، نحصل على أداء مشابه بـ 3-4K" : "Instead of $10K+ GPU, get similar performance for $3-4K"}</p>
           </div>
           <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border">
-            <div className="text-2xl mb-2">🔒</div>
+            <div className="text-3xl mb-2">🔒</div>
             <div className="font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? "خصوصية تامة" : "Full Privacy"}</div>
-            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "تشغيل محلي بدون سحابة" : "Local execution without cloud"}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "تشغيل محلي 100% بدون إرسال بيانات للسحابة" : "100% local execution without sending data to cloud"}</p>
           </div>
         </div>
       </Card>
