@@ -127,7 +127,7 @@ export const DATA = {
     { title_ar: "المالية", title_en: "Financials", content_ar: "Y3: SAR 936K\n80 عميل", content_en: "Y3: SAR 936K\n80 clients" },
     { title_ar: "الطلب", title_en: "Ask", content_ar: "SAR 82,500\nمضاربة شرعية", content_en: "SAR 82,500\nSharia Mudarabah" },
     { title_ar: "الرؤية", title_en: "Vision", content_ar: "Y5: 200+ عميل\n$2M+ ARR", content_en: "Y5: 200+ clients\n$2M+ ARR" },
-  ],,
+  ],
   securityHighlights: { attacks: 25, hallucinationTests: 100, encryption: "AES-256 + TLS 1.3" },
   checklists: {
     investorReady: [
