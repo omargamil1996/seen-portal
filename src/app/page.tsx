@@ -1908,111 +1908,176 @@ function DataRoomView({ t, lang }: any) {
 
 
 function TeamView({ t, lang }: any) {
+  const [activeTab, setActiveTab] = useState<'overview' | 'experience' | 'achievements' | 'skills'>('overview');
+
+  const experiences = [
+    { period: "2024 - Present", company_ar: "Seen Automation AI Agency", company_en: "Seen Automation AI Agency", role_ar: "المؤسس التشغيلي ومعمار الأنظمة", role_en: "Operational Founder & Systems Architect", desc_ar: "تأسيس وكالة أتمتة ذكاء اصطناعي متخصصة في القطاع الهندسي. بناء 49 ملفاً استراتيجياً، تصميم معمارية القلعة والرماح، تطوير بروتوكول الأمان الشامل.", desc_en: "Founded AI automation agency specialized in engineering sector. Built 49 strategic documents, designed Fortress & Spears architecture, developed comprehensive security protocol.", icon: "🏗️", color: "emerald", current: true },
+    { period: "2022 - 2024", company_ar: "SABIC - الشركة السعودية للصناعات الأساسية", company_en: "SABIC - Saudi Basic Industries Corporation", role_ar: "مهندس عمليات وتحسين", role_en: "Operations & Process Improvement Engineer", desc_ar: "العمل في واحدة من أكبر شركات البتروكيماويات في العالم. تحسين العمليات الصناعية، إدارة سلاسل الإمداد، تطبيق معايير الجودة العالمية.", desc_en: "Worked at one of world's largest petrochemical companies. Industrial process optimization, supply chain management, implementing global quality standards.", icon: "⚗️", color: "gold", current: false },
+    { period: "2019 - 2022", company_ar: "SEGi University - ماليزيا", company_en: "SEGi University - Malaysia", role_ar: "بكالوريوس هندسة ميكانيكية", role_en: "Bachelor of Mechanical Engineering", desc_ar: "التخصص في تحسين العمليات وسلاسل الإمداد. مشاريع تخرج في الأتمتة الصناعية والذكاء الاصطناعي.", desc_en: "Specialized in process optimization and supply chains. Graduation projects in industrial automation and AI.", icon: "🎓", color: "accent", current: false },
+  ];
+
+  const achievements = [
+    { title_ar: "بناء 49 ملفاً استراتيجياً", title_en: "Built 49 Strategic Documents", desc_ar: "إنشاء مستودع معرفي شامل يغطي جميع جوانب الشركة.", desc_en: "Created comprehensive knowledge repository covering all company aspects.", icon: "📚", year: "2026" },
+    { title_ar: "بروتوكول أمني بـ 25 هجمة", title_en: "Security Protocol with 25 Attacks", desc_ar: "بروتوكول أمني شامل يختبر النظام قبل كل تسليم.", desc_en: "Comprehensive security protocol testing before each delivery.", icon: "🛡️", year: "2026" },
+    { title_ar: "100 سؤال هلوسة مُختبر", title_en: "100 Hallucination Questions", desc_ar: "مكتبة شاملة لاختبار دقة نماذج الذكاء الاصطناعي.", desc_en: "Comprehensive library to test AI model accuracy.", icon: "🧪", year: "2026" },
+    { title_ar: "معمارية القلعة والرماح", title_en: "Fortress & Spears Architecture", desc_ar: "تصميم يجمع 5 قطاعات تحت هوية واحدة.", desc_en: "Smart design uniting 5 sectors under one identity.", icon: "🏰", year: "2026" },
+    { title_ar: "خبرة SABIC الميدانية", title_en: "SABIC Field Experience", desc_ar: "سنتان في واحدة من أكبر شركات البتروكيماويات.", desc_en: "Two years at one of world's largest petrochemical companies.", icon: "⚗️", year: "2024" },
+    { title_ar: "نموذج مضاربة شرعي", title_en: "Sharia-Compliant Mudarabah", desc_ar: "هيكل استثماري متوافق مع AAOIFI.", desc_en: "Investment structure aligned with AAOIFI standards.", icon: "🕌", year: "2026" },
+  ];
+
+  const skills = [
+    { name_ar: "هندسة العمليات", name_en: "Process Engineering", level: 95 },
+    { name_ar: "سلاسل الإمداد", name_en: "Supply Chain", level: 90 },
+    { name_ar: "أتمتة n8n", name_en: "n8n Automation", level: 92 },
+    { name_ar: "Supabase & PostgreSQL", name_en: "Supabase & PostgreSQL", level: 88 },
+    { name_ar: "نماذج الذكاء الاصطناعي", name_en: "AI Models", level: 90 },
+    { name_ar: "تصميم UX/UI", name_en: "UX/UI Design", level: 85 },
+    { name_ar: "إدارة المشاريع", name_en: "Project Management", level: 88 },
+    { name_ar: "التفاوض التجاري", name_en: "Business Negotiation", level: 85 },
+  ];
+
   return (
     <div className="space-y-6">
-      <SectionHeader 
-        icon={Users} 
-        title={lang === "ar" ? "الفريق المؤسس" : "Founding Team"} 
-        subtitle={lang === "ar" ? "خبرة هندسية ميدانية تلتقي برؤية تشغيلية طموحة" : "Field engineering experience meets ambitious operational vision"} 
-      />
+      <SectionHeader icon={Users} title={lang === "ar" ? "الفريق المؤسس" : "Founding Team"} subtitle={lang === "ar" ? "خبرة هندسية ميدانية تلتقي برؤية تشغيلية طموحة" : "Field engineering experience meets ambitious operational vision"} />
 
-      {/* Founder Card */}
       <Card className="p-8 overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald/10 to-gold/10 rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
-          <div className="shrink-0">
-            <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-white text-5xl font-amiri font-bold shadow-xl">
-              {(lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en)[0]}
+          <div className="shrink-0 relative">
+            <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-emerald via-emerald-dark to-gold flex items-center justify-center text-white text-6xl font-amiri font-bold shadow-2xl relative overflow-hidden">
+              <div className="absolute inset-0 noise opacity-30" />
+              <span className="relative z-10">{DATA.company.founder.name[0]}</span>
             </div>
+            <div className="absolute -bottom-2 -right-2 w-14 h-14 rounded-full bg-gold flex items-center justify-center text-2xl shadow-lg border-4 border-card dark:border-dark-card">⭐</div>
           </div>
           <div className="flex-1">
-            <div className="inline-flex items-center gap-2 bg-emerald/10 px-3 py-1 rounded-full mb-3">
-              <span className="w-2 h-2 rounded-full bg-emerald" />
-              <span className="text-xs font-semibold text-emerald">{lang === "ar" ? "المؤسس التشغيلي" : "Operational Founder"}</span>
+            <div className="inline-flex items-center gap-2 bg-emerald/10 dark:bg-emerald/20 px-4 py-1.5 rounded-full mb-3 border border-emerald/20">
+              <span className="w-2 h-2 rounded-full bg-emerald animate-pulse" />
+              <span className="text-xs font-bold text-emerald dark:text-gold uppercase tracking-wider">{lang === "ar" ? "المؤسس التشغيلي" : "Operational Founder"}</span>
             </div>
-            <h2 className="text-3xl font-bold text-emerald dark:text-gold font-amiri mb-2">
-              {lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en}
-            </h2>
-            <p className="text-lg text-accent font-semibold mb-4">
-              {lang === "ar" ? DATA.company.founder.role_ar : DATA.company.founder.role_en}
-            </p>
-            <p className="text-gray-700 dark:text-gray-300 leading-[1.9] text-base">
-              {lang === "ar" ? DATA.company.founder.bio_ar : DATA.company.founder.bio_en}
-            </p>
+            <h2 className="text-4xl font-bold text-emerald dark:text-gold font-amiri mb-2">{lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en}</h2>
+            <p className="text-xl text-accent font-bold mb-4">{lang === "ar" ? DATA.company.founder.role_ar : DATA.company.founder.role_en}</p>
+            <p className="text-gray-700 dark:text-gray-300 leading-[1.9] text-base mb-6">{lang === "ar" ? DATA.company.founder.bio_ar : DATA.company.founder.bio_en}</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-emerald font-amiri">5+</div><div className="text-xs text-gray-500">{lang === "ar" ? "سنوات خبرة" : "Years Exp"}</div></div>
+              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-gold font-amiri">49</div><div className="text-xs text-gray-500">{lang === "ar" ? "ملف" : "Files"}</div></div>
+              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-accent font-amiri">25</div><div className="text-xs text-gray-500">{lang === "ar" ? "هجمة" : "Attacks"}</div></div>
+              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-emerald font-amiri">5</div><div className="text-xs text-gray-500">{lang === "ar" ? "قطاعات" : "Sectors"}</div></div>
+            </div>
           </div>
         </div>
       </Card>
 
-      {/* Founder Experience */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-6 border-emerald/20 bg-gradient-to-br from-emerald/5 to-transparent">
-          <div className="w-12 h-12 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald mb-4">
-            <Users size={24} />
-          </div>
-          <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "الخبرة الميدانية" : "Field Experience"}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? "خبرة في SABIC، إحدى أكبر شركات البتروكيماويات في العالم، مع فهم عميق للاختناقات التشغيلية في المكاتب الهندسية."
-              : "Experience at SABIC, one of the world's largest petrochemical companies, with deep understanding of operational bottlenecks in engineering firms."}
-          </p>
-        </Card>
-
-        <Card className="p-6 border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
-          <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold mb-4">
-            <BookOpen size={24} />
-          </div>
-          <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "التعليم" : "Education"}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? "خريج SEGi University في ماليزيا، تخصص هندسة ميكانيكية مع تركيز على تحسين العمليات وسلاسل الإمداد."
-              : "SEGi University graduate in Malaysia, mechanical engineering major focused on process optimization and supply chains."}
-          </p>
-        </Card>
-
-        <Card className="p-6 border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
-          <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-4">
-            <Zap size={24} />
-          </div>
-          <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "الرؤية" : "Vision"}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? "تحرير المهندسين من الروتين الإداري للتركيز على الابتكار والتصميم، من خلال أتمتة ذكية وحلال."
-              : "Liberating engineers from administrative routine to focus on innovation and design, through intelligent Halal automation."}
-          </p>
-        </Card>
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {[
+          { id: 'overview', label_ar: 'نظرة عامة', label_en: 'Overview', icon: '📊' },
+          { id: 'experience', label_ar: 'الخبرات', label_en: 'Experience', icon: '💼' },
+          { id: 'achievements', label_ar: 'الإنجازات', label_en: 'Achievements', icon: '🏆' },
+          { id: 'skills', label_ar: 'المهارات', label_en: 'Skills', icon: '🎯' },
+        ].map((tab) => (
+          <button key={tab.id} onClick={() => setActiveTab(tab.id as any)} className={cn("px-5 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border", activeTab === tab.id ? "bg-emerald text-white border-emerald shadow-md" : "bg-muted/30 dark:bg-dark-muted/30 text-gray-600 dark:text-gray-400 border-transparent hover:border-emerald/40")}>
+            <span className="mr-2">{tab.icon}</span>{lang === "ar" ? tab.label_ar : tab.label_en}
+          </button>
+        ))}
       </div>
 
-      {/* Core Values */}
-      <Card className="p-6">
-        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
-          <CheckCircle2 size={18} />
-          {lang === "ar" ? "القيم الأساسية" : "Core Values"}
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {[
-            { ar: "الامتثال الشرعي: حلال 100% في كل تعامل", en: "Sharia Compliance: 100% Halal in every transaction" },
-            { ar: "الجودة المطلقة: 25 هجمة أمنية + 100 سؤال هلوسة", en: "Absolute Quality: 25 security attacks + 100 hallucination tests" },
-            { ar: "الشفافية الكاملة: لا تكاليف خفية ولا وعود كاذبة", en: "Full Transparency: No hidden costs, no false promises" },
-            { ar: "الابتكار العملي: نخصص الحلول الجاهزة ولا نعيد الاختراع", en: "Practical Innovation: Customize existing solutions, don't reinvent" },
-          ].map((v, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: -10 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="flex items-start gap-3 p-3 bg-muted/30 dark:bg-dark-muted/30 rounded-lg"
-            >
-              <CheckCircle2 size={16} className="text-emerald shrink-0 mt-0.5" />
-              <span className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                {lang === "ar" ? v.ar : v.en}
-              </span>
-            </motion.div>
-          ))}
-        </div>
-      </Card>
+      <AnimatePresence mode="wait">
+        {activeTab === 'overview' && (
+          <motion.div key="overview" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Card className="p-6 border-emerald/20 bg-gradient-to-br from-emerald/5 to-transparent">
+                <div className="w-12 h-12 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald mb-4"><Users size={24} /></div>
+                <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "الخبرة الميدانية" : "Field Experience"}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? "خبرة في SABIC، إحدى أكبر شركات البتروكيماويات في العالم." : "Experience at SABIC, one of world's largest petrochemical companies."}</p>
+              </Card>
+              <Card className="p-6 border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
+                <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold mb-4"><BookOpen size={24} /></div>
+                <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "التعليم" : "Education"}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? "خريج SEGi University في ماليزيا، هندسة ميكانيكية." : "SEGi University graduate in Malaysia, mechanical engineering."}</p>
+              </Card>
+              <Card className="p-6 border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
+                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-4"><Zap size={24} /></div>
+                <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "الرؤية" : "Vision"}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? "تحرير المهندسين من الروتين عبر أتمتة ذكية وحلال." : "Liberating engineers from routine through intelligent Halal automation."}</p>
+              </Card>
+            </div>
+            <Card className="p-6">
+              <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2"><CheckCircle2 size={18} />{lang === "ar" ? "القيم الأساسية" : "Core Values"}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {[
+                  { ar: "الامتثال الشرعي: حلال 100%", en: "Sharia Compliance: 100% Halal" },
+                  { ar: "الجودة المطلقة: 25 هجمة + 100 سؤال", en: "Absolute Quality: 25 attacks + 100 tests" },
+                  { ar: "الشفافية الكاملة", en: "Full Transparency" },
+                  { ar: "الابتكار العملي", en: "Practical Innovation" },
+                ].map((v, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex items-start gap-3 p-3 bg-muted/30 dark:bg-dark-muted/30 rounded-lg">
+                    <CheckCircle2 size={16} className="text-emerald shrink-0 mt-0.5" />
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{lang === "ar" ? v.ar : v.en}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+        )}
 
-      {/* Supporting Roles */}
+        {activeTab === 'experience' && (
+          <motion.div key="experience" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
+            {experiences.map((exp, i) => (
+              <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="relative">
+                {i < experiences.length - 1 && <div className="absolute right-8 top-20 bottom-0 w-0.5 bg-gradient-to-b from-emerald/40 to-transparent md:right-16" />}
+                <Card className={cn("p-6 overflow-hidden relative", exp.current && "border-emerald/30 shadow-elevated")}>
+                  {exp.current && <div className="absolute top-0 right-0 bg-emerald text-white text-xs font-bold px-3 py-1 rounded-bl-xl">{lang === "ar" ? "الحالي" : "Current"}</div>}
+                  <div className="flex items-start gap-4">
+                    <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-lg", exp.color === "emerald" && "bg-gradient-to-br from-emerald to-emerald-dark", exp.color === "gold" && "bg-gradient-to-br from-gold to-gold-dark", exp.color === "accent" && "bg-gradient-to-br from-accent to-orange-600")}>{exp.icon}</div>
+                    <div className="flex-1">
+                      <span className="text-xs font-mono bg-muted dark:bg-dark-muted px-2 py-1 rounded text-gray-500">{exp.period}</span>
+                      <h3 className="text-xl font-bold text-emerald dark:text-gold mb-1 mt-2">{lang === "ar" ? exp.role_ar : exp.role_en}</h3>
+                      <p className="text-sm text-accent font-semibold mb-3">{lang === "ar" ? exp.company_ar : exp.company_en}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? exp.desc_ar : exp.desc_en}</p>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
+        {activeTab === 'achievements' && (
+          <motion.div key="achievements" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {achievements.map((ach, i) => (
+              <motion.div key={i} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -4 }}>
+                <Card className="p-6 h-full bg-gradient-to-br from-gold/5 to-emerald/5 border-gold/20 hover:border-gold/40 transition-all">
+                  <div className="flex items-start gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center text-3xl shadow-lg shrink-0">{ach.icon}</div>
+                    <div className="flex-1">
+                      <span className="text-xs font-mono bg-gold/10 text-gold-dark dark:text-gold px-2 py-0.5 rounded">{ach.year}</span>
+                      <h3 className="text-base font-bold text-emerald dark:text-gold mb-2 mt-2 leading-snug">{lang === "ar" ? ach.title_ar : ach.title_en}</h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? ach.desc_ar : ach.desc_en}</p>
+                    </div>
+                  </div>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
+        {activeTab === 'skills' && (
+          <motion.div key="skills" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-3">
+            {skills.map((skill, i) => (
+              <motion.div key={i} initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border shadow-sm">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold text-emerald dark:text-gold">{lang === "ar" ? skill.name_ar : skill.name_en}</span>
+                  <span className="text-sm font-bold text-accent">{skill.level}%</span>
+                </div>
+                <div className="h-3 bg-muted dark:bg-dark-muted rounded-full overflow-hidden">
+                  <motion.div initial={{ width: 0 }} whileInView={{ width: `${skill.level}%` }} viewport={{ once: true }} transition={{ duration: 1, ease: "easeOut", delay: i * 0.1 }} className={cn("h-full rounded-full", skill.level >= 90 ? "bg-gradient-to-l from-emerald to-gold" : skill.level >= 85 ? "bg-gradient-to-l from-emerald to-emerald-light" : "bg-gradient-to-l from-gold to-amber-500")} />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-3">
@@ -2022,32 +2087,22 @@ function TeamView({ t, lang }: any) {
               <p className="text-xs text-accent">{lang === "ar" ? "الشريك القانوني - ماليزيا" : "Legal Partner - Malaysia"}</p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? "مسؤول عن التأسيس القانوني للكيان في ماليزيا، والامتثال المحلي، ومراجعة العقود والاتفاقيات."
-              : "Responsible for legal entity formation in Malaysia, local compliance, and contract/agreement review."}
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? "مسؤول عن التأسيس القانوني والامتثال المحلي." : "Responsible for legal entity formation and local compliance."}</p>
         </Card>
-
         <Card className="p-6">
           <div className="flex items-center gap-4 mb-3">
-            <div className="w-14 h-14 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald text-xl font-bold font-amiri">🤖</div>
+            <div className="w-14 h-14 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald text-2xl">🤖</div>
             <div>
               <h3 className="font-bold text-emerald dark:text-gold">{lang === "ar" ? "د.سين" : "Dr. Seen"}</h3>
               <p className="text-xs text-accent">{lang === "ar" ? "مدير العمليات الآلي" : "AI Operations Manager"}</p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-            {lang === "ar" 
-              ? "موظف آلي يعمل 24/7 على توثيق القرارات، متابعة SOPs، ومنع فقدان المعرفة التشغيلية."
-              : "AI agent working 24/7 on documenting decisions, following SOPs, and preventing operational knowledge loss."}
-          </p>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? "موظف آلي يعمل 24/7 على توثيق القرارات ومتابعة SOPs." : "AI agent working 24/7 on documenting decisions and following SOPs."}</p>
         </Card>
       </div>
     </div>
   );
 }
-
 
 function SecurityView({ t, lang }: any) {
   return (
