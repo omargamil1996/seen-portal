@@ -112,50 +112,22 @@ export const DATA = {
     { title_ar: "النموذج المالي", title_en: "Financial Model", content_ar: "LTV:CAC 19.3x. نقطة التعادل شهر 2. هامش 70-80%.", content_en: "LTV:CAC 19.3x. Break-even month 2. Margin 70-80%." },
     { title_ar: "المخاطر", title_en: "Risks", content_ar: "10 مخاطر موثقة. بروتوكول أمني شامل + تشفير + مراجعة قانونية.", content_en: "10 documented risks. Comprehensive security + encryption + legal review." },
   ],
-  pitchSlides: [
-    { title_ar: "الغلاف", title_en: "Cover", content_ar: "Seen Automation
-Automate. Elevate. Halal.", content_en: "Seen Automation
-Automate. Elevate. Halal." },
-    { title_ar: "المشكلة", title_en: "Problem", content_ar: "7.6 ساعة/أسبوع مهدرة
-67.6% أخطاء رسومات", content_en: "7.6 hours/week wasted
-67.6% drawing errors" },
-    { title_ar: "الحل", title_en: "Solution", content_ar: "AI Backend Pipelines
-Zero-Friction", content_en: "AI Backend Pipelines
-Zero-Friction" },
-    { title_ar: "لماذا الآن", title_en: "Why Now", content_ar: "Vision 2030
-+56.25% AI spending", content_en: "Vision 2030
-+56.25% AI spending" },
-    { title_ar: "السوق", title_en: "Market", content_ar: "TAM $3.5B
-SAM $1.95B
-SOM $320K", content_en: "TAM $3.5B
-SAM $1.95B
-SOM $320K" },
-    { title_ar: "النموذج", title_en: "Model", content_ar: "SAR 600-5K/شهر
-هامش 70-80%", content_en: "SAR 600-5K/mo
-70-80% margin" },
-    { title_ar: "الجاهزية", title_en: "Readiness", content_ar: "49 ملف
-بروتوكول أمني", content_en: "49 docs
-Security protocol" },
+    pitchSlides: [
+    { title_ar: "الغلاف", title_en: "Cover", content_ar: "Seen Automation\nAutomate. Elevate. Halal.", content_en: "Seen Automation\nAutomate. Elevate. Halal." },
+    { title_ar: "المشكلة", title_en: "Problem", content_ar: "7.6 ساعة/أسبوع مهدرة\n67.6% أخطاء رسومات", content_en: "7.6 hours/week wasted\n67.6% drawing errors" },
+    { title_ar: "الحل", title_en: "Solution", content_ar: "AI Backend Pipelines\nZero-Friction", content_en: "AI Backend Pipelines\nZero-Friction" },
+    { title_ar: "لماذا الآن", title_en: "Why Now", content_ar: "Vision 2030\n+56.25% AI spending", content_en: "Vision 2030\n+56.25% AI spending" },
+    { title_ar: "السوق", title_en: "Market", content_ar: "TAM $3.5B\nSAM $1.95B\nSOM $320K", content_en: "TAM $3.5B\nSAM $1.95B\nSOM $320K" },
+    { title_ar: "النموذج", title_en: "Model", content_ar: "SAR 600-5K/شهر\nهامش 70-80%", content_en: "SAR 600-5K/mo\n70-80% margin" },
+    { title_ar: "الجاهزية", title_en: "Readiness", content_ar: "49 ملف\nبروتوكول أمني", content_en: "49 docs\nSecurity protocol" },
     { title_ar: "المنافسون", title_en: "Competitors", content_ar: "Seen: SAR 600-5K + حلال", content_en: "Seen: SAR 600-5K + Halal" },
-    { title_ar: "الميزة", title_en: "Edge", content_ar: "حلال 100%
-SLA 5-30 دقيقة", content_en: "100% Halal
-SLA 5-30 min" },
-    { title_ar: "الدخول", title_en: "GTM", content_ar: "Landing Bot
-Close 25-35%", content_en: "Landing Bot
-Close 25-35%" },
-    { title_ar: "الفريق", title_en: "Team", content_ar: "عمر باعبدالله
-SEGi + SABIC", content_en: "Omar Baabdullah
-SEGi + SABIC" },
-    { title_ar: "المالية", title_en: "Financials", content_ar: "Y3: SAR 936K
-80 عميل", content_en: "Y3: SAR 936K
-80 clients" },
-    { title_ar: "الطلب", title_en: "Ask", content_ar: "SAR 82,500
-مضاربة شرعية", content_en: "SAR 82,500
-Sharia Mudarabah" },
-    { title_ar: "الرؤية", title_en: "Vision", content_ar: "Y5: 200+ عميل
-$2M+ ARR", content_en: "Y5: 200+ clients
-$2M+ ARR" },
-  ],
+    { title_ar: "الميزة", title_en: "Edge", content_ar: "حلال 100%\nSLA 5-30 دقيقة", content_en: "100% Halal\nSLA 5-30 min" },
+    { title_ar: "الدخول", title_en: "GTM", content_ar: "Landing Bot\nClose 25-35%", content_en: "Landing Bot\nClose 25-35%" },
+    { title_ar: "الفريق", title_en: "Team", content_ar: "عمر باعبدالله\nSEGi + SABIC", content_en: "Omar Baabdullah\nSEGi + SABIC" },
+    { title_ar: "المالية", title_en: "Financials", content_ar: "Y3: SAR 936K\n80 عميل", content_en: "Y3: SAR 936K\n80 clients" },
+    { title_ar: "الطلب", title_en: "Ask", content_ar: "SAR 82,500\nمضاربة شرعية", content_en: "SAR 82,500\nSharia Mudarabah" },
+    { title_ar: "الرؤية", title_en: "Vision", content_ar: "Y5: 200+ عميل\n$2M+ ARR", content_en: "Y5: 200+ clients\n$2M+ ARR" },
+  ],,
   securityHighlights: { attacks: 25, hallucinationTests: 100, encryption: "AES-256 + TLS 1.3" },
   checklists: {
     investorReady: [
