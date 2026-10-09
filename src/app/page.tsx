@@ -632,28 +632,125 @@ function RoadmapView({ t, lang }: any) {
 }
 
 function RisksView({ t, lang }: any) {
+  // Group risks by category
+  const risksByCategory: Record<string, any[]> = {};
+  DATA.risks.forEach((r: any) => {
+    const cat = r.category_en;
+    if (!risksByCategory[cat]) risksByCategory[cat] = [];
+    risksByCategory[cat].push(r);
+  });
+  
+  const highCount = DATA.risks.filter((r: any) => r.prob === "high").length;
+  const medCount = DATA.risks.filter((r: any) => r.prob === "medium").length;
+  const lowCount = DATA.risks.filter((r: any) => r.prob === "low").length;
+  
   return (
     <div className="space-y-6">
-      <SectionHeader icon={AlertTriangle} title={lang === "ar" ? "إدارة المخاطر" : "Risk Management"} subtitle={lang === "ar" ? "مخاطر موثقة مع خطط تخفيف" : "Documented risks with mitigation plans"} />
-      <Card className="overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-emerald text-white"><tr><th className="p-4 text-right">#</th><th className="p-4 text-right">{lang === "ar" ? "المخاطرة" : "Risk"}</th><th className="p-4 text-right">{lang === "ar" ? "الاحتمال" : "Prob"}</th><th className="p-4 text-right">{lang === "ar" ? "الأثر" : "Impact"}</th><th className="p-4 text-right">{lang === "ar" ? "التخفيف" : "Mitigation"}</th></tr></thead>
-          <tbody>
-            {DATA.risks.map((r, i) => (
-              <motion.tr key={i} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/30 dark:hover:bg-dark-muted/30">
-                <td className="p-4 text-gray-400 font-mono text-xs">{String(i + 1).padStart(2, "0")}</td>
-                <td className="p-4 font-semibold">{lang === "ar" ? r.name_ar : r.name_en}</td>
-                <td className="p-4"><Badge color={r.prob === "high" ? "red" : r.prob === "medium" ? "yellow" : "green"}>{lang === "ar" ? (r.prob === "high" ? "عالي" : r.prob === "medium" ? "متوسط" : "منخفض") : r.prob}</Badge></td>
-                <td className="p-4 text-gray-600 dark:text-gray-400">{lang === "ar" ? (r.impact === "high" ? "عالي" : r.impact === "medium" ? "متوسط" : "منخفض") : r.impact}</td>
-                <td className="p-4 text-gray-600 dark:text-gray-400 text-xs leading-relaxed max-w-md">{lang === "ar" ? r.mitigation_ar : r.mitigation_en}</td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+      <SectionHeader 
+        icon={AlertTriangle} 
+        title={lang === "ar" ? "إدارة المخاطر" : "Risk Management"} 
+        subtitle={lang === "ar" ? "سجل مخاطر شامل موثق مع خطط تخفيف قابلة للتنفيذ" : "Comprehensive documented risk register with executable mitigation plans"} 
+      />
+      
+      {/* Risk Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-card dark:bg-dark-card p-5 rounded-2xl border border-border shadow-card text-center">
+          <div className="text-3xl font-bold text-emerald dark:text-gold font-amiri">{DATA.risks.length}</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{lang === "ar" ? "إجمالي المخاطر" : "Total Risks"}</div>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-red-50 dark:bg-red-900/20 p-5 rounded-2xl border border-red-200 dark:border-red-800 shadow-card text-center">
+          <div className="text-3xl font-bold text-red-700 dark:text-red-400 font-amiri">{highCount}</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{lang === "ar" ? "عالي الاحتمال" : "High Probability"}</div>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-yellow-50 dark:bg-yellow-900/20 p-5 rounded-2xl border border-yellow-200 dark:border-yellow-800 shadow-card text-center">
+          <div className="text-3xl font-bold text-yellow-700 dark:text-yellow-400 font-amiri">{medCount}</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{lang === "ar" ? "متوسط" : "Medium"}</div>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-green-50 dark:bg-green-900/20 p-5 rounded-2xl border border-green-200 dark:border-green-800 shadow-card text-center">
+          <div className="text-3xl font-bold text-green-700 dark:text-green-400 font-amiri">{lowCount}</div>
+          <div className="text-xs text-gray-500 mt-1 uppercase tracking-wider">{lang === "ar" ? "منخفض" : "Low"}</div>
+        </motion.div>
+      </div>
+
+      {/* Risk Matrix */}
+      <Card className="p-6">
+        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <BarChart3 size={18} />
+          {lang === "ar" ? "مصفوفة المخاطر (3x3)" : "Risk Matrix (3×3)"}
+        </h3>
+        <div className="grid grid-cols-4 gap-2">
+          <div className="col-span-1"></div>
+          <div className="text-center text-xs font-bold p-2">{lang === "ar" ? "أثر منخفض" : "Low Impact"}</div>
+          <div className="text-center text-xs font-bold p-2">{lang === "ar" ? "أثر متوسط" : "Med Impact"}</div>
+          <div className="text-center text-xs font-bold p-2">{lang === "ar" ? "أثر عالي" : "High Impact"}</div>
+          
+          <div className="text-right text-xs font-bold p-2">{lang === "ar" ? "احتمال عالي" : "High"}</div>
+          <div className="bg-yellow-100 dark:bg-yellow-900/30 rounded-lg p-3 text-sm text-center font-bold">{DATA.risks.filter((r: any) => r.prob === "high" && r.impact === "low").length}</div>
+          <div className="bg-orange-100 dark:bg-orange-900/30 rounded-lg p-3 text-sm text-center font-bold">{DATA.risks.filter((r: any) => r.prob === "high" && r.impact === "medium").length}</div>
+          <div className="bg-red-200 dark:bg-red-800 rounded-lg p-3 text-sm text-center font-bold text-white">{DATA.risks.filter((r: any) => r.prob === "high" && r.impact === "high").length}</div>
+          
+          <div className="text-right text-xs font-bold p-2">{lang === "ar" ? "احتمال متوسط" : "Med"}</div>
+          <div className="bg-green-100 dark:bg-green-900/20 rounded-lg p-3 text-sm text-center">{DATA.risks.filter((r: any) => r.prob === "medium" && r.impact === "low").length}</div>
+          <div className="bg-yellow-100 dark:bg-yellow-900/30 rounded-lg p-3 text-sm text-center font-bold">{DATA.risks.filter((r: any) => r.prob === "medium" && r.impact === "medium").length}</div>
+          <div className="bg-orange-100 dark:bg-orange-900/30 rounded-lg p-3 text-sm text-center font-bold">{DATA.risks.filter((r: any) => r.prob === "medium" && r.impact === "high").length}</div>
+          
+          <div className="text-right text-xs font-bold p-2">{lang === "ar" ? "احتمال منخفض" : "Low"}</div>
+          <div className="bg-green-100 dark:bg-green-900/20 rounded-lg p-3 text-sm text-center">{DATA.risks.filter((r: any) => r.prob === "low" && r.impact === "low").length}</div>
+          <div className="bg-green-100 dark:bg-green-900/20 rounded-lg p-3 text-sm text-center">{DATA.risks.filter((r: any) => r.prob === "low" && r.impact === "medium").length}</div>
+          <div className="bg-yellow-100 dark:bg-yellow-900/30 rounded-lg p-3 text-sm text-center font-bold">{DATA.risks.filter((r: any) => r.prob === "low" && r.impact === "high").length}</div>
+        </div>
       </Card>
+
+      {/* Risks grouped by category */}
+      {Object.entries(risksByCategory).map(([cat, risks]) => (
+        <Card key={cat} className="overflow-hidden">
+          <div className="bg-emerald text-white p-4">
+            <h3 className="font-bold flex items-center gap-2">
+              <AlertTriangle size={18} />
+              {lang === "ar" ? (risks[0].category_ar || cat) : cat} ({risks.length})
+            </h3>
+          </div>
+          <div className="divide-y divide-border dark:divide-dark-border">
+            {risks.map((r: any, i: number) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="p-5 hover:bg-muted/30 dark:hover:bg-dark-muted/30 transition-colors"
+              >
+                <div className="flex justify-between items-start mb-3 flex-wrap gap-2">
+                  <h4 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
+                    <span className="text-xs bg-emerald/10 dark:bg-emerald/20 px-2 py-0.5 rounded font-mono">#{String(DATA.risks.indexOf(r) + 1).padStart(2, "0")}</span>
+                    {lang === "ar" ? r.name_ar : r.name_en}
+                  </h4>
+                  <div className="flex gap-2">
+                    <Badge color={r.prob === "high" ? "red" : r.prob === "medium" ? "yellow" : "green"}>
+                      {lang === "ar" ? (r.prob === "high" ? "احتمال عالي" : r.prob === "medium" ? "احتمال متوسط" : "احتمال منخفض") : `${r.prob} prob`}
+                    </Badge>
+                    <Badge color={r.impact === "high" ? "red" : r.impact === "medium" ? "yellow" : "green"}>
+                      {lang === "ar" ? `أثر ${r.impact === "high" ? "عالي" : r.impact === "medium" ? "متوسط" : "منخفض"}` : `${r.impact} impact`}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg border-r-4 border-emerald">
+                  <div className="text-xs text-gray-500 mb-1 uppercase tracking-wider">
+                    {lang === "ar" ? "خطة التخفيف" : "Mitigation Plan"}
+                  </div>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {lang === "ar" ? r.mitigation_ar : r.mitigation_en}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </Card>
+      ))}
     </div>
   );
 }
+
 
 function HardwareView({ t, lang }: any) {
   return (
