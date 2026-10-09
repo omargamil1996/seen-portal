@@ -755,36 +755,154 @@ function RisksView({ t, lang }: any) {
 function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Cpu} title={lang === "ar" ? "محطة العمل المقترحة" : "Recommended Workstation"} subtitle={lang === "ar" ? "تجميعة كاملة" : "Complete setup"} />
+      <SectionHeader 
+        icon={Cpu} 
+        title={lang === "ar" ? "محطة العمل المقترحة" : "Recommended Workstation"} 
+        subtitle={lang === "ar" ? "تجميعة كاملة مدروسة لتشغيل نماذج AI محلياً (7B-120B) ضمن ميزانية 12,000$" : "Complete setup for running AI models locally (7B-120B) within $12,000 budget"} 
+      />
+
+      {/* Recommended Scenario - HERO */}
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald noise" />
         <div className="relative z-10 text-white">
-          <div className="flex items-center gap-3 mb-6"><div className="w-12 h-12 rounded-xl bg-gold/20 flex items-center justify-center"><Server size={24} className="text-gold" /></div><div><h3 className="text-xl font-bold text-gold">✅ {lang === "ar" ? "التجميعة المختارة:" : "Selected:"} {lang === "ar" ? DATA.hardware.scenario.name_ar : DATA.hardware.scenario.name_en}</h3><p className="text-sm text-white/70">{lang === "ar" ? "الأفضل لنماذج 70B-120B" : "Best for 70B-120B models"}</p></div></div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white/10 border border-white/10 rounded-xl p-4 backdrop-blur-sm"><div className="text-xs text-gray-300 mb-2">💻 {lang === "ar" ? "اللابتوب" : "Laptop"}</div><div className="font-bold text-sm mb-1">{DATA.hardware.scenario.laptop}</div><div className="text-gold font-bold">${DATA.hardware.scenario.laptop_price.toLocaleString()}</div></div>
-            <div className="bg-white/10 border border-white/10 rounded-xl p-4 backdrop-blur-sm"><div className="text-xs text-gray-300 mb-2">🖥️ Mini PC</div><div className="font-bold text-sm mb-1">{DATA.hardware.scenario.minipc}</div><div className="text-gold font-bold">${DATA.hardware.scenario.minipc_price.toLocaleString()}</div></div>
-            <div className="bg-white/10 border border-white/10 rounded-xl p-4 backdrop-blur-sm"><div className="text-xs text-gray-300 mb-2">🔌 {lang === "ar" ? "الإكسسوارات" : "Accessories"}</div><div className="font-bold text-sm mb-1">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</div><div className="text-gold font-bold">${DATA.hardware.scenario.accessories_price.toLocaleString()}</div></div>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-gold/20 backdrop-blur-sm flex items-center justify-center border border-gold/30">
+              <Server size={28} className="text-gold" />
+            </div>
+            <div>
+              <div className="text-xs text-gold-light uppercase tracking-widest">✅ {lang === "ar" ? "التجميعة المختارة" : "Selected Build"}</div>
+              <h3 className="text-2xl font-bold text-gold font-amiri">{lang === "ar" ? DATA.hardware.scenario.name_ar : DATA.hardware.scenario.name_en}</h3>
+              <p className="text-sm text-white/70">{lang === "ar" ? "الأفضل لتشغيل نماذج 70B-120B محلياً" : "Best for running 70B-120B models locally"}</p>
+            </div>
           </div>
-          <div className="mt-6 grid grid-cols-3 gap-4 bg-gold/20 border border-gold/30 rounded-xl p-4">
-            <div><span className="text-xs text-gold-light">{lang === "ar" ? "الإجمالي" : "Total"}</span><div className="text-2xl font-bold text-gold">${DATA.hardware.scenario.total.toLocaleString()}</div></div>
-            <div><span className="text-xs text-gray-300">{lang === "ar" ? "المتبقي" : "Remaining"}</span><div className="text-xl font-bold text-white">${DATA.hardware.scenario.remaining.toLocaleString()}</div></div>
-            <div><span className="text-xs text-gray-300">{lang === "ar" ? "الميزانية" : "Budget"}</span><div className="text-xl font-bold text-white/70">${DATA.hardware.scenario.budget.toLocaleString()}</div></div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
+              <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">💻 {lang === "ar" ? "اللابتوب" : "Laptop"}</div>
+              <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.laptop}</div>
+              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.laptop_price.toLocaleString()}</div>
+            </div>
+            <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
+              <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🖥️ Mini PC</div>
+              <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.minipc}</div>
+              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.minipc_price.toLocaleString()}</div>
+            </div>
+            <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
+              <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🔌 {lang === "ar" ? "الإكسسوارات" : "Accessories"}</div>
+              <div className="font-bold text-sm mb-2 leading-relaxed">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</div>
+              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.accessories_price.toLocaleString()}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 bg-gold/20 border border-gold/30 rounded-xl p-5">
+            <div className="text-center">
+              <div className="text-xs text-gold-light uppercase tracking-wider">{lang === "ar" ? "الإجمالي" : "Total"}</div>
+              <div className="text-3xl font-bold text-gold font-amiri">${DATA.hardware.scenario.total.toLocaleString()}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xs text-gray-300 uppercase tracking-wider">{lang === "ar" ? "المتبقي" : "Remaining"}</div>
+              <div className="text-xl font-bold text-white">${DATA.hardware.scenario.remaining.toLocaleString()}</div>
+            </div>
+            <div className="text-center">
+              <div className="text-xs text-gray-300 uppercase tracking-wider">{lang === "ar" ? "الميزانية" : "Budget"}</div>
+              <div className="text-xl font-bold text-white/70">${DATA.hardware.scenario.budget.toLocaleString()}</div>
+            </div>
           </div>
         </div>
       </Card>
+
+      {/* Comparison Tables */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="overflow-hidden">
-          <div className="p-4 border-b border-border dark:border-dark-border bg-muted/30 dark:bg-dark-muted/30"><h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><Cpu size={16} /> {lang === "ar" ? "فئات اللابتوب" : "Laptops"}</h3></div>
-          <table className="w-full text-xs"><thead className="bg-muted/50 dark:bg-dark-muted/50"><tr><th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th><th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th><th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th><th className="p-3 text-right">AI</th></tr></thead><tbody>{DATA.hardware.laptops.map((l, i) => <tr key={i} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20"><td className="p-3 font-semibold">{l.category}</td><td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td><td className="p-3 text-accent font-bold">{l.price}</td><td className="p-3 text-gray-500">{l.ai}</td></tr>)}</tbody></table>
+          <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-emerald/5 to-transparent">
+            <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
+              <Cpu size={16} /> {lang === "ar" ? "فئات اللابتوب (5)" : "Laptop Categories (5)"}
+            </h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead className="bg-muted/50 dark:bg-dark-muted/50">
+                <tr>
+                  <th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th>
+                  <th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th>
+                  <th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th>
+                  <th className="p-3 text-right">{lang === "ar" ? "قدرة AI" : "AI Capacity"}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {DATA.hardware.laptops.map((l, i) => (
+                  <tr key={i} className={cn(
+                    "border-b border-border/50 dark:border-dark-border/50 transition-colors",
+                    l.category.includes("⭐") ? "bg-gold/5 dark:bg-gold/10" : "hover:bg-muted/20"
+                  )}>
+                    <td className="p-3 font-semibold text-emerald dark:text-gold">{l.category}</td>
+                    <td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td>
+                    <td className="p-3 text-accent font-bold">{l.price}</td>
+                    <td className="p-3 text-gray-500">{l.ai}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Card>
+
         <Card className="overflow-hidden">
-          <div className="p-4 border-b border-border dark:border-dark-border bg-muted/30 dark:bg-dark-muted/30"><h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><Layers size={16} /> {lang === "ar" ? "فئات Mini PC" : "Mini PCs"}</h3></div>
-          <table className="w-full text-xs"><thead className="bg-muted/50 dark:bg-dark-muted/50"><tr><th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th><th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th><th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th></tr></thead><tbody>{DATA.hardware.minipc.map((l, i) => <tr key={i} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20"><td className="p-3 font-semibold">{l.category}</td><td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td><td className="p-3 text-accent font-bold">{l.price}</td></tr>)}</tbody></table>
+          <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-gold/5 to-transparent">
+            <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
+              <Layers size={16} /> {lang === "ar" ? "فئات Mini PC (5)" : "Mini PC Categories (5)"}
+            </h3>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs">
+              <thead className="bg-muted/50 dark:bg-dark-muted/50">
+                <tr>
+                  <th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th>
+                  <th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th>
+                  <th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {DATA.hardware.minipc.map((l, i) => (
+                  <tr key={i} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors">
+                    <td className="p-3 font-semibold text-emerald dark:text-gold">{l.category}</td>
+                    <td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td>
+                    <td className="p-3 text-accent font-bold">{l.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Card>
       </div>
+
+      {/* Why Unified Memory */}
+      <Card className="p-6 bg-gradient-to-br from-emerald/5 to-gold/5 dark:from-emerald/10 dark:to-gold/10 border-emerald/20">
+        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <Zap size={20} />
+          {lang === "ar" ? "لماذا Unified Memory؟" : "Why Unified Memory?"}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border">
+            <div className="text-2xl mb-2">🚀</div>
+            <div className="font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? "نماذج 120B" : "120B Models"}</div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "تشغيل نماذج ضخمة بكفاءة عالية" : "Run massive models with high efficiency"}</p>
+          </div>
+          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border">
+            <div className="text-2xl mb-2">💰</div>
+            <div className="font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? "توفير كبير" : "Major Savings"}</div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "بدلاً من شراء GPU بقيمة 10K+" : "Instead of $10K+ GPU purchase"}</p>
+          </div>
+          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border">
+            <div className="text-2xl mb-2">🔒</div>
+            <div className="font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? "خصوصية تامة" : "Full Privacy"}</div>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{lang === "ar" ? "تشغيل محلي بدون سحابة" : "Local execution without cloud"}</p>
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }
+
 
 function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
