@@ -1,141 +1,184 @@
 export const DATA = {
   company: {
-    name_ar: "سين أوتوميشن",
-    name_en: "Seen Automation AI Agency",
-    founder: "عمر محمد جميل باعبدالله",
-    founder_role: "المؤسس التشغيلي ومعمار الأنظمة",
-    founder_bio: "مهندس ميكانيكي خريج SEGi University في ماليزيا، بخبرة ميدانية في الشركة السعودية للصناعات الكيميائية (SABIC). متخصص في تحسين العمليات الصناعية وسلاسل الإمداد، مع فهم عميق للاختناقات التشغيلية في الشركات الهندسية وكيفية تفكيك الأنظمة المعقدة لأتمتتها بذكاء.",
-    tagline: "Automate. Elevate. Halal.",
-    vision: "قيادة سوق أتمتة الذكاء الاصطناعي في العالم العربي عبر حلول مرئية مستقلة، حلال 100%.",
-    mission: "تحرير الطاقات البشرية من الروتين عبر أتمتة ذكية، حلال، ومنخفضة التكلفة.",
-    entity: "Malaysian Sdn Bhd (قيد التأسيس)",
-    hq: "Online / Worldwide",
+    name_ar: "سين أوتوميشن", name_en: "Seen Automation",
+    tagline_ar: "أتمتة. ارتقاء. حلال.", tagline_en: "Automate. Elevate. Halal.",
+    vision_ar: "قيادة سوق أتمتة الذكاء الاصطناعي في العالم العربي عبر حلول مرئية مستقلة، حلال 100%.",
+    vision_en: "Leading the AI automation market in the Arab world through independent, 100% Halal visual solutions.",
+    mission_ar: "تحرير الطاقات البشرية من الروتين عبر أتمتة ذكية، حلال، ومنخفضة التكلفة.",
+    mission_en: "Liberating human potential from routine through intelligent, Halal, cost-effective automation.",
+    founder: {
+      name: "عمر محمد جميل باعبدالله", name_en: "Omar Mohammed Jamil Baabdullah",
+      role_ar: "المؤسس التشغيلي ومعمار الأنظمة", role_en: "Operational Founder & Systems Architect",
+      bio_ar: "مهندس ميكانيكي خريج SEGi University في ماليزيا، بخبرة ميدانية في SABIC. متخصص في تحسين العمليات الصناعية وسلاسل الإمداد.",
+      bio_en: "Mechanical engineer, SEGi University graduate, with SABIC field experience. Specialized in industrial process optimization.",
+    },
+    entity: "Malaysian Sdn Bhd", hq_ar: "أونلاين / عالمي", hq_en: "Online / Worldwide",
   },
-  ask: 82500,
-  ask_usd: 22000,
-  tam: "3.5B", sam: "1.95B", som: "320K",
-  mrrY1: 32000, mrrY3: 78000,
-  arpu: 1600, churn: 6, cac: 1500, margin: 70,
-  fixedCosts: 3500, newCustomers: 2.3,
-  customersY1: 20, customersY3: 50, breakEven: 2,
-  useOfFunds: { operations: 60, marketing: 40, opsAmount: 49500, mktAmount: 33000 },
-  mudarabah: { phase1: 15, phase2: 15, buyoutMonths: 24, buyoutMultiple: 1.5, maxYears: 15 },
-  
+  ask: { amount: 82500, amount_usd: 22000, structure_ar: "مضاربة شرعية (AAOIFI)", structure_en: "Sharia-compliant Mudarabah", phase1: 15, phase2: 15, phase2_months: 36, buyout_months: 24, buyout_multiple: 1.5, max_years: 15 },
+  market: {
+    tam: { value: 3.5, unit: "B", label_ar: "السوق الكلي", label_en: "Total Addressable Market" },
+    sam: { value: 1.95, unit: "B", label_ar: "السوق القابل للخدمة", label_en: "Serviceable Available Market" },
+    som: { value: 320, unit: "K", label_ar: "السوق القابل للاستحواذ (Y1)", label_en: "Serviceable Obtainable (Y1)" },
+  },
   kpis: [
-    { label: "TAM", value: "$3.5B", sub: "السوق الكلي", color: "emerald" },
-    { label: "SAM", value: "$1.95B", sub: "السوق القابل للخدمة", color: "gold" },
-    { label: "SOM Y1", value: "$320K", sub: "السوق القابل للاستحواذ", color: "accent" },
-    { label: "MRR Y1", value: "SAR 32,000", sub: "الإيراد الشهري المتكرر", color: "emerald" },
-    { label: "LTV:CAC", value: "19.3x", sub: "كفاءة الاكتساب", color: "gold" },
-    { label: "الطلب", value: "SAR 82,500", sub: "مضاربة شرعية", color: "accent" },
+    { label_ar: "الإيراد الشهري Y1", label_en: "MRR Y1", value: "32K", unit: "SAR", color: "emerald" },
+    { label_ar: "الإيراد الشهري Y3", label_en: "MRR Y3", value: "78K", unit: "SAR", color: "gold" },
+    { label_ar: "LTV:CAC", label_en: "LTV:CAC", value: "19.3x", unit: "", color: "accent" },
+    { label_ar: "نقطة التعادل", label_en: "Break-even", value: "2", unit: "شهر", color: "emerald" },
+    { label_ar: "عملاء Y1", label_en: "Customers Y1", value: "20", unit: "", color: "gold" },
+    { label_ar: "عملاء Y3", label_en: "Customers Y3", value: "50", unit: "", color: "accent" },
   ],
-
+  financials: {
+    arpu: 1600, churn: 6, cac: 1500, margin: 70, fixedCosts: 3500, newCustomers: 2.3,
+    useOfFunds: {
+      operations: { percent: 60, amount: 49500, label_ar: "عمليات وتوظيف", label_en: "Operations & Hiring" },
+      marketing: { percent: 40, amount: 33000, label_ar: "تسويق واستحواذ", label_en: "Marketing & Acquisition" },
+    },
+    projections: {
+      y1: { revenue: 384000, costs: 106800, profit: 277200 },
+      y2: { revenue: 600000, costs: 144000, profit: 456000 },
+      y3: { revenue: 936000, costs: 195000, profit: 741000 },
+    },
+  },
   packages: [
-    { name: "Starter", setup: "3,000-5,000", monthly: "600-1,000", sla: "30 دقيقة", workflows: 1, channels: 1, features: ["Workflow واحد", "قناة تواصل واحدة", "تقرير شهري", "Error Node أساسي"] },
-    { name: "Growth", setup: "6,000-10,000", monthly: "1,200-2,000", sla: "15 دقيقة", workflows: 3, channels: 3, features: ["3 Workflows متكاملة", "قنوات متعددة", "لوحة Looker Studio", "تكامل API", "SLA موثق"] },
-    { name: "Enterprise", setup: "15,000-25,000", monthly: "3,000-5,000", sla: "5 دقائق", workflows: 10, channels: -1, features: ["10+ Workflows مخصصة", "Self-Hosted Option", "دعم VIP", "مدير حساب مخصص", "SLA 99.5% Uptime"] },
-    { name: "Lead-Gen", setup: "1,000-3,000", monthly: "300-600", sla: "30 دقيقة", workflows: 1, channels: 1, features: ["Workflow بسيط", "3 إحالات/سنة", "لا نرفض بسبب الميزانية"] },
+    { name: "Starter", setup_min: 3000, setup_max: 5000, monthly_min: 600, monthly_max: 1000, sla: "30 دقيقة", workflows: 1, features: ["Workflow واحد", "قناة واحدة", "تقرير شهري", "Error Node أساسي"] },
+    { name: "Growth", setup_min: 6000, setup_max: 10000, monthly_min: 1200, monthly_max: 2000, sla: "15 دقيقة", workflows: 3, features: ["3 Workflows", "قنوات متعددة", "لوحة تحكم", "تكامل API", "SLA موثق"] },
+    { name: "Enterprise", setup_min: 15000, setup_max: 25000, monthly_min: 3000, monthly_max: 5000, sla: "5 دقائق", workflows: 10, features: ["10+ Workflows", "Self-Hosted", "دعم VIP", "مدير حساب", "SLA 99.5%"] },
+    { name: "Lead-Gen", setup_min: 1000, setup_max: 3000, monthly_min: 300, monthly_max: 600, sla: "30 دقيقة", workflows: 1, features: ["Workflow بسيط", "3 إحالات/سنة", "لا نرفض بسبب الميزانية"] },
   ],
-
   competitors: [
-    { name: "UiPath", price: "SAR 10K-50K", specialty: "جزئي", halal: false, weakness: "معقد + مكلف" },
-    { name: "PROVEN Consult", price: "SAR 75K+", specialty: "لا", halal: false, weakness: "أسعار مرتفعة" },
-    { name: "Hivekind", price: "$50-99/ساعة", specialty: "لا", halal: false, weakness: "لا تخصص هندسي" },
-    { name: "Wakeb", price: "$25-49/ساعة", specialty: "لا", halal: false, weakness: "تركيز UAV فقط" },
-    { name: "Calq", price: "مجاني-مدفوع", specialty: "نعم (AEC)", halal: false, weakness: "نطاق ضيق (BIM فقط)" },
-    { name: "AIQ", price: "SAR 8,812/مستخدم", specialty: "نعم (طاقة)", halal: false, weakness: "طاقة فقط" },
-    { name: "Elm", price: "حكومي", specialty: "جزئي", halal: false, weakness: "حكومي فقط" },
-    { name: "aTeam Soft", price: "$15K-40K", specialty: "لا", halal: false, weakness: "لا تخصص" },
-    { name: "Alwajeez", price: "SAR 7,999/شهر", specialty: "لا", halal: false, weakness: "حكومي" },
-    { name: "Seen Automation", price: "SAR 600-5K", specialty: "نعم (هندسي)", halal: true, weakness: null },
+    { name: "UiPath", price: "SAR 10K-50K", specialty_ar: "جزئي", halal: false, weakness_ar: "معقد + مكلف" },
+    { name: "PROVEN", price: "SAR 75K+", specialty_ar: "لا", halal: false, weakness_ar: "أسعار مرتفعة" },
+    { name: "Hivekind", price: "$50-99/hr", specialty_ar: "لا", halal: false, weakness_ar: "لا تخصص هندسي" },
+    { name: "Seen", price: "SAR 600-5K", specialty_ar: "هندسي ✅", halal: true, weakness_ar: "—" },
   ],
-
   sectors: [
-    { id: "eng", name: "Engineering", ar: "الهندسة", status: "active", desc: "أتمتة RFIs، QOO، Submittals، تقارير التقدم، وتنسيق التخصصات للمكاتب الهندسية الاستشارية.", timeline: "Q1 2026", clients: 20 },
-    { id: "med", name: "Medical", ar: "الطب", status: "upcoming", desc: "أتمتة السجلات الطبية، التقارير السريرية، وجدولة المواعيد الذكية للعيادات والمستشفيات.", timeline: "Q3 2026", clients: 10 },
-    { id: "leg", name: "Legal", ar: "القانون", status: "upcoming", desc: "مراجعة العقود تلقائياً، صياغة المستندات القانونية، وتحليل المخاطر التعاقدية.", timeline: "Q4 2026", clients: 8 },
-    { id: "edu", name: "Education", ar: "التعليم", status: "upcoming", desc: "أتمتة العمليات الإدارية، تقييم الطلاب، وإدارة المحتوى التعليمي الرقمي.", timeline: "Q1 2027", clients: 12 },
-    { id: "com", name: "Commerce", ar: "التجارة", status: "upcoming", desc: "أتمتة سلاسل الإمداد، إدارة المخازن، والفوترة الإلكترونية المتكاملة.", timeline: "Q2 2027", clients: 15 },
+    { id: "eng", name_ar: "الهندسة", name_en: "Engineering", status: "active", desc_ar: "أتمتة RFIs، QOO، Submittals للمكاتب الهندسية.", desc_en: "Automating RFIs, QOO, Submittals for engineering firms.", timeline: "Q1 2026", target_clients: 20 },
+    { id: "med", name_ar: "الطب", name_en: "Medical", status: "upcoming", desc_ar: "أتمتة السجلات الطبية والتقارير السريرية.", desc_en: "Automating medical records and clinical reports.", timeline: "Q3 2026", target_clients: 10 },
+    { id: "leg", name_ar: "القانون", name_en: "Legal", status: "upcoming", desc_ar: "مراجعة العقود وصياغة المستندات القانونية.", desc_en: "Contract review and legal document drafting.", timeline: "Q4 2026", target_clients: 8 },
+    { id: "edu", name_ar: "التعليم", name_en: "Education", status: "upcoming", desc_ar: "أتمتة العمليات الإدارية وتقييم الطلاب.", desc_en: "Automating admin operations and student assessment.", timeline: "Q1 2027", target_clients: 12 },
+    { id: "com", name_ar: "التجارة", name_en: "Commerce", status: "upcoming", desc_ar: "أتمتة سلاسل الإمداد والفوترة الإلكترونية.", desc_en: "Automating supply chains and e-invoicing.", timeline: "Q2 2027", target_clients: 15 },
   ],
-
   risks: [
-    { id: 1, name: "تأخر اعتماد العميل", prob: "عالي", impact: "متوسط", mitigation: "تضمين بنود SLA واضحة مع جدول زمني ملزم للاعتماد", color: "red" },
-    { id: 2, name: "تغير متطلبات المشروع", prob: "متوسط", impact: "عالي", mitigation: "نموذج Change Request رسمي مع تسعير منفصل للتغييرات", color: "yellow" },
-    { id: 3, name: "فشل تكامل API خارجي", prob: "منخفض", impact: "عالي", mitigation: "Fallback mechanisms + Error Node + مراقبة مستمرة", color: "green" },
-    { id: 4, name: "تسرب بيانات العملاء", prob: "منخفض", impact: "عالي", mitigation: "تشفير AES-256 + TLS 1.3 + عزل Containers لكل عميل", color: "green" },
-    { id: 5, name: "منافسة أسعار قوية", prob: "عالي", impact: "متوسط", mitigation: "التركيز على القيمة والـ ROI لا السعر + تخصص هندسي عميق", color: "red" },
-    { id: 6, name: "نقص الكفاءات التقنية", prob: "متوسط", impact: "متوسط", mitigation: "الاعتماد على الأتمتة الذاتية + شبكة Freelancers موثوقين", color: "yellow" },
-    { id: 7, name: "تغير تنظيمي (PDPL/GDPR)", prob: "منخفض", impact: "عالي", mitigation: "مراجعة قانونية ربع سنوية + DPA محدّث", color: "green" },
-    { id: 8, name: "هلوسة النماذج (AI Hallucination)", prob: "متوسط", impact: "عالي", mitigation: "100 سؤال اختبار هلوسة + RAG صارم + مراجعة بشرية", color: "yellow" },
-    { id: 9, name: "تأخر دفع الفواتير", prob: "متوسط", impact: "متوسط", mitigation: "دفع مقدم + بنود تأخير حلال (خصم لا فائدة)", color: "yellow" },
-    { id: 10, name: "فقدان النسخ الاحتياطي", prob: "منخفض", impact: "عالي", mitigation: "نسخ يومية مشفرة + اختبار استعادة أسبوعي + Offsite Backup", color: "green" },
+    { name_ar: "تأخر اعتماد العميل", name_en: "Client approval delays", prob: "high", impact: "medium", mitigation_ar: "بنود SLA واضحة مع جدول زمني ملزم", mitigation_en: "Clear SLA with binding timeline" },
+    { name_ar: "تغير متطلبات المشروع", name_en: "Scope creep", prob: "medium", impact: "high", mitigation_ar: "نموذج Change Request رسمي", mitigation_en: "Formal Change Request model" },
+    { name_ar: "فشل API خارجي", name_en: "External API failure", prob: "low", impact: "high", mitigation_ar: "Fallback mechanisms + Error Node", mitigation_en: "Fallback mechanisms + Error Node" },
+    { name_ar: "منافسة أسعار", name_en: "Price competition", prob: "high", impact: "medium", mitigation_ar: "التركيز على القيمة والـ ROI", mitigation_en: "Focus on value & ROI" },
+    { name_ar: "نقص الكفاءات", name_en: "Talent shortage", prob: "medium", impact: "medium", mitigation_ar: "الأتمتة الذاتية + Freelancers", mitigation_en: "Self-automation + freelancers" },
+    { name_ar: "تغير تنظيمي", name_en: "Regulatory changes", prob: "low", impact: "high", mitigation_ar: "مراجعة قانونية ربع سنوية", mitigation_en: "Quarterly legal review" },
   ],
-
   hardware: {
     laptops: [
-      { category: "Entry-Level", specs: "Ryzen AI 7 / Ultra 5, iGPU مشترك, 16GB", price: "$700-900", ai: "4B-8B (بطيء)" },
-      { category: "Mid-Range", specs: "Ryzen AI 9 / Ultra 7, iGPU مشترك, 32GB", price: "$1,100-1,500", ai: "7B-13B" },
-      { category: "High-End GPU", specs: "Ultra 9 / Ryzen 9, RTX 5060/5070 (8-12GB), 32-64GB", price: "$1,600-2,500", ai: "13B-30B" },
-      { category: "Extreme Workstation", specs: "Ultra 9 285HX / i9-14900HX, RTX 5090 (24GB), 64-128GB", price: "$3,500-7,000", ai: "30B-70B" },
-      { category: "Unified Memory ⭐", specs: "Ryzen AI Max+ 395, Radeon 8060S (حتى 96GB), 128GB موحدة", price: "$3,000-4,000", ai: "70B-120B" },
+      { category: "Entry-Level", specs: "Ryzen AI 7, 16GB", price: "$700-900", ai: "4B-8B" },
+      { category: "Mid-Range", specs: "Ryzen AI 9, 32GB", price: "$1,100-1,500", ai: "7B-13B" },
+      { category: "High-End", specs: "RTX 5070, 64GB", price: "$1,600-2,500", ai: "13B-30B" },
+      { category: "Extreme", specs: "RTX 5090 24GB, 128GB", price: "$3,500-7,000", ai: "30B-70B" },
+      { category: "Unified Memory ⭐", specs: "Ryzen AI Max+ 395, 128GB", price: "$3,000-4,000", ai: "70B-120B" },
     ],
     minipc: [
-      { category: "Entry (NPU فقط)", specs: "Ryzen 7 255 (38 TOPS), 32GB DDR5", price: "$700-900" },
-      { category: "Mid-Range (NPU قوي)", specs: "Ryzen AI 9 HX 370 (80 TOPS), 32GB DDR5", price: "$1,100-1,700" },
-      { category: "High-End Unified", specs: "Ryzen AI Max+ 395 (126 TOPS), 128GB موحدة", price: "$2,600-4,000" },
-      { category: "Ultra (GPU مخصص)", specs: "i9-14900HX / Ryzen 9, RTX 5070/5090", price: "$1,600-3,500" },
-      { category: "Extreme Workstation", specs: "Threadripper / Xeon, RTX PRO 6000", price: "$6,000-12,000" },
+      { category: "Entry", specs: "Ryzen 7, 32GB", price: "$700-900" },
+      { category: "Mid-Range", specs: "Ryzen AI 9 HX, 32GB", price: "$1,100-1,700" },
+      { category: "High-End", specs: "Ryzen AI Max+, 128GB", price: "$2,600-4,000" },
+      { category: "Ultra GPU", specs: "RTX 5070/5090", price: "$1,600-3,500" },
+      { category: "Extreme", specs: "RTX PRO 6000", price: "$6,000-12,000" },
     ],
     scenario: {
-      name: "Unified Memory (الأفضل للـ AI محلياً)",
-      laptop: "HP ZBook Ultra G1a 14 — Ryzen AI Max+ PRO 395, 128GB",
-      laptopPrice: "$3,500",
-      minipc: "Minisforum MS-S1 Max — Ryzen AI Max+ 395, 128GB, 2TB",
-      minipcPrice: "$3,639",
-      accessories: "شاشات + Docking + UPS + مايك + كاميرا",
-      accessoriesPrice: "$1,958",
-      total: "$10,197",
-      remaining: "$1,803",
-      budget: "$12,000",
-    }
+      name_ar: "Unified Memory", name_en: "Unified Memory",
+      laptop: "HP ZBook Ultra G1a 14 — Ryzen AI Max+ PRO 395, 128GB", laptop_price: 3500,
+      minipc: "Minisforum MS-S1 Max — Ryzen AI Max+ 395, 128GB, 2TB", minipc_price: 3639,
+      accessories: "شاشات + Docking + UPS", accessories_en: "Displays + Docking + UPS", accessories_price: 1958,
+      total: 10197, remaining: 1803, budget: 12000,
+    },
   },
-
   roadmap: [
-    { quarter: "Q1", year: 1, title: "التأسيس والانطلاق", tasks: ["تسجيل الكيان القانوني في ماليزيا", "إطلاق بوابة المستثمرين", "اكتساب أول 5 عملاء هندسيين", "تطبيق نظام Error Node الكامل"], milestone: "أول عميل مدفوع" },
-    { quarter: "Q2", year: 1, title: "التحقق والتحسين", tasks: ["تحسين Landing Bot بناءً على البيانات", "توثيق 3 دراسات حالة حقيقية", "اختبار 25 هجمة أمنية على بيئة الإنتاج", "تحقيق MRR: SAR 10,000"], milestone: "Product-Market Fit" },
-    { quarter: "Q3", year: 1, title: "التوسع الأول", tasks: ["إطلاق رمح الطب (Seen Medical)", "وصول 20 عميل نشط", "توظيف أول موظف دعم فني", "تحقيق MRR: SAR 32,000"], milestone: "20 عميل" },
-    { quarter: "Q4", year: 1, title: "النضج والاستقرار", tasks: ["أتمتة كاملة لعمليات التسليم", "بناء فريق دعم مخصص", "مراجعة ربعية شاملة", "تحقيق MRR: SAR 50,000"], milestone: "نقطة التعادل المالي" },
-    { quarter: "Y2", year: 2, title: "التوسع الإقليمي", tasks: ["إطلاق رمح القانون والتعليم", "التوسع للسوق الماليزي", "بدء تطوير Micro-SaaS", "MRR: SAR 100,000"], milestone: "40 عميل + رمحين جديدين" },
-    { quarter: "Y3", year: 3, title: "القيادة الإقليمية", tasks: ["إطلاق أول منتج Micro-SaaS", "80+ عميل نشط", "قيادة سوق الأتمتة الهندسية", "MRR: SAR 250,000"], milestone: "قيادة إقليمية" },
+    { phase_ar: "💡 لحظة الفكرة", phase_en: "💡 Idea Born", date_ar: "يناير 2026", date_en: "Jan 2026", desc_ar: "ولدت الفكرة من ملاحظة الاختناقات في المكاتب الهندسية.", desc_en: "Idea born from observing engineering bottlenecks." },
+    { phase_ar: "🔬 البحث والتحقق", phase_en: "🔬 Research", date_ar: "فبراير-مارس 2026", date_en: "Feb-Mar 2026", desc_ar: "دراسة السوق وتحديد الفجوة الذهبية.", desc_en: "Market study and golden gap identification." },
+    { phase_ar: "📚 بناء المستودع", phase_en: "📚 KB Build", date_ar: "أبريل-يونيو 2026", date_en: "Apr-Jun 2026", desc_ar: "إنشاء 49 ملفاً استراتيجياً.", desc_en: "Created 49 strategic documents." },
+    { phase_ar: "🏛️ التأسيس القانوني", phase_en: "🏛️ Legal Setup", date_ar: "يوليو 2026", date_en: "Jul 2026", desc_ar: "تسجيل الكيان في ماليزيا.", desc_en: "Entity registration in Malaysia." },
+    { phase_ar: "🚀 الإطلاق", phase_en: "🚀 Launch", date_ar: "أغسطس 2026", date_en: "Aug 2026", desc_ar: "إطلاق بوابة المستثمرين.", desc_en: "Investor portal launch." },
+    { phase_ar: "⭐ أول عميل", phase_en: "⭐ First Client", date_ar: "Q3 2026", date_en: "Q3 2026", desc_ar: "أول 5 عملاء هندسيين.", desc_en: "First 5 engineering clients." },
+    { phase_ar: "🌍 التوسع", phase_en: "🌍 Expansion", date_ar: "السنة 2", date_en: "Year 2", desc_ar: "رمح القانون والتعليم.", desc_en: "Legal and Education spears." },
+    { phase_ar: "🏆 القيادة", phase_en: "🏆 Leadership", date_ar: "السنة 3", date_en: "Year 3", desc_ar: "Micro-SaaS و 80+ عميل.", desc_en: "Micro-SaaS and 80+ clients." },
   ],
-
-  pitchSlides: [
-    { title: "الغلاف", content: "Seen Automation AI Agency\nAutomate. Elevate. Halal.\nأول وكالة أتمتة AI حلال في العالم العربي", subtitle: "بوابة الهندسة" },
-    { title: "المشكلة", content: "7.6 ساعة/أسبوع مهدرة = 44 يوم عمل/سنة\n67.6% من الرسومات فيها أخطاء\n30-50% من RFIs سببها أخطاء التصميم\nSAR 15,000-45,000 تكلفة مهندس/شهر", subtitle: "نزيف الوقت والجودة" },
-    { title: "الحل", content: "AI-Powered Backend Pipelines\nAutomated Reporting (QOO, IR, NCR)\nRFI Management + Financial Automation\nZero-Friction Communication (WhatsApp/Email)\nError Node System (إشعار فوري للطرفين)", subtitle: "مبني على خبرة مهندس ميكانيكي" },
-    { title: "لماذا الآن؟", content: "Vision 2030: مشاريع عملاقة (NEOM, Qiddiya)\n+56.25% زيادة الإنفاق الحكومي على AI\n48% AI Adoption في القطاع الخاص السعودي\nCAGR 14.9-28.4%", subtitle: "الفرصة التاريخية" },
-    { title: "حجم السوق", content: "TAM (KSA): SAR 13.1-19.5B\nSAM (Engineering): SAR 1.95-2.93B\nSOM (Year 1): SAR 240K-320K\nTAM (Malaysia): $152M-$462M", subtitle: "سوق نمو انفجاري" },
-    { title: "نموذج العمل", content: "Starter: SAR 600-1,000/شهر\nGrowth: SAR 1,200-2,000/شهر\nEnterprise: SAR 3,000-5,000/شهر\nHosting: SAR 300-800/شهر\nالشهري = 15-20% من التأسيس", subtitle: "هامش ربح 70-80%" },
-    { title: "الجاهزية", content: "✅ 49 ملف استراتيجي مكتمل\n✅ 25 هجمة أمنية في البروتوكول\n✅ 100 سؤال هلوسة مُختبر\n✅ Landing Page تفاعلية + بوت ذكي\n✅ عتاد فيزيائي محدد ($12K)", subtitle: "ليس فكرة — مؤسسة جاهزة" },
-    { title: "المنافسون", content: "UiPath: SAR 10K-50K | جزئي | ❌\nPROVEN: SAR 75K+ | لا | ❌\nHivekind: $50-99/س | لا | ❌\nSeen: SAR 600-5K | ✅ هندسي | ✅ حلال", subtitle: "الفجوة الذهبية" },
-    { title: "الميزة التنافسية", content: "🕌 حلال 100% (مضاربة شرعية)\n🎯 تخصص هندسي عميق\n💬 Zero-Friction (داخل WhatsApp/Email)\n⚡ SLA 5-30 دقيقة (96x أسرع)\n🔔 Error Node System\n🖥️ Container معزول لكل عميل", subtitle: "لا منافس مباشر" },
-    { title: "استراتيجية الدخول", content: "Landing Visit → Bot Analysis → Custom Plan\n→ Confirmation Call (15-20 دقيقة) → Close\nClose Rate: 25-35% (مقابل 10-15% تقليدي)\nSales Cycle: 3-7 أيام (مقابل 2-4 أسابيع)", subtitle: "نموذج ثوري" },
-    { title: "الفريق", content: "عمر محمد جميل باعبدالله\nمهندس ميكانيكي (SEGi University)\nخبرة في SABIC وتحسين العمليات\nأحمد: الشريك القانوني (ماليزيا)\nد.سين: مدير العمليات الآلي", subtitle: "خبرة هندسية + تقنية" },
-    { title: "المالية", content: "Y1: SAR 240K-320K | 20 عميل | MRR 32K\nY2: SAR 500K-700K | 40 عميل | MRR 100K\nY3: SAR 900K-1.2M | 80 عميل | MRR 250K\nLTV:CAC: 19.3x | Margin: 70-80%", subtitle: "نمو مستدام" },
-    { title: "الطلب", content: "SAR 82,500 ($22,000)\nمضاربة شرعية (AAOIFI)\n15% حتى استرداد رأس المال\n15% لمدة 36 شهر بعد ذلك\nBuyout: بعد 24 شهر × 1.5\nMax Duration: 15 سنة", subtitle: "هيكل عادل وشفاف" },
-    { title: "التواصل والرؤية", content: "hello@seen-agency.com\nseen-agency.com\nالرؤية Y5: 200+ عميل | $2M+ ARR\nقيادة إقليمية | Micro-SaaS | 10 لغات", subtitle: "Automate. Elevate. Halal." },
-  ],
-
   businessPlan: [
-    { title: "الملخص التنفيذي", content: "Seen Automation هي وكالة أتمتة ذكاء اصطناعي حلال 100%، تبدأ بقطاع الهندسة كبوابة ذهبية للدخول إلى السوق، ثم تتوسع لتشمل الطب والقانون والتعليم والتجارة. نعمل بنموذج Zero-Friction الذي يدمج الأتمتة داخل أدوات العميل الحالية (WhatsApp, Email, Slack) دون الحاجة لتعلم برامج جديدة. نطلب تمويلاً بمقدار SAR 82,500 ($22,000) عبر هيكل مضاربة شرعي متوافق مع معايير AAOIFI، لتحقيق إيرادات متكررة بنموذج تسعير يعتمد على 15-20% من قيمة التأسيس شهرياً، مع هامش ربح مستهدف 70-80%." },
-    { title: "وصف الشركة", content: "الكيان القانوني: Malaysian Sdn Bhd (قيد التأسيس). المقر التشغيلي: Online / Worldwide. المؤسس التشغيلي: عمر محمد جميل باعبدالله (مهندس ميكانيكي). الشريك القانوني: أحمد (ماليزي). الرؤية: قيادة سوق أتمتة الذكاء الاصطناعي في العالم العربي عبر حلول مرئية مستقلة، حلال 100%. الرسالة: تحرير الطاقات البشرية من الروتين عبر أتمتة ذكية، حلال، ومنخفضة التكلفة. الاستراتيجية ثلاثية المراحل: (1) الهندسة كبوابة ذهبية، (2) التوسع لجميع القطاعات، (3) Productization إلى Micro-SaaS." },
-    { title: "تحليل السوق", content: "السوق السعودي: TAM $42.4M-$223M | SAM $15M-$78M | SOM Y1 SAR 240K-320K. السوق الماليزي: TAM $152M-$462M | SAM $53M-$162M. معدل النمو CAGR: 14.9-28.4% (السعودية)، 4.8-7.3% (ماليزيا). محركات النمو: رؤية 2030، التحول الرقمي الحكومي، +56.25% زيادة الإنفاق على AI. الفجوة السوقية: 3 شركات فقط في السعودية تخدم القطاع الهندسي، وصفر في ماليزيا بشكل متخصص. Seen Automation هي الخيار الوحيد المتخصص في العمليات الهندسية الشاملة + حلال + سعر معقول." },
-    { title: "تحليل المنافسين", content: "10 منافسين رئيسيين تم تحليلهم. UiPath: SAR 10K-50K، جزئي، غير حلال، معقد. PROVEN Consult: SAR 75K+، لا تخصص، أسعار مرتفعة. Hivekind: $50-99/ساعة، لا تخصص هندسي. Calq: مجاني-مدفوع، نطاق ضيق (BIM فقط). AIQ: SAR 8,812/مستخدم، طاقة فقط. الميزة التنافسية لـ Seen: سعر أقل 10x من المنافسين الرئيسيين، تخصص هندسي عميق، امتثال شرعي 100%، SLA 5-30 دقيقة (96x أسرع من المتوسط)، نظام Error Node للإشعار الفوري." },
-    { title: "المنتج والخدمات", content: "4 باقات خدمة: Starter (SAR 600-1,000/شهر، Workflow واحد، SLA 30 دقيقة)، Growth (SAR 1,200-2,000/شهر، 3 Workflows، لوحة تحكم، SLA 15 دقيقة)، Enterprise (SAR 3,000-5,000/شهر، 10+ Workflows، Self-Hosted، SLA 5 دقائق)، Lead-Gen (SAR 300-600/شهر، لا نرفض بسبب الميزانية، مقابل 3 إحالات/سنة). كل باقة تشمل: Error Node System، Container معزول، تشفير AES-256 + TLS 1.3، 25 هجمة أمنية قبل التسليم، 100 سؤال هلوسة. خدمة استضافة إضافية: SAR 300-800/شهر (Container معزول لكل عميل)." },
-    { title: "التسويق والمبيعات", content: "استراتيجية الدخول: Landing Bot ذكي (7 أسئلة هندسية) → تقرير مخصص فوري → Confirmation Call (15-20 دقيقة) → إغلاق الصفقة. لا Cold Calls. القنوات: Landing Page + Bot (60%)، LinkedIn Content (20%)، Social Media (15%)، Referrals (5%). Close Rate المستهدف: 25-35% (مقابل 10-15% للنموذج التقليدي). Sales Cycle: 3-7 أيام (مقابل 2-4 أسابيع). Funnel Y1: 5,000 زائر → 1,500 تحليل → 400 Confirmation Call → 20-25 عميل." },
-    { title: "العمليات والتسليم", content: "دورة تسليم من 2-4 أسابيع: Discovery (3-5 أيام) → Design (2-3 أيام) → Build (5-10 أيام) → Validation (2-3 أيام، تشمل 25 هجمة أمنية + 100 سؤال هلوسة) → Release (1-2 يوم) → Operate (مستمر). مبدأ Search-Before-Build: لا نبني من الصفر، نبحث عن حلول جاهزة ونخصصها (توفير 60-80% من الوقت). مكتبة SOPs تحتوي على 26 إجراء تشغيلي موحد. نظام Quality Gates: Gate A (Discovery) → Gate B (Design Sign-off) → Gate C (Release Approval) → Gate D (Operational Acceptance)." },
-    { title: "الفريق", content: "عمر محمد جميل باعبدالله — المؤسس التشغيلي ومعمار الأنظمة. مهندس ميكانيكي خريج SEGi University في ماليزيا، بخبرة ميدانية في SABIC. متخصص في تحسين العمليات الصناعية وسلاسل الإمداد. أحمد — الشريك القانوني (ماليزي)، مسؤول عن التأسيس القانوني والامتثال والعقود. د.سين — مدير العمليات الآلي، يعمل 24/7 على إدارة العمليات اليومية، مراقبة الأنظمة، ودعم العملاء." },
-    { title: "النموذج المالي", content: "ARPU: SAR 1,600/شهر. Churn: 6%. CAC: SAR 1,500. Margin: 70%. Fixed Costs: SAR 3,500/شهر. LTV: SAR 29,000. LTV:CAC: 19.3x. استرداد CAC: 0.6 شهر. نقطة التعادل: الشهر 2. MRR الشهر 12: SAR 32,000. MRR الشهر 36: SAR 67,000. توزيع استخدام الأموال: 60% عمليات وتوظيف (SAR 49,500)، 40% تسويق واستحواذ (SAR 33,000)." },
-    { title: "المخاطر والتخفيف", content: "10 مخاطر رئيسية موثقة مع خطط تخفيف مفصلة. أعلى المخاطر: تأخر اعتماد العميل (عالي/متوسط)، منافسة أسعار قوية (عالي/متوسط). أدنى المخاطر: تسرب بيانات العملاء (منخفض/عالي) بسبب التشفير والعزل. جميع المخاطر مغطاة ببروتوكول أمني شامل يتضمن: 25 هجمة محاكاة، 100 سؤال هلوسة، تشفير AES-256، Container Isolation، Error Node System، ومراجعة قانونية ربع سنوية." },
+    { title_ar: "الملخص التنفيذي", title_en: "Executive Summary", content_ar: "Seen Automation وكالة أتمتة AI حلال 100%، تبدأ بقطاع الهندسة كبوابة ذهبية. نطلب SAR 82,500 عبر مضاربة شرعية.", content_en: "Seen Automation is a 100% Halal AI automation agency starting with engineering. Seeking SAR 82,500 via Sharia Mudarabah." },
+    { title_ar: "وصف الشركة", title_en: "Company Description", content_ar: "الكيان: Malaysian Sdn Bhd. الرؤية: قيادة سوق الأتمتة العربي. الاستراتيجية: الهندسة كبوابة، ثم التوسع، ثم Micro-SaaS.", content_en: "Entity: Malaysian Sdn Bhd. Vision: Leading Arab automation market. Strategy: Engineering gateway, then expansion, then Micro-SaaS." },
+    { title_ar: "تحليل السوق", title_en: "Market Analysis", content_ar: "السعودي: TAM $223M. الماليزي: TAM $462M. CAGR 14.9-28.4%. محركات: رؤية 2030، +56.25% إنفاق AI.", content_en: "Saudi: TAM $223M. Malaysian: TAM $462M. CAGR 14.9-28.4%. Drivers: Vision 2030, +56.25% AI spending." },
+    { title_ar: "تحليل المنافسين", title_en: "Competitive Analysis", content_ar: "10 منافسين. ميزة Seen: سعر أقل 10x، تخصص هندسي، حلال 100%، SLA 5-30 دقيقة.", content_en: "10 competitors. Seen advantages: 10x lower price, engineering specialization, 100% Halal, SLA 5-30 min." },
+    { title_ar: "المنتج والخدمات", title_en: "Products & Services", content_ar: "4 باقات: Starter (SAR 600-1K)، Growth (SAR 1.2-2K)، Enterprise (SAR 3-5K)، Lead-Gen (SAR 300-600).", content_en: "4 packages: Starter (SAR 600-1K), Growth (SAR 1.2-2K), Enterprise (SAR 3-5K), Lead-Gen (SAR 300-600)." },
+    { title_ar: "التسويق والمبيعات", title_en: "Marketing & Sales", content_ar: "Landing Bot → Report → Confirmation Call. Close Rate 25-35%. Sales Cycle 3-7 أيام.", content_en: "Landing Bot → Report → Confirmation Call. Close Rate 25-35%. Sales Cycle 3-7 days." },
+    { title_ar: "العمليات", title_en: "Operations", content_ar: "دورة 2-4 أسابيع. Search-Before-Build يوفر 60-80% من الوقت. 26 SOP.", content_en: "2-4 week cycle. Search-Before-Build saves 60-80% time. 26 SOPs." },
+    { title_ar: "الفريق", title_en: "Team", content_ar: "عمر باعبدالله — المؤسس. أحمد — الشريك القانوني.", content_en: "Omar Baabdullah — Founder. Ahmed — Legal Partner." },
+    { title_ar: "النموذج المالي", title_en: "Financial Model", content_ar: "LTV:CAC 19.3x. نقطة التعادل شهر 2. هامش 70-80%.", content_en: "LTV:CAC 19.3x. Break-even month 2. Margin 70-80%." },
+    { title_ar: "المخاطر", title_en: "Risks", content_ar: "10 مخاطر موثقة. بروتوكول أمني شامل + تشفير + مراجعة قانونية.", content_en: "10 documented risks. Comprehensive security + encryption + legal review." },
   ],
+  pitchSlides: [
+    { title_ar: "الغلاف", title_en: "Cover", content_ar: "Seen Automation
+Automate. Elevate. Halal.", content_en: "Seen Automation
+Automate. Elevate. Halal." },
+    { title_ar: "المشكلة", title_en: "Problem", content_ar: "7.6 ساعة/أسبوع مهدرة
+67.6% أخطاء رسومات", content_en: "7.6 hours/week wasted
+67.6% drawing errors" },
+    { title_ar: "الحل", title_en: "Solution", content_ar: "AI Backend Pipelines
+Zero-Friction", content_en: "AI Backend Pipelines
+Zero-Friction" },
+    { title_ar: "لماذا الآن", title_en: "Why Now", content_ar: "Vision 2030
++56.25% AI spending", content_en: "Vision 2030
++56.25% AI spending" },
+    { title_ar: "السوق", title_en: "Market", content_ar: "TAM $3.5B
+SAM $1.95B
+SOM $320K", content_en: "TAM $3.5B
+SAM $1.95B
+SOM $320K" },
+    { title_ar: "النموذج", title_en: "Model", content_ar: "SAR 600-5K/شهر
+هامش 70-80%", content_en: "SAR 600-5K/mo
+70-80% margin" },
+    { title_ar: "الجاهزية", title_en: "Readiness", content_ar: "49 ملف
+بروتوكول أمني", content_en: "49 docs
+Security protocol" },
+    { title_ar: "المنافسون", title_en: "Competitors", content_ar: "Seen: SAR 600-5K + حلال", content_en: "Seen: SAR 600-5K + Halal" },
+    { title_ar: "الميزة", title_en: "Edge", content_ar: "حلال 100%
+SLA 5-30 دقيقة", content_en: "100% Halal
+SLA 5-30 min" },
+    { title_ar: "الدخول", title_en: "GTM", content_ar: "Landing Bot
+Close 25-35%", content_en: "Landing Bot
+Close 25-35%" },
+    { title_ar: "الفريق", title_en: "Team", content_ar: "عمر باعبدالله
+SEGi + SABIC", content_en: "Omar Baabdullah
+SEGi + SABIC" },
+    { title_ar: "المالية", title_en: "Financials", content_ar: "Y3: SAR 936K
+80 عميل", content_en: "Y3: SAR 936K
+80 clients" },
+    { title_ar: "الطلب", title_en: "Ask", content_ar: "SAR 82,500
+مضاربة شرعية", content_en: "SAR 82,500
+Sharia Mudarabah" },
+    { title_ar: "الرؤية", title_en: "Vision", content_ar: "Y5: 200+ عميل
+$2M+ ARR", content_en: "Y5: 200+ clients
+$2M+ ARR" },
+  ],
+  securityHighlights: { attacks: 25, hallucinationTests: 100, encryption: "AES-256 + TLS 1.3" },
+  checklists: {
+    investorReady: [
+      { label_ar: "خطة عمل شاملة", label_en: "Comprehensive business plan", done: true },
+      { label_ar: "نموذج مالي تفاعلي", label_en: "Interactive financial model", done: true },
+      { label_ar: "Pitch Deck (14 شريحة)", label_en: "Pitch Deck (14 slides)", done: true },
+      { label_ar: "تحليل المنافسين", label_en: "Competitor analysis", done: true },
+      { label_ar: "5 قطاعات مستهدفة", label_en: "5 target sectors", done: true },
+      { label_ar: "خريطة طريق 36 شهر", label_en: "36-month roadmap", done: true },
+      { label_ar: "سجل مخاطر", label_en: "Risk register", done: true },
+      { label_ar: "مواصفات عتاد", label_en: "Hardware specs", done: true },
+      { label_ar: "مضاربة شرعية", label_en: "Sharia Mudarabah", done: true },
+      { label_ar: "بروتوكول أمني", label_en: "Security protocol", done: true },
+    ],
+    dueDiligence: [
+      { label_ar: "NDA Template", label_en: "NDA Template", done: true },
+      { label_ar: "MSA Template", label_en: "MSA Template", done: true },
+      { label_ar: "SOW Template", label_en: "SOW Template", done: true },
+      { label_ar: "SLA Template", label_en: "SLA Template", done: true },
+      { label_ar: "DPA Template", label_en: "DPA Template", done: true },
+      { label_ar: "Unit Economics", label_en: "Unit Economics", done: true },
+      { label_ar: "Market Positioning", label_en: "Market Positioning", done: true },
+      { label_ar: "Halal Certification", label_en: "Halal Certification", done: true },
+    ],
+  },
 };
