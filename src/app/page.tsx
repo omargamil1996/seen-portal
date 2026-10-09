@@ -1,519 +1,605 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, createContext, useContext } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { DATA } from "@/lib/data";
-import { 
-  LayoutDashboard, Wallet, FileText, Target, Map as MapIcon, 
+import { translations, type Lang } from "@/lib/translations";
+import { cn } from "@/lib/utils";
+import {
+  LayoutDashboard, Wallet, FileText, Target, Map as MapIcon,
   AlertTriangle, Cpu, FileCheck, Globe, SkipBack, SkipForward,
-  ChevronDown, TrendingUp, Shield, Zap, Users, Clock, DollarSign,
-  BarChart3, PieChart, Activity, CheckCircle2, XCircle, AlertCircle,
-  ArrowUpRight, Layers, Server, Lock, Eye
+  ChevronDown, TrendingUp, Shield, Users, Clock, DollarSign,
+  BarChart3, PieChart as PieChartIcon, Activity, CheckCircle2,
+  Layers, Server, Eye, Download, Settings, BookOpen, Briefcase,
+  Moon, Sun, ArrowRight, ShieldCheck,
 } from "lucide-react";
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area, PieChart, Pie, Cell,
+} from "recharts";
 
-// ─── Animated Counter Hook ───
-function useCounter(end: number, duration = 1500, start = 0) {
-  const [count, setCount] = useState(start);
+const AppContext = createContext<any>({});
+
+function useCounter(end: number, duration = 1500, decimals = 0) {
+  const [count, setCount] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
-        let startTime: number;
-        const step = (timestamp: number) => {
-          if (!startTime) startTime = timestamp;
-          const progress = Math.min((timestamp - startTime) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3);
-          setCount(Math.floor(start + (end - start) * eased));
-          if (progress < 1) requestAnimationFrame(step);
+    const obs = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        let start: number;
+        const step = (ts: number) => {
+          if (!start) start = ts;
+          const p = Math.min((ts - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          setCount(Number((end * eased).toFixed(decimals)));
+          if (p < 1) requestAnimationFrame(step);
         };
         requestAnimationFrame(step);
-        observer.disconnect();
+        obs.disconnect();
       }
     }, { threshold: 0.3 });
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [end, duration, start]);
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [end, duration, decimals]);
   return { count, ref };
 }
 
-// ─── KPI Card Component ───
-function KPICard({ label, value, sub, color, delay }: { label: string; value: string; sub: string; color: string; delay: number }) {
-  const colorClasses: Record<string, string> = {
-    emerald: "from-emerald/10 to-emerald/5 border-emerald/20",
-    gold: "from-gold/10 to-gold/5 border-gold/20",
-    accent: "from-accent/10 to-accent/5 border-accent/20",
-  };
-  const textColors: Record<string, string> = {
-    emerald: "text-emerald", gold: "text-gold-dark", accent: "text-accent",
-  };
-  return (
-    <div className={`relative overflow-hidden rounded-2xl border bg-gradient-to-br p-6 hover-lift opacity-0 animate-fade-up ${colorClasses[color] || colorClasses.emerald}`} style={{ animationDelay: `${delay}ms`, animationFillMode: "forwards" }}>
-      <div className="relative z-10">
-        <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">{label}</p>
-        <p className={`text-3xl font-bold font-amiri ${textColors[color] || "text-emerald"}`}>{value}</p>
-        <p className="text-xs text-gray-400 mt-2">{sub}</p>
-      </div>
-      <div className="absolute -bottom-4 -left-4 w-24 h-24 rounded-full bg-current opacity-[0.03]" />
+const Card = ({ children, className, delay = 0, hover = true }: any) => (
+  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 0.5, delay: delay / 1000 }} className={cn("bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card", hover && "hover-lift", className)}>
+    {children}
+  </motion.div>
+);
+
+const SectionHeader = ({ icon: Icon, title, subtitle }: any) => (
+  <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-8 p-6 bg-gradient-to-l from-emerald/5 to-transparent dark:from-emerald/10 rounded-2xl border border-emerald/10">
+    <div className="flex items-center gap-3 mb-2">
+      <div className="w-10 h-10 rounded-xl bg-emerald/10 dark:bg-emerald/20 flex items-center justify-center text-emerald"><Icon size={20} /></div>
+      <h2 className="text-2xl font-amiri font-bold text-emerald dark:text-gold">{title}</h2>
     </div>
-  );
-}
+    <p className="text-gray-600 dark:text-gray-400 text-sm mr-13">{subtitle}</p>
+  </motion.div>
+);
 
-// ─── Financial Slider Component ───
-function FinSlider({ label, value, min, max, step, unit, onChange }: any) {
-  return (
-    <div className="group">
-      <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{label}</span>
-        <span className="text-sm font-bold text-gold tabular-nums">{typeof value === "number" ? value.toLocaleString() : value} {unit}</span>
-      </div>
-      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(parseFloat(e.target.value))} className="w-full" />
-    </div>
-  );
-}
+const Badge = ({ children, color = "emerald" }: any) => {
+  const colors: any = { emerald: "bg-emerald/10 text-emerald border-emerald/20", gold: "bg-gold/10 text-gold-dark dark:text-gold border-gold/20", accent: "bg-accent/10 text-accent border-accent/20", red: "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200", yellow: "bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 border-yellow-200", green: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200" };
+  return <span className={cn("inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border", colors[color])}>{children}</span>;
+};
 
-// ─── Metric Card (Dark) ───
-function MetricCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
-  return (
-    <div className={`p-4 rounded-xl text-center transition-all duration-300 ${highlight ? "bg-gradient-to-br from-gold/20 to-accent/10 border border-gold/30 shadow-glow" : "bg-white/5 border border-white/10 hover:border-white/20"}`}>
-      <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">{label}</div>
-      <div className={`text-xl font-bold tabular-nums ${highlight ? "text-gradient-gold" : "text-white"}`}>{value}</div>
-    </div>
-  );
-}
+type Tab = "dashboard" | "financials" | "business-plan" | "sectors" | "roadmap" | "risks" | "hardware" | "the-ask" | "data-room" | "team" | "security" | "settings";
 
-// ─── Main App ───
-type Tab = "dashboard" | "financials" | "business-plan" | "sectors" | "roadmap" | "risks" | "hardware" | "the-ask";
-
-export default function Home() {
-  const [activeTab, setActiveTab] = useState<Tab>("dashboard");
-  const [lang, setLang] = useState<"ar" | "en">("ar");
+export default function InvestorBriefcase() {
+  const [tab, setTab] = useState<Tab>("dashboard");
+  const [lang, setLang] = useState<Lang>("ar");
+  const [dark, setDark] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [fin, setFin] = useState({ arpu: DATA.arpu, churn: DATA.churn, cac: DATA.cac, newCust: DATA.newCustomers, margin: DATA.margin, fixed: DATA.fixedCosts });
+  const [fin, setFin] = useState({ arpu: DATA.financials.arpu, churn: DATA.financials.churn, cac: DATA.financials.cac, newCust: DATA.financials.newCustomers, margin: DATA.financials.margin, fixed: DATA.financials.fixedCosts });
   const [slideIdx, setSlideIdx] = useState(0);
+  const t = translations[lang];
 
-  // Financial calculations
+  useEffect(() => {
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = lang;
+    if (dark) document.documentElement.classList.add("dark");
+    else document.documentElement.classList.remove("dark");
+  }, [lang, dark]);
+
   const ltv = (fin.arpu * (fin.margin / 100)) / (fin.churn / 100);
   const ltvCac = ltv / fin.cac;
   const payback = fin.cac / (fin.arpu * (fin.margin / 100));
-  const mrr12 = Math.round(fin.arpu * (fin.newCust * 12 * 0.8));
-  const mrr36 = Math.round(fin.arpu * (fin.newCust * 36 * 0.6));
   const be = Math.max(1, Math.ceil(fin.fixed / (fin.newCust * fin.arpu * (fin.margin / 100) - fin.newCust * fin.cac)));
 
-  const menuItems: { id: Tab; label: string; en: string; icon: any }[] = [
-    { id: "dashboard", label: "لوحة التحكم", en: "Dashboard", icon: LayoutDashboard },
-    { id: "financials", label: "المالية", en: "Financials", icon: Wallet },
-    { id: "business-plan", label: "خطة العمل", en: "Business Plan", icon: FileText },
-    { id: "sectors", label: "القطاعات", en: "Sectors", icon: Target },
-    { id: "roadmap", label: "خريطة الطريق", en: "Roadmap", icon: MapIcon },
-    { id: "risks", label: "المخاطر", en: "Risks", icon: AlertTriangle },
-    { id: "hardware", label: "العتاد", en: "Hardware", icon: Cpu },
-    { id: "the-ask", label: "الطلب", en: "The Ask", icon: FileCheck },
+  const projectionData = Array.from({ length: 36 }, (_, i) => {
+    const m = i + 1;
+    const customers = Math.round(fin.newCust * m * Math.pow(1 - fin.churn / 100, m / 2));
+    const mrr = Math.round(customers * fin.arpu);
+    const profit = Math.round(mrr * (fin.margin / 100) - fin.fixed - fin.newCust * fin.cac);
+    return { month: m, customers, mrr, profit };
+  });
+
+  const menuItems: { id: Tab; icon: any }[] = [
+    { id: "dashboard", icon: LayoutDashboard },
+    { id: "financials", icon: Wallet },
+    { id: "business-plan", icon: FileText },
+    { id: "sectors", icon: Target },
+    { id: "roadmap", icon: MapIcon },
+    { id: "risks", icon: AlertTriangle },
+    { id: "hardware", icon: Cpu },
+    { id: "the-ask", icon: FileCheck },
+    { id: "data-room", icon: Briefcase },
+    { id: "team", icon: Users },
+    { id: "security", icon: ShieldCheck },
+    { id: "settings", icon: Settings },
   ];
 
-  // ─── RENDER TABS ───
   const renderContent = () => {
-    switch (activeTab) {
-      case "dashboard": return (
-        <div className="space-y-8">
-          {/* Hero Banner */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-l from-emerald via-emerald-dark to-emerald p-10 text-white noise">
-            <div className="relative z-10 max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6">
-                <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-                ما قبل الإطلاق — Pre-Seed
-              </div>
-              <h1 className="text-4xl md:text-5xl font-amiri font-bold leading-tight mb-4">
-                {DATA.company.name_ar}
-              </h1>
-              <p className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">
-                {DATA.company.vision} نعمل بنموذج Zero-Friction ومعمارية القلعة والرماح لتقديم حلول أتمتة ذكية حلال 100%.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <span className="rounded-lg bg-gold/20 border border-gold/30 px-4 py-2 text-sm font-semibold text-gold-light backdrop-blur-sm">🕌 حلال 100%</span>
-                <span className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">⚡ Zero-Friction</span>
-                <span className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">🏰 قلعة + رماح</span>
-              </div>
-            </div>
-            <div className="absolute top-0 left-0 w-full h-full opacity-10">
-              <svg width="100%" height="100%"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/></svg>
-            </div>
-          </div>
-
-          {/* KPI Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {DATA.kpis.map((kpi, i) => (
-              <KPICard key={i} label={kpi.label} value={kpi.value} sub={kpi.sub} color={kpi.color} delay={i * 100} />
-            ))}
-          </div>
-
-          {/* Founder + Stats Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-card rounded-2xl border border-border p-8 shadow-card hover-lift">
-              <div className="flex items-start gap-6">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-white text-3xl font-amiri font-bold shadow-lg shrink-0">ع</div>
-                <div>
-                  <h3 className="text-xl font-bold text-emerald mb-1">{DATA.company.founder}</h3>
-                  <p className="text-sm text-accent font-semibold mb-3">{DATA.company.founder_role}</p>
-                  <p className="text-gray-600 leading-relaxed text-sm">{DATA.company.founder_bio}</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              {[
-                { icon: Users, label: "عملاء Y1", value: DATA.customersY1, color: "text-emerald" },
-                { icon: TrendingUp, label: "عملاء Y3", value: DATA.customersY3, color: "text-gold-dark" },
-                { icon: Clock, label: "نقطة التعادل", value: `شهر ${DATA.breakEven}`, color: "text-accent" },
-              ].map((stat, i) => (
-                <div key={i} className="bg-card rounded-xl border border-border p-4 flex items-center gap-4 shadow-card hover-lift opacity-0 animate-fade-up" style={{ animationDelay: `${600 + i * 100}ms`, animationFillMode: "forwards" }}>
-                  <div className={`w-10 h-10 rounded-lg bg-muted flex items-center justify-center ${stat.color}`}><stat.icon size={20} /></div>
-                  <div><div className="text-xs text-gray-500">{stat.label}</div><div className="text-xl font-bold">{stat.value}</div></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-
-      case "financials": return (
-        <div className="space-y-6">
-          <div className="bg-dark text-white rounded-3xl p-8 md:p-10 shadow-elevated noise relative overflow-hidden">
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 rounded-xl bg-gold/20 flex items-center justify-center"><DollarSign size={20} className="text-gold" /></div>
-                <div>
-                  <h2 className="text-2xl font-amiri font-bold text-gold">النمذجة المالية التفاعلية</h2>
-                  <p className="text-sm text-gray-400">حرّك المؤشرات وشاهد التأثير الفوري على جميع المخرجات</p>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <div className="space-y-6">
-                  <FinSlider label="Setup Fees (رسوم التأسيس)" value={fin.arpu} min={500} max={5000} step={100} unit="SAR" onChange={(v: number) => setFin({...fin, arpu: v})} />
-                  <FinSlider label="Churn Rate (نسبة التسرب)" value={fin.churn} min={1} max={20} step={1} unit="%" onChange={(v: number) => setFin({...fin, churn: v})} />
-                  <FinSlider label="CAC (تكلفة الاكتساب)" value={fin.cac} min={500} max={5000} step={100} unit="SAR" onChange={(v: number) => setFin({...fin, cac: v})} />
-                  <FinSlider label="New Customers (عملاء جدد/شهر)" value={fin.newCust} min={1} max={10} step={0.1} unit="" onChange={(v: number) => setFin({...fin, newCust: v})} />
-                  <FinSlider label="Margin (هامش الربح)" value={fin.margin} min={50} max={90} step={5} unit="%" onChange={(v: number) => setFin({...fin, margin: v})} />
-                  <FinSlider label="Fixed Costs (تكاليف ثابتة)" value={fin.fixed} min={1000} max={10000} step={500} unit="SAR" onChange={(v: number) => setFin({...fin, fixed: v})} />
-                </div>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
-                    <MetricCard label="LTV" value={`${Math.round(ltv).toLocaleString()} SAR`} />
-                    <MetricCard label="LTV:CAC" value={`${ltvCac.toFixed(1)}x`} highlight />
-                    <MetricCard label="استرداد CAC" value={`${payback.toFixed(1)} شهر`} />
-                    <MetricCard label="نقطة التعادل" value={`شهر ${be > 0 && be < 36 ? be : ">36"}`} highlight />
-                    <MetricCard label="MRR شهر 12" value={`${mrr12.toLocaleString()} SAR`} />
-                    <MetricCard label="MRR شهر 36" value={`${mrr36.toLocaleString()} SAR`} highlight />
-                  </div>
-                  <div className="mt-6 p-5 rounded-xl bg-white/5 border border-white/10">
-                    <h4 className="text-sm font-bold text-center mb-4 text-gray-300">توزيع استخدام الأموال (SAR {DATA.ask.toLocaleString()})</h4>
-                    <div className="flex h-12 rounded-full overflow-hidden shadow-inner">
-                      <div className="bg-emerald w-[60%] flex items-center justify-center text-xs font-bold text-white transition-all duration-500">60% عمليات<br/><span className="text-[10px] opacity-75">SAR {DATA.useOfFunds.opsAmount.toLocaleString()}</span></div>
-                      <div className="bg-accent w-[40%] flex items-center justify-center text-xs font-bold text-white transition-all duration-500">40% تسويق<br/><span className="text-[10px] opacity-75">SAR {DATA.useOfFunds.mktAmount.toLocaleString()}</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      );
-
-      case "business-plan": return (
-        <div className="space-y-4">
-          <div className="mb-6 p-6 bg-gradient-to-l from-emerald/5 to-transparent rounded-2xl border border-emerald/10">
-            <h2 className="text-2xl font-amiri font-bold text-emerald mb-2">خطة العمل الشاملة</h2>
-            <p className="text-gray-600 text-sm">وثيقة حية تحتوي على {DATA.businessPlan.length} أقسام استراتيجية وتشغيلية، مستمدة من مستودع Seen Automation OS (49 ملف).</p>
-          </div>
-          {DATA.businessPlan.map((sec, i) => (
-            <details key={i} className="group bg-card rounded-2xl border border-border shadow-card overflow-hidden transition-all duration-300 open:shadow-elevated open:border-emerald/20">
-              <summary className="p-6 cursor-pointer flex justify-between items-center select-none hover:bg-muted/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <span className="w-8 h-8 rounded-lg bg-emerald/10 text-emerald flex items-center justify-center text-sm font-bold font-amiri">{i + 1}</span>
-                  <span className="text-lg font-bold text-emerald group-open:text-accent transition-colors">{sec.title}</span>
-                </div>
-                <ChevronDown size={20} className="text-gray-400 transition-transform duration-300 group-open:rotate-180 group-open:text-accent" />
-              </summary>
-              <div className="details-content px-6 pb-6 pt-0">
-                <div className="border-t border-border/50 pt-4 text-gray-700 leading-loose text-sm">{sec.content}</div>
-              </div>
-            </details>
-          ))}
-        </div>
-      );
-
-      case "sectors": return (
-        <div className="space-y-6">
-          <div className="mb-4 p-6 bg-gradient-to-l from-emerald/5 to-transparent rounded-2xl border border-emerald/10">
-            <h2 className="text-2xl font-amiri font-bold text-emerald mb-2">معمارية القلعة والرماح</h2>
-            <p className="text-gray-600 text-sm">Seen هي القلعة الأم التي تجمع كل الرماح تحت هوية واحدة. كل رمح له تخصصه وهويته البصرية المستقلة.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {DATA.sectors.map((s, i) => (
-              <div key={s.id} className={`relative overflow-hidden rounded-2xl border p-6 shadow-card hover-lift opacity-0 animate-fade-up ${s.status === "active" ? "border-emerald/30 bg-gradient-to-br from-emerald/5 to-transparent" : "border-border bg-card"}`} style={{ animationDelay: `${i * 100}ms`, animationFillMode: "forwards" }}>
-                {s.status === "active" && <div className="absolute top-0 right-0 w-20 h-20 bg-emerald/10 rounded-bl-full" />}
-                <div className="relative z-10">
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald font-bold text-lg font-amiri">{s.ar[0]}</div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${s.status === "active" ? "bg-emerald text-white" : "bg-yellow-100 text-yellow-800"}`}>
-                      {s.status === "active" ? "🟢 نشط" : "🟡 قريباً"}
-                    </span>
-                  </div>
-                  <h3 className="text-xl font-bold text-emerald mb-1">{s.ar}</h3>
-                  <p className="text-xs text-accent font-semibold mb-3">{s.timeline} • {s.clients} عميل مستهدف</p>
-                  <p className="text-gray-600 text-sm leading-relaxed">{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-
-      case "roadmap": return (
-        <div className="space-y-6">
-          <div className="mb-4 p-6 bg-gradient-to-l from-emerald/5 to-transparent rounded-2xl border border-emerald/10">
-            <h2 className="text-2xl font-amiri font-bold text-emerald mb-2">خريطة الطريق — 36 شهراً</h2>
-            <p className="text-gray-600 text-sm">من التأسيس إلى القيادة الإقليمية في 3 سنوات.</p>
-          </div>
-          <div className="relative">
-            <div className="absolute right-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald via-gold to-accent hidden md:block" />
-            <div className="space-y-6">
-              {DATA.roadmap.map((r, i) => (
-                <div key={i} className={`relative flex gap-6 items-start opacity-0 animate-fade-up`} style={{ animationDelay: `${i * 150}ms`, animationFillMode: "forwards" }}>
-                  <div className="hidden md:flex flex-col items-center shrink-0">
-                    <div className="w-12 h-12 rounded-full bg-emerald text-white flex items-center justify-center font-bold text-sm shadow-lg border-4 border-background z-10">{r.quarter}</div>
-                  </div>
-                  <div className="flex-1 bg-card rounded-2xl border border-border p-6 shadow-card hover-lift">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-lg font-bold text-emerald">{r.title}</h3>
-                      <span className="text-xs font-bold text-accent bg-accent/10 px-3 py-1 rounded-full">السنة {r.year}</span>
-                    </div>
-                    <ul className="space-y-2 mb-4">
-                      {r.tasks.map((t, j) => (
-                        <li key={j} className="flex items-start gap-2 text-sm text-gray-600">
-                          <CheckCircle2 size={14} className="text-emerald mt-0.5 shrink-0" />
-                          <span>{t}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="flex items-center gap-2 text-xs font-bold text-gold-dark bg-gold/10 px-3 py-2 rounded-lg w-fit">
-                      <Activity size={12} /> {r.milestone}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-
-      case "risks":
-        const colorMap: Record<string, { bg: string; text: string; dot: string }> = {
-          red: { bg: "bg-red-50", text: "text-red-700", dot: "bg-red-500" },
-          yellow: { bg: "bg-yellow-50", text: "text-yellow-700", dot: "bg-yellow-500" },
-          green: { bg: "bg-green-50", text: "text-green-700", dot: "bg-green-500" },
-        };
-        return (
-          <div className="space-y-6">
-            <div className="mb-4 p-6 bg-gradient-to-l from-emerald/5 to-transparent rounded-2xl border border-emerald/10">
-              <h2 className="text-2xl font-amiri font-bold text-emerald mb-2">سجل المخاطر والتخفيف</h2>
-              <p className="text-gray-600 text-sm">10 مخاطر رئيسية موثقة مع خطط تخفيف مفصلة وبروتوكول أمني شامل.</p>
-            </div>
-            <div className="bg-card rounded-2xl border border-border shadow-card overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-right">
-                  <thead className="bg-emerald text-white">
-                    <tr>
-                      <th className="p-4 font-semibold">#</th>
-                      <th className="p-4 font-semibold">المخاطرة</th>
-                      <th className="p-4 font-semibold">الاحتمال</th>
-                      <th className="p-4 font-semibold">الأثر</th>
-                      <th className="p-4 font-semibold">خطة التخفيف</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {DATA.risks.map((r, i) => {
-                      const c = colorMap[r.color] || colorMap.green;
-                      return (
-                        <tr key={r.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
-                          <td className="p-4 text-gray-400 font-mono text-xs">{String(i + 1).padStart(2, "0")}</td>
-                          <td className="p-4 font-semibold text-foreground">{r.name}</td>
-                          <td className="p-4"><span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold ${c.bg} ${c.text}`}><span className={`w-1.5 h-1.5 rounded-full ${c.dot}`} />{r.prob}</span></td>
-                          <td className="p-4 text-gray-600">{r.impact}</td>
-                          <td className="p-4 text-gray-600 text-xs leading-relaxed max-w-md">{r.mitigation}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        );
-
-      case "hardware": return (
-        <div className="space-y-6">
-          <div className="mb-4 p-6 bg-gradient-to-l from-emerald/5 to-transparent rounded-2xl border border-emerald/10">
-            <h2 className="text-2xl font-amiri font-bold text-emerald mb-2">مواصفات العتاد الفيزيائي</h2>
-            <p className="text-gray-600 text-sm">بيئة عمل قادرة على تشغيل نماذج AI محلياً (7B-120B) ضمن ميزانية $12,000.</p>
-          </div>
-          
-          {/* Selected Scenario Highlight */}
-          <div className="bg-gradient-to-l from-emerald via-emerald-dark to-emerald rounded-2xl p-8 text-white shadow-elevated noise relative overflow-hidden">
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gold/20 flex items-center justify-center"><Server size={20} className="text-gold" /></div>
-                <h3 className="text-xl font-bold text-gold">✅ السيناريو المختار: {DATA.hardware.scenario.name}</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <div className="space-y-3">
-                  <div className="p-3 rounded-lg bg-white/10 border border-white/10"><span className="text-gray-300 text-xs block mb-1">💻 اللابتوب</span><strong>{DATA.hardware.scenario.laptop}</strong><span className="text-gold block mt-1">{DATA.hardware.scenario.laptopPrice}</span></div>
-                  <div className="p-3 rounded-lg bg-white/10 border border-white/10"><span className="text-gray-300 text-xs block mb-1">🖥️ Mini PC</span><strong>{DATA.hardware.scenario.minipc}</strong><span className="text-gold block mt-1">{DATA.hardware.scenario.minipcPrice}</span></div>
-                </div>
-                <div className="space-y-3">
-                  <div className="p-3 rounded-lg bg-white/10 border border-white/10"><span className="text-gray-300 text-xs block mb-1">🔌 الإكسسوارات</span><strong>{DATA.hardware.scenario.accessories}</strong><span className="text-gold block mt-1">{DATA.hardware.scenario.accessoriesPrice}</span></div>
-                  <div className="p-4 rounded-xl bg-gold/20 border border-gold/30 flex justify-between items-center">
-                    <div><span className="text-xs text-gold-light block">الإجمالي</span><span className="text-2xl font-bold text-gold">{DATA.hardware.scenario.total}</span></div>
-                    <div className="text-left"><span className="text-xs text-gray-300 block">المتبقي</span><span className="text-lg font-bold text-white">{DATA.hardware.scenario.remaining}</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Tables */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-card rounded-2xl border border-border shadow-card overflow-hidden">
-              <div className="p-4 border-b border-border bg-muted/30"><h3 className="font-bold text-emerald flex items-center gap-2"><Cpu size={16} /> فئات اللابتوب (5)</h3></div>
-              <table className="w-full text-xs text-right">
-                <thead className="bg-muted/50"><tr><th className="p-3">الفئة</th><th className="p-3">المواصفات</th><th className="p-3">السعر</th><th className="p-3">AI</th></tr></thead>
-                <tbody>{DATA.hardware.laptops.map((l, i) => (
-                  <tr key={i} className="border-b border-border/50 hover:bg-muted/20"><td className="p-3 font-semibold">{l.category}</td><td className="p-3 text-gray-600">{l.specs}</td><td className="p-3 text-accent font-bold">{l.price}</td><td className="p-3 text-gray-500">{l.ai}</td></tr>
-                ))}</tbody>
-              </table>
-            </div>
-            <div className="bg-card rounded-2xl border border-border shadow-card overflow-hidden">
-              <div className="p-4 border-b border-border bg-muted/30"><h3 className="font-bold text-emerald flex items-center gap-2"><Layers size={16} /> فئات Mini PC (5)</h3></div>
-              <table className="w-full text-xs text-right">
-                <thead className="bg-muted/50"><tr><th className="p-3">الفئة</th><th className="p-3">المواصفات</th><th className="p-3">السعر</th></tr></thead>
-                <tbody>{DATA.hardware.minipc.map((l, i) => (
-                  <tr key={i} className="border-b border-border/50 hover:bg-muted/20"><td className="p-3 font-semibold">{l.category}</td><td className="p-3 text-gray-600">{l.specs}</td><td className="p-3 text-accent font-bold">{l.price}</td></tr>
-                ))}</tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      );
-
-      case "the-ask": return (
-        <div className="space-y-6">
-          {/* Ask Hero */}
-          <div className="bg-gradient-to-l from-emerald via-emerald-dark to-emerald rounded-3xl p-10 text-center text-white shadow-elevated noise relative overflow-hidden">
-            <div className="relative z-10">
-              <p className="text-sm font-semibold text-gold-light uppercase tracking-widest mb-3">طلب الاستثمار</p>
-              <div className="text-6xl font-bold font-amiri text-gold mb-4 animate-pulse-gold rounded-2xl inline-block px-8 py-2">SAR {DATA.ask.toLocaleString()}</div>
-              <p className="text-lg text-white/90 max-w-xl mx-auto leading-relaxed">
-                هيكل مضاربة شرعي متوافق مع معايير AAOIFI: {DATA.mudarabah.phase1}% من كل بيعة حتى استرداد رأس المال، ثم {DATA.mudarabah.phase2}% لمدة {DATA.mudarabah.phase2} شهراً.
-              </p>
-              <div className="flex justify-center gap-4 mt-6 text-sm">
-                <span className="bg-white/10 border border-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">Buyout: {DATA.mudarabah.buyoutMonths} شهر × {DATA.mudarabah.buyoutMultiple}</span>
-                <span className="bg-white/10 border border-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">Max: {DATA.mudarabah.maxYears} سنة</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Pitch Deck */}
-          <div className="bg-card rounded-2xl border border-border shadow-card overflow-hidden">
-            <div className="p-4 border-b border-border flex justify-between items-center">
-              <h3 className="font-bold text-emerald flex items-center gap-2"><Eye size={16} /> Pitch Deck ({DATA.pitchSlides.length} شريحة)</h3>
-              <div className="flex items-center gap-2">
-                <button onClick={() => setSlideIdx(Math.max(0, slideIdx - 1))} className="p-2 rounded-lg hover:bg-muted transition-colors"><SkipBack size={16} /></button>
-                <span className="text-xs font-mono text-gray-500">{slideIdx + 1}/{DATA.pitchSlides.length}</span>
-                <button onClick={() => setSlideIdx(Math.min(DATA.pitchSlides.length - 1, slideIdx + 1))} className="p-2 rounded-lg hover:bg-muted transition-colors"><SkipForward size={16} /></button>
-              </div>
-            </div>
-            <div className="bg-dark text-white p-10 min-h-[300px] flex flex-col items-center justify-center text-center relative">
-              <div className="absolute top-4 left-4 text-gold/50 text-xs font-mono">SLIDE {slideIdx + 1}</div>
-              <h3 className="text-2xl font-amiri font-bold text-gold mb-6">{DATA.pitchSlides[slideIdx].title}</h3>
-              <p className="text-lg text-white/90 whitespace-pre-line leading-relaxed max-w-2xl">{DATA.pitchSlides[slideIdx].content}</p>
-              <p className="text-sm text-gray-500 mt-6 italic">{DATA.pitchSlides[slideIdx].subtitle}</p>
-              <div className="flex gap-1.5 mt-8">
-                {DATA.pitchSlides.map((_, i) => (
-                  <button key={i} onClick={() => setSlideIdx(i)} className={`h-1.5 rounded-full transition-all duration-300 ${i === slideIdx ? "w-8 bg-gold" : "w-1.5 bg-gray-600 hover:bg-gray-500"}`} />
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Data Room */}
-          <div className="bg-card rounded-2xl border border-border shadow-card p-6">
-            <h3 className="font-bold text-emerald mb-4 flex items-center gap-2"><Lock size={16} /> غرفة البيانات (Data Room)</h3>
-            <div className="space-y-3">
-              {[
-                { name: "NDA & MSA Templates", level: "public", icon: CheckCircle2, color: "text-green-600", bg: "bg-green-50", label: "🟢 عام" },
-                { name: "Partner & Mudarabah Agreements", level: "nda", icon: AlertCircle, color: "text-yellow-600", bg: "bg-yellow-50", label: "🟡 NDA مطلوب" },
-                { name: "Cap Table & Financial Model", level: "nda", icon: AlertCircle, color: "text-yellow-600", bg: "bg-yellow-50", label: "🟡 NDA مطلوب" },
-                { name: "System Prompts & Source Code", level: "restricted", icon: XCircle, color: "text-red-600", bg: "bg-red-50", label: "🔴 مقيد" },
-              ].map((item, i) => (
-                <div key={i} className={`flex justify-between items-center p-4 rounded-xl border transition-all ${item.level === "restricted" ? "border-red-100 bg-red-50/30 opacity-60" : "border-border hover:border-emerald/20 hover:shadow-sm"}`}>
-                  <div className="flex items-center gap-3">
-                    <item.icon size={16} className={item.color} />
-                    <span className="font-medium text-sm">{item.name}</span>
-                  </div>
-                  <span className={`text-xs font-bold px-3 py-1 rounded-full ${item.bg} ${item.color}`}>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      );
-
+    switch (tab) {
+      case "dashboard": return <DashboardView t={t} lang={lang} />;
+      case "financials": return <FinancialsView fin={fin} setFin={setFin} ltv={ltv} ltvCac={ltvCac} payback={payback} be={be} projectionData={projectionData} t={t} lang={lang} />;
+      case "business-plan": return <BusinessPlanView t={t} lang={lang} />;
+      case "sectors": return <SectorsView t={t} lang={lang} />;
+      case "roadmap": return <RoadmapView t={t} lang={lang} />;
+      case "risks": return <RisksView t={t} lang={lang} />;
+      case "hardware": return <HardwareView t={t} lang={lang} />;
+      case "the-ask": return <TheAskView slideIdx={slideIdx} setSlideIdx={setSlideIdx} t={t} lang={lang} />;
+      case "data-room": return <DataRoomView t={t} lang={lang} />;
+      case "team": return <TeamView t={t} lang={lang} />;
+      case "security": return <SecurityView t={t} lang={lang} />;
+      case "settings": return <SettingsView lang={lang} setLang={setLang} dark={dark} setDark={setDark} t={t} />;
       default: return null;
     }
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
-      {/* Sidebar */}
-      <aside className={`${sidebarOpen ? "w-72" : "w-20"} bg-card border-l border-border flex flex-col transition-all duration-300 ease-in-out z-20 shadow-sm`}>
-        <div className="p-6 border-b border-border flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-gold font-bold font-amiri text-lg shadow-md shrink-0">S</div>
-          {sidebarOpen && <div><h1 className="text-lg font-amiri font-bold text-emerald leading-none">Seen</h1><p className="text-[10px] text-gray-400 mt-0.5">Automation AI</p></div>}
-        </div>
-        <nav className="flex-1 overflow-y-auto p-3 space-y-1">
-          {menuItems.map((item) => (
-            <button key={item.id} onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${activeTab === item.id ? "bg-emerald text-white shadow-md sidebar-active" : "text-gray-500 hover:bg-muted hover:text-emerald"}`}>
-              <item.icon size={18} className={activeTab === item.id ? "text-gold" : ""} />
-              {sidebarOpen && <span>{lang === "ar" ? item.label : item.en}</span>}
-            </button>
-          ))}
-        </nav>
-        <div className="p-3 border-t border-border space-y-1">
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl hover:bg-muted text-gray-500 text-sm transition-colors">
-            {sidebarOpen ? "◀ طي" : "▶"}
-          </button>
-          <button onClick={() => setLang(lang === "ar" ? "en" : "ar")} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-border hover:bg-muted text-sm font-semibold transition-colors">
-            <Globe size={14} /> {lang === "ar" ? "English" : "العربية"}
-          </button>
-        </div>
-      </aside>
+    <AppContext.Provider value={{ lang, setLang, dark, setDark }}>
+      <div className="flex h-screen overflow-hidden bg-background dark:bg-dark-bg">
+        <motion.aside animate={{ width: sidebarOpen ? 288 : 80 }} className="bg-card dark:bg-dark-card border-l dark:border-dark-border flex flex-col z-20 shadow-sm">
+          <div className="p-6 border-b border-border dark:border-dark-border flex items-center gap-3">
+            <motion.div whileHover={{ rotate: 360 }} transition={{ duration: 0.6 }} className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-gold font-bold font-amiri text-lg shadow-md shrink-0">S</motion.div>
+            {sidebarOpen && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}><h1 className="text-lg font-amiri font-bold text-emerald dark:text-gold leading-none">Seen</h1><p className="text-[10px] text-gray-400 mt-0.5">{t.common.investorBriefcase}</p></motion.div>}
+          </div>
+          <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+            {menuItems.map((item) => (
+              <motion.button key={item.id} whileHover={{ x: lang === "ar" ? -4 : 4 }} onClick={() => setTab(item.id)} className={cn("w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all", tab === item.id ? "bg-emerald text-white shadow-md sidebar-active" : "text-gray-500 dark:text-gray-400 hover:bg-muted dark:hover:bg-dark-muted hover:text-emerald dark:hover:text-gold")}>
+                <item.icon size={18} className={tab === item.id ? "text-gold" : ""} />
+                {sidebarOpen && <span>{t.menu[item.id as keyof typeof t.menu]}</span>}
+              </motion.button>
+            ))}
+          </nav>
+          <div className="p-3 border-t border-border dark:border-dark-border space-y-1">
+            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl hover:bg-muted dark:hover:bg-dark-muted text-gray-500 text-sm">{sidebarOpen ? (lang === "ar" ? "◀ طي" : "◀ Collapse") : "▶"}</button>
+          </div>
+        </motion.aside>
+        <main className="flex-1 overflow-y-auto">
+          <div className="max-w-6xl mx-auto p-6 md:p-10">
+            <header className="mb-8 flex justify-between items-center">
+              <div>
+                <motion.h2 key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-3xl font-amiri font-bold text-gradient">{t.menu[tab as keyof typeof t.menu]}</motion.h2>
+                <p className="text-gray-400 mt-1 text-sm">{t.common.investorBriefcase} v5.0 • {t.common.tagline}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDark(!dark)} className="p-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted" title="Toggle Dark Mode">{dark ? <Sun size={16} /> : <Moon size={16} />}</motion.button>
+                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setLang(lang === "ar" ? "en" : "ar")} className="px-4 py-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted text-sm font-semibold flex items-center gap-2"><Globe size={14} /> {lang === "ar" ? "EN" : "عربي"}</motion.button>
+                <div className="hidden md:flex items-center gap-2 text-xs text-gray-400 ml-4"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />{t.common.livePlan}</div>
+              </div>
+            </header>
+            <AnimatePresence mode="wait">
+              <motion.div key={tab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>{renderContent()}</motion.div>
+            </AnimatePresence>
+            <footer className="mt-16 pt-8 border-t border-border dark:border-dark-border text-center text-xs text-gray-400 pb-8">
+              <p>© 2026 {DATA.company.name_en} • {t.common.tagline} • Investor Briefcase v5.0</p>
+            </footer>
+          </div>
+        </main>
+      </div>
+    </AppContext.Provider>
+  );
+}
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto">
-        <div className="max-w-6xl mx-auto p-6 md:p-10">
-          <header className="mb-8 flex justify-between items-end">
-            <div>
-              <h2 className="text-3xl font-amiri font-bold text-gradient">{menuItems.find(m => m.id === activeTab)?.label}</h2>
-              <p className="text-gray-400 mt-1 text-sm">Interactive Visual Reference • {DATA.company.tagline}</p>
-            </div>
-            <div className="hidden md:flex items-center gap-2 text-xs text-gray-400">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              v3.0 • Live
-            </div>
-          </header>
-          {renderContent()}
-          <footer className="mt-16 pt-8 border-t border-border text-center text-xs text-gray-400 pb-8">
-            <p>© 2026 {DATA.company.name_en} • {DATA.company.tagline}</p>
-          </footer>
+function DashboardView({ t, lang }: any) {
+  return (
+    <div className="space-y-8">
+      <Card className="p-10 overflow-hidden relative" hover={false}>
+        <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald noise" />
+        <div className="relative z-10 max-w-3xl text-white">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6"><span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}</motion.div>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl md:text-5xl font-amiri font-bold leading-tight mb-4">{lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}</motion.h1>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{lang === "ar" ? DATA.company.vision_ar : DATA.company.vision_en}</motion.p>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap gap-3">
+            {["🕌 حلال 100%", "⚡ Zero-Friction", "🏰 قلعة + رماح", "🔒 بروتوكول أمني شامل"].map((tag, i) => (
+              <span key={i} className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">{tag}</span>
+            ))}
+          </motion.div>
         </div>
-      </main>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[
+          { ...t.briefcases.investorKit, icon: Briefcase, color: "from-emerald to-emerald-dark", iconBg: "bg-gold/20" },
+          { ...t.briefcases.dueDiligence, icon: ShieldCheck, color: "from-gold to-gold-dark", iconBg: "bg-white/20" },
+          { ...t.briefcases.portfolio, icon: BookOpen, color: "from-accent to-orange-600", iconBg: "bg-white/20" },
+        ].map((bc, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} whileHover={{ y: -8, scale: 1.02 }} className="relative overflow-hidden rounded-2xl cursor-pointer group">
+            <div className={cn("absolute inset-0 bg-gradient-to-br noise", bc.color)} />
+            <div className="relative z-10 p-8 text-white h-full">
+              <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm", bc.iconBg)}><bc.icon size={28} /></div>
+              <h3 className="text-xl font-bold mb-1">{bc.title}</h3>
+              <p className="text-xs text-white/70 mb-3">{bc.subtitle}</p>
+              <p className="text-sm text-white/90 leading-relaxed mb-4">{bc.description}</p>
+              <div className="flex flex-wrap gap-1 mb-6">{bc.items.map((item: string, j: number) => <span key={j} className="text-[10px] px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">{item}</span>)}</div>
+              <button className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all">{bc.cta} <ArrowRight size={16} /></button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      <Card className="p-6" delay={100}>
+        <div className="flex items-center gap-2 mb-6"><Target size={20} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "حجم السوق" : "Market Size"}</h3></div>
+        <div className="grid grid-cols-3 gap-4">
+          {([
+            { key: "tam", color: "emerald" },
+            { key: "sam", color: "gold" },
+            { key: "som", color: "accent" },
+          ] as const).map(({ key, color }) => {
+            const data = DATA.market[key];
+            const Counter = () => {
+              const { count, ref } = useCounter(data.value, 1500, data.unit === "K" ? 0 : 2);
+              return <div ref={ref} className="text-4xl font-bold">{count}</div>;
+            };
+            return (
+              <motion.div key={key} whileHover={{ scale: 1.05 }} className={cn("p-6 rounded-2xl text-center border-2", color === "emerald" && "bg-emerald/5 dark:bg-emerald/10 border-emerald/20", color === "gold" && "bg-gold/5 dark:bg-gold/10 border-gold/20", color === "accent" && "bg-accent/5 dark:bg-accent/10 border-accent/20")}>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">{lang === "ar" ? data.label_ar : data.label_en}</p>
+                <div className={cn("font-amiri", color === "emerald" && "text-emerald", color === "gold" && "text-gold-dark dark:text-gold", color === "accent" && "text-accent")}><Counter /><span className="text-2xl">{data.unit === "B" ? "B" : "K"}</span></div>
+                <p className="text-xs text-gray-400 mt-1">${data.unit === "B" ? "Billion" : "Thousand"}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+      </Card>
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {DATA.kpis.map((kpi, i) => (
+          <Card key={i} delay={i * 80} className="p-4 text-center">
+            <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">{lang === "ar" ? kpi.label_ar : kpi.label_en}</p>
+            <div className="text-2xl font-bold text-emerald dark:text-gold font-amiri">{kpi.value}</div>
+            <p className="text-[10px] text-gray-400 mt-1">{kpi.unit}</p>
+          </Card>
+        ))}
+      </div>
+
+      <Card className="p-6" delay={200}>
+        <div className="flex items-center justify-between mb-6"><div className="flex items-center gap-2"><CheckCircle2 size={20} className="text-emerald" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "جاهزية الاستثمار" : "Investment Readiness"}</h3></div><Badge color="green">{DATA.checklists.investorReady.filter(c => c.done).length}/{DATA.checklists.investorReady.length}</Badge></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {DATA.checklists.investorReady.map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 dark:bg-dark-muted/50"><CheckCircle2 size={16} className={item.done ? "text-emerald" : "text-gray-300"} /><span className="text-sm">{lang === "ar" ? item.label_ar : item.label_en}</span></motion.div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData, t, lang }: any) {
+  const mrr12 = Math.round(fin.arpu * (fin.newCust * 12 * 0.8));
+  const mrr36 = Math.round(fin.arpu * (fin.newCust * 36 * 0.6));
+
+  const FinSlider = ({ label, value, min, max, step, unit, onChange }: any) => (
+    <div className="group">
+      <div className="flex justify-between items-center mb-2"><span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{label}</span><span className="text-sm font-bold text-gold tabular-nums">{typeof value === "number" ? value.toLocaleString() : value} {unit}</span></div>
+      <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(parseFloat(e.target.value))} className="w-full" />
+    </div>
+  );
+
+  const MetricCard = ({ label, value, highlight }: any) => (
+    <motion.div whileHover={{ scale: 1.03 }} className={cn("p-4 rounded-xl text-center transition-all duration-300", highlight ? "bg-gradient-to-br from-gold/20 to-accent/10 border border-gold/30 shadow-glow-gold" : "bg-white/5 border border-white/10 hover:border-white/20")}>
+      <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">{label}</div>
+      <div className={cn("text-xl font-bold tabular-nums", highlight ? "text-gradient-gold" : "text-white")}>{value}</div>
+    </motion.div>
+  );
+
+  return (
+    <div className="space-y-8">
+      <SectionHeader icon={Wallet} title={lang === "ar" ? "النمذجة المالية التفاعلية" : "Interactive Financial Model"} subtitle={lang === "ar" ? "حرّك المؤشرات وشاهد التأثير الفوري" : "Move sliders and see instant impact"} />
+      <Card className="p-8 overflow-hidden relative" hover={false}>
+        <div className="absolute inset-0 bg-dark-bg dark:bg-black noise" />
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
+          <div className="space-y-6">
+            <FinSlider label={lang === "ar" ? "Setup Fees" : "Setup Fees"} value={fin.arpu} min={500} max={5000} step={100} unit="SAR" onChange={(v: number) => setFin({ ...fin, arpu: v })} />
+            <FinSlider label={lang === "ar" ? "Churn Rate" : "Churn Rate"} value={fin.churn} min={1} max={20} step={1} unit="%" onChange={(v: number) => setFin({ ...fin, churn: v })} />
+            <FinSlider label="CAC" value={fin.cac} min={500} max={5000} step={100} unit="SAR" onChange={(v: number) => setFin({ ...fin, cac: v })} />
+            <FinSlider label={lang === "ar" ? "New Customers/mo" : "New Customers/mo"} value={fin.newCust} min={1} max={10} step={0.1} unit="" onChange={(v: number) => setFin({ ...fin, newCust: v })} />
+            <FinSlider label={lang === "ar" ? "Margin" : "Margin"} value={fin.margin} min={50} max={90} step={5} unit="%" onChange={(v: number) => setFin({ ...fin, margin: v })} />
+            <FinSlider label={lang === "ar" ? "Fixed Costs" : "Fixed Costs"} value={fin.fixed} min={1000} max={10000} step={500} unit="SAR" onChange={(v: number) => setFin({ ...fin, fixed: v })} />
+          </div>
+          <div className="grid grid-cols-2 gap-3 content-start">
+            <MetricCard label="LTV" value={`${Math.round(ltv).toLocaleString()} SAR`} />
+            <MetricCard label="LTV:CAC" value={`${ltvCac.toFixed(1)}x`} highlight />
+            <MetricCard label={lang === "ar" ? "استرداد CAC" : "CAC Payback"} value={`${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`} />
+            <MetricCard label={lang === "ar" ? "نقطة التعادل" : "Break-even"} value={`${lang === "ar" ? "شهر" : "Mo"} ${be > 0 && be < 36 ? be : ">36"}`} highlight />
+            <MetricCard label={lang === "ar" ? "MRR M12" : "MRR Month 12"} value={`${mrr12.toLocaleString()} SAR`} />
+            <MetricCard label={lang === "ar" ? "MRR M36" : "MRR Month 36"} value={`${mrr36.toLocaleString()} SAR`} highlight />
+          </div>
+        </div>
+      </Card>
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4"><TrendingUp size={18} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "نمو الإيراد الشهري المتكرر" : "MRR Growth"} (36 {lang === "ar" ? "شهراً" : "months"})</h3></div>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={projectionData}>
+              <defs><linearGradient id="colorMrr" x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#0F5132" stopOpacity={0.4} /><stop offset="95%" stopColor="#0F5132" stopOpacity={0} /></linearGradient></defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" className="dark:opacity-20" />
+              <XAxis dataKey="month" tick={{ fontSize: 10 }} />
+              <YAxis tick={{ fontSize: 10 }} />
+              <Tooltip formatter={(v: any) => [`SAR ${Number(v).toLocaleString()}`, "MRR"]} />
+              <Area type="monotone" dataKey="mrr" stroke="#0F5132" strokeWidth={2} fillOpacity={1} fill="url(#colorMrr)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </Card>
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4"><BarChart3 size={18} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "الربحية الشهرية" : "Monthly Profitability"}</h3></div>
+        <div className="h-64 w-full">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={projectionData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" className="dark:opacity-20" />
+              <XAxis dataKey="month" tick={{ fontSize: 10 }} />
+              <YAxis tick={{ fontSize: 10 }} />
+              <Tooltip formatter={(v: any) => [`SAR ${Number(v).toLocaleString()}`, ""]} />
+              <Line type="monotone" dataKey="profit" stroke="#F97316" strokeWidth={2} dot={false} />
+              <Line type="monotone" dataKey="customers" stroke="#D4AF37" strokeWidth={2} dot={false} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </Card>
+      <Card className="overflow-hidden">
+        <div className="p-4 border-b border-border dark:border-dark-border bg-muted/30 dark:bg-dark-muted/30"><h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><FileText size={16} /> {lang === "ar" ? "قائمة الأرباح والخسائر" : "P&L Statement"}</h3></div>
+        <table className="w-full text-sm">
+          <thead className="bg-emerald text-white"><tr><th className="p-3 text-right">{lang === "ar" ? "البند" : "Item"}</th><th className="p-3 text-right">Y1</th><th className="p-3 text-right">Y2</th><th className="p-3 text-right">Y3</th></tr></thead>
+          <tbody>
+            {[
+              { label: lang === "ar" ? "الإيراد" : "Revenue", y1: DATA.financials.projections.y1.revenue, y2: DATA.financials.projections.y2.revenue, y3: DATA.financials.projections.y3.revenue },
+              { label: lang === "ar" ? "التكاليف" : "Costs", y1: DATA.financials.projections.y1.costs, y2: DATA.financials.projections.y2.costs, y3: DATA.financials.projections.y3.costs },
+              { label: lang === "ar" ? "صافي الربح" : "Net Profit", y1: DATA.financials.projections.y1.profit, y2: DATA.financials.projections.y2.profit, y3: DATA.financials.projections.y3.profit, highlight: true },
+            ].map((row, i) => (
+              <tr key={i} className={cn("border-b border-border/50 dark:border-dark-border/50", row.highlight && "bg-emerald/5 dark:bg-emerald/10 font-bold")}>
+                <td className="p-3">{row.label}</td>
+                <td className={cn("p-3", row.highlight && "text-emerald dark:text-gold")}>SAR {row.y1.toLocaleString()}</td>
+                <td className={cn("p-3", row.highlight && "text-emerald dark:text-gold")}>SAR {row.y2.toLocaleString()}</td>
+                <td className={cn("p-3", row.highlight && "text-emerald dark:text-gold")}>SAR {row.y3.toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4"><PieChartIcon size={18} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "توزيع استخدام الأموال" : "Use of Funds"}</h3></div>
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="h-48 w-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={[{ name: DATA.financials.useOfFunds.operations[lang === "ar" ? "label_ar" : "label_en"], value: 60 }, { name: DATA.financials.useOfFunds.marketing[lang === "ar" ? "label_ar" : "label_en"], value: 40 }]} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={5} dataKey="value">
+                  <Cell fill="#0F5132" /><Cell fill="#F97316" />
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="space-y-3 flex-1">
+            <div className="flex items-center gap-3"><div className="w-4 h-4 rounded bg-emerald" /><div><strong>60% {DATA.financials.useOfFunds.operations[lang === "ar" ? "label_ar" : "label_en"]}</strong><br /><span className="text-xs text-gray-500">SAR {DATA.financials.useOfFunds.operations.amount.toLocaleString()}</span></div></div>
+            <div className="flex items-center gap-3"><div className="w-4 h-4 rounded bg-accent" /><div><strong>40% {DATA.financials.useOfFunds.marketing[lang === "ar" ? "label_ar" : "label_en"]}</strong><br /><span className="text-xs text-gray-500">SAR {DATA.financials.useOfFunds.marketing.amount.toLocaleString()}</span></div></div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function BusinessPlanView({ t, lang }: any) {
+  return (
+    <div className="space-y-4">
+      <SectionHeader icon={FileText} title={lang === "ar" ? "خطة العمل الشاملة" : "Comprehensive Business Plan"} subtitle={`${DATA.businessPlan.length} ${lang === "ar" ? "أقسام" : "sections"}`} />
+      {DATA.businessPlan.map((sec, i) => (
+        <motion.details key={i} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="group bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card overflow-hidden">
+          <summary className="p-6 cursor-pointer flex justify-between items-center select-none hover:bg-muted/50 dark:hover:bg-dark-muted/50 transition-colors">
+            <div className="flex items-center gap-4"><span className="w-8 h-8 rounded-lg bg-emerald/10 dark:bg-emerald/20 text-emerald dark:text-gold flex items-center justify-center text-sm font-bold font-amiri">{i + 1}</span><span className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? sec.title_ar : sec.title_en}</span></div>
+            <ChevronDown size={20} className="text-gray-400 transition-transform duration-300 group-open:rotate-180 text-accent" />
+          </summary>
+          <div className="details-content px-6 pb-6 pt-0"><div className="border-t border-border/50 dark:border-dark-border/50 pt-4 text-gray-700 dark:text-gray-300 leading-[1.9] text-sm whitespace-pre-line">{lang === "ar" ? sec.content_ar : sec.content_en}</div></div>
+        </motion.details>
+      ))}
+    </div>
+  );
+}
+
+function SectorsView({ t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={Target} title={lang === "ar" ? "القطاعات والرماح" : "Sectors & Spears"} subtitle={lang === "ar" ? "معمارية القلعة والرماح" : "Fortress and Spears architecture"} />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {DATA.sectors.map((s, i) => (
+          <Card key={s.id} delay={i * 100} className={cn("p-0 overflow-hidden", s.status === "active" && "border-emerald/30 dark:border-emerald/50")}>
+            <div className={cn("p-4 flex justify-between items-center", s.status === "active" ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted")}>
+              <div className="flex items-center gap-3"><span className="text-2xl font-amiri font-bold">{(lang === "ar" ? s.name_ar : s.name_en)[0]}</span><div><h3 className="font-bold text-lg">{lang === "ar" ? s.name_ar : s.name_en}</h3><p className="text-xs opacity-80">{s.name_en}</p></div></div>
+              <Badge color={s.status === "active" ? "green" : "yellow"}>{s.status === "active" ? (lang === "ar" ? "🟢 نشط" : "🟢 Active") : (lang === "ar" ? "🟡 قريباً" : "🟡 Coming")}</Badge>
+            </div>
+            <div className="p-6 space-y-4">
+              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? s.desc_ar : s.desc_en}</p>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center"><div className="text-xs text-gray-500">{lang === "ar" ? "الإطلاق" : "Launch"}</div><div className="font-bold text-emerald dark:text-gold">{s.timeline}</div></div>
+                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center"><div className="text-xs text-gray-500">{lang === "ar" ? "العملاء" : "Clients"}</div><div className="font-bold text-accent">{s.target_clients}</div></div>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RoadmapView({ t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={MapIcon} title={lang === "ar" ? "رحلة المشروع" : "Project Journey"} subtitle={lang === "ar" ? "من الفكرة إلى القيادة الإقليمية" : "From idea to regional leadership"} />
+      <div className="relative">
+        <div className="absolute right-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block" />
+        <div className="space-y-6">
+          {DATA.roadmap.map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: i * 0.1 }} className="relative flex gap-6 items-start">
+              <div className="hidden md:flex flex-col items-center shrink-0"><motion.div whileHover={{ scale: 1.1 }} className="w-12 h-12 rounded-full bg-emerald text-white flex items-center justify-center text-lg shadow-lg border-4 border-background dark:border-dark-bg z-10">{item.phase_ar.slice(0, 2)}</motion.div></div>
+              <Card className="flex-1 p-6">
+                <div className="flex justify-between items-center mb-2"><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? item.phase_ar : item.phase_en}</h3><Badge color="gold">{lang === "ar" ? item.date_ar : item.date_en}</Badge></div>
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? item.desc_ar : item.desc_en}</p>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RisksView({ t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={AlertTriangle} title={lang === "ar" ? "إدارة المخاطر" : "Risk Management"} subtitle={lang === "ar" ? "مخاطر موثقة مع خطط تخفيف" : "Documented risks with mitigation plans"} />
+      <Card className="overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-emerald text-white"><tr><th className="p-4 text-right">#</th><th className="p-4 text-right">{lang === "ar" ? "المخاطرة" : "Risk"}</th><th className="p-4 text-right">{lang === "ar" ? "الاحتمال" : "Prob"}</th><th className="p-4 text-right">{lang === "ar" ? "الأثر" : "Impact"}</th><th className="p-4 text-right">{lang === "ar" ? "التخفيف" : "Mitigation"}</th></tr></thead>
+          <tbody>
+            {DATA.risks.map((r, i) => (
+              <motion.tr key={i} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/30 dark:hover:bg-dark-muted/30">
+                <td className="p-4 text-gray-400 font-mono text-xs">{String(i + 1).padStart(2, "0")}</td>
+                <td className="p-4 font-semibold">{lang === "ar" ? r.name_ar : r.name_en}</td>
+                <td className="p-4"><Badge color={r.prob === "high" ? "red" : r.prob === "medium" ? "yellow" : "green"}>{lang === "ar" ? (r.prob === "high" ? "عالي" : r.prob === "medium" ? "متوسط" : "منخفض") : r.prob}</Badge></td>
+                <td className="p-4 text-gray-600 dark:text-gray-400">{lang === "ar" ? (r.impact === "high" ? "عالي" : r.impact === "medium" ? "متوسط" : "منخفض") : r.impact}</td>
+                <td className="p-4 text-gray-600 dark:text-gray-400 text-xs leading-relaxed max-w-md">{lang === "ar" ? r.mitigation_ar : r.mitigation_en}</td>
+              </motion.tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+    </div>
+  );
+}
+
+function HardwareView({ t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={Cpu} title={lang === "ar" ? "محطة العمل المقترحة" : "Recommended Workstation"} subtitle={lang === "ar" ? "تجميعة كاملة" : "Complete setup"} />
+      <Card className="p-8 overflow-hidden relative" hover={false}>
+        <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald noise" />
+        <div className="relative z-10 text-white">
+          <div className="flex items-center gap-3 mb-6"><div className="w-12 h-12 rounded-xl bg-gold/20 flex items-center justify-center"><Server size={24} className="text-gold" /></div><div><h3 className="text-xl font-bold text-gold">✅ {lang === "ar" ? "التجميعة المختارة:" : "Selected:"} {lang === "ar" ? DATA.hardware.scenario.name_ar : DATA.hardware.scenario.name_en}</h3><p className="text-sm text-white/70">{lang === "ar" ? "الأفضل لنماذج 70B-120B" : "Best for 70B-120B models"}</p></div></div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white/10 border border-white/10 rounded-xl p-4 backdrop-blur-sm"><div className="text-xs text-gray-300 mb-2">💻 {lang === "ar" ? "اللابتوب" : "Laptop"}</div><div className="font-bold text-sm mb-1">{DATA.hardware.scenario.laptop}</div><div className="text-gold font-bold">${DATA.hardware.scenario.laptop_price.toLocaleString()}</div></div>
+            <div className="bg-white/10 border border-white/10 rounded-xl p-4 backdrop-blur-sm"><div className="text-xs text-gray-300 mb-2">🖥️ Mini PC</div><div className="font-bold text-sm mb-1">{DATA.hardware.scenario.minipc}</div><div className="text-gold font-bold">${DATA.hardware.scenario.minipc_price.toLocaleString()}</div></div>
+            <div className="bg-white/10 border border-white/10 rounded-xl p-4 backdrop-blur-sm"><div className="text-xs text-gray-300 mb-2">🔌 {lang === "ar" ? "الإكسسوارات" : "Accessories"}</div><div className="font-bold text-sm mb-1">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</div><div className="text-gold font-bold">${DATA.hardware.scenario.accessories_price.toLocaleString()}</div></div>
+          </div>
+          <div className="mt-6 grid grid-cols-3 gap-4 bg-gold/20 border border-gold/30 rounded-xl p-4">
+            <div><span className="text-xs text-gold-light">{lang === "ar" ? "الإجمالي" : "Total"}</span><div className="text-2xl font-bold text-gold">${DATA.hardware.scenario.total.toLocaleString()}</div></div>
+            <div><span className="text-xs text-gray-300">{lang === "ar" ? "المتبقي" : "Remaining"}</span><div className="text-xl font-bold text-white">${DATA.hardware.scenario.remaining.toLocaleString()}</div></div>
+            <div><span className="text-xs text-gray-300">{lang === "ar" ? "الميزانية" : "Budget"}</span><div className="text-xl font-bold text-white/70">${DATA.hardware.scenario.budget.toLocaleString()}</div></div>
+          </div>
+        </div>
+      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="overflow-hidden">
+          <div className="p-4 border-b border-border dark:border-dark-border bg-muted/30 dark:bg-dark-muted/30"><h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><Cpu size={16} /> {lang === "ar" ? "فئات اللابتوب" : "Laptops"}</h3></div>
+          <table className="w-full text-xs"><thead className="bg-muted/50 dark:bg-dark-muted/50"><tr><th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th><th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th><th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th><th className="p-3 text-right">AI</th></tr></thead><tbody>{DATA.hardware.laptops.map((l, i) => <tr key={i} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20"><td className="p-3 font-semibold">{l.category}</td><td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td><td className="p-3 text-accent font-bold">{l.price}</td><td className="p-3 text-gray-500">{l.ai}</td></tr>)}</tbody></table>
+        </Card>
+        <Card className="overflow-hidden">
+          <div className="p-4 border-b border-border dark:border-dark-border bg-muted/30 dark:bg-dark-muted/30"><h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><Layers size={16} /> {lang === "ar" ? "فئات Mini PC" : "Mini PCs"}</h3></div>
+          <table className="w-full text-xs"><thead className="bg-muted/50 dark:bg-dark-muted/50"><tr><th className="p-3 text-right">{lang === "ar" ? "الفئة" : "Category"}</th><th className="p-3 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th><th className="p-3 text-right">{lang === "ar" ? "السعر" : "Price"}</th></tr></thead><tbody>{DATA.hardware.minipc.map((l, i) => <tr key={i} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20"><td className="p-3 font-semibold">{l.category}</td><td className="p-3 text-gray-600 dark:text-gray-400">{l.specs}</td><td className="p-3 text-accent font-bold">{l.price}</td></tr>)}</tbody></table>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <Card className="p-10 text-center overflow-hidden relative" hover={false}>
+        <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald noise" />
+        <div className="relative z-10 text-white">
+          <p className="text-sm font-semibold text-gold-light uppercase tracking-widest mb-3">{lang === "ar" ? "طلب الاستثمار" : "Investment Ask"}</p>
+          <div className="text-6xl font-bold font-amiri text-gold mb-4">SAR {DATA.ask.amount.toLocaleString()}</div>
+          <p className="text-lg text-white/90 max-w-xl mx-auto">{lang === "ar" ? `هيكل ${DATA.ask.structure_ar}: ${DATA.ask.phase1}% حتى استرداد رأس المال، ثم ${DATA.ask.phase2}% لمدة ${DATA.ask.phase2_months} شهراً` : `${DATA.ask.structure_en}: ${DATA.ask.phase1}% until recovery, then ${DATA.ask.phase2}% for ${DATA.ask.phase2_months} months`}</p>
+          <div className="flex justify-center gap-4 mt-6 text-sm flex-wrap"><span className="bg-white/10 border border-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">Buyout: {DATA.ask.buyout_months} {lang === "ar" ? "شهر" : "mo"} × {DATA.ask.buyout_multiple}</span><span className="bg-white/10 border border-white/20 px-4 py-2 rounded-lg backdrop-blur-sm">Max: {DATA.ask.max_years} {lang === "ar" ? "سنة" : "yrs"}</span></div>
+        </div>
+      </Card>
+      <Card className="overflow-hidden">
+        <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center">
+          <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><Eye size={16} /> Pitch Deck ({DATA.pitchSlides.length} {lang === "ar" ? "شريحة" : "slides"})</h3>
+          <div className="flex items-center gap-2"><button onClick={() => setSlideIdx(Math.max(0, slideIdx - 1))} className="p-2 rounded-lg hover:bg-muted dark:hover:bg-dark-muted"><SkipBack size={16} /></button><span className="text-xs font-mono text-gray-500">{slideIdx + 1}/{DATA.pitchSlides.length}</span><button onClick={() => setSlideIdx(Math.min(DATA.pitchSlides.length - 1, slideIdx + 1))} className="p-2 rounded-lg hover:bg-muted dark:hover:bg-dark-muted"><SkipForward size={16} /></button></div>
+        </div>
+        <div className="bg-dark-bg text-white p-10 min-h-[300px] flex flex-col items-center justify-center text-center">
+          <h3 className="text-2xl font-amiri font-bold text-gold mb-6">{lang === "ar" ? DATA.pitchSlides[slideIdx].title_ar : DATA.pitchSlides[slideIdx].title_en}</h3>
+          <p className="text-lg text-white/90 whitespace-pre-line leading-relaxed max-w-2xl">{lang === "ar" ? DATA.pitchSlides[slideIdx].content_ar : DATA.pitchSlides[slideIdx].content_en}</p>
+          <div className="flex gap-1.5 mt-8">{DATA.pitchSlides.map((_, i) => <button key={i} onClick={() => setSlideIdx(i)} className={cn("h-1.5 rounded-full transition-all", i === slideIdx ? "w-8 bg-gold" : "w-1.5 bg-gray-600 hover:bg-gray-500")} />)}</div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function DataRoomView({ t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={Briefcase} title={lang === "ar" ? "غرفة البيانات" : "Data Room"} subtitle={lang === "ar" ? "وثائق الاستعداد للاستثمار" : "Investment-Ready Documentation"} />
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-6"><CheckCircle2 size={20} className="text-emerald" /><h3 className="text-lg font-bold text-emerald dark:text-gold">Due Diligence Checklist</h3><Badge color="green">{DATA.checklists.dueDiligence.filter(c => c.done).length}/{DATA.checklists.dueDiligence.length}</Badge></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {DATA.checklists.dueDiligence.map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 dark:bg-dark-muted/50 hover:bg-muted dark:hover:bg-dark-muted">
+              <div className="flex items-center gap-3"><CheckCircle2 size={16} className={item.done ? "text-emerald" : "text-gray-300"} /><span className="text-sm">{lang === "ar" ? item.label_ar : item.label_en}</span></div>
+              <button className="p-2 rounded-lg hover:bg-emerald/10 text-emerald"><Download size={14} /></button>
+            </motion.div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function TeamView({ t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={Users} title={lang === "ar" ? "الفريق" : "Team"} subtitle={lang === "ar" ? "الهيكل التنظيمي" : "Organizational structure"} />
+      <Card className="p-8">
+        <div className="flex items-start gap-6">
+          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-white text-4xl font-amiri font-bold shadow-lg shrink-0">{(lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en)[0]}</div>
+          <div><h3 className="text-2xl font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en}</h3><p className="text-accent font-semibold mb-4">{lang === "ar" ? DATA.company.founder.role_ar : DATA.company.founder.role_en}</p><p className="text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? DATA.company.founder.bio_ar : DATA.company.founder.bio_en}</p></div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function SecurityView({ t, lang }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={ShieldCheck} title={lang === "ar" ? "الأمن والامتثال" : "Security & Compliance"} subtitle={lang === "ar" ? "بروتوكول أمني شامل" : "Comprehensive security protocol"} />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-6 text-center"><div className="text-4xl font-bold text-emerald dark:text-gold mb-2">{DATA.securityHighlights.attacks}</div><div className="text-sm text-gray-500">{lang === "ar" ? "هجمة محاكاة" : "Simulated attacks"}</div></Card>
+        <Card className="p-6 text-center"><div className="text-4xl font-bold text-gold-dark dark:text-gold mb-2">{DATA.securityHighlights.hallucinationTests}</div><div className="text-sm text-gray-500">{lang === "ar" ? "سؤال هلوسة" : "Hallucination tests"}</div></Card>
+        <Card className="p-6 text-center"><div className="text-2xl font-bold text-accent mb-2">{DATA.securityHighlights.encryption}</div><div className="text-sm text-gray-500">{lang === "ar" ? "تشفير البيانات" : "Data encryption"}</div></Card>
+      </div>
+      <Card className="p-6">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "طبقات الحماية" : "Protection Layers"}</h3>
+        <div className="space-y-3">
+          {[
+            { ar: "Container Isolation لكل عميل", en: "Container Isolation per client" },
+            { ar: "Error Node System", en: "Error Node System" },
+            { ar: "TLS 1.3 للنقل المشفر", en: "TLS 1.3 encrypted transport" },
+            { ar: "إدارة المفاتيح المركزية", en: "Centralized key management" },
+            { ar: "Backup يومي مشفر", en: "Daily encrypted backup" },
+            { ar: "NDA + DPA لكل عميل", en: "NDA + DPA for every client" },
+          ].map((item, i) => (
+            <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex items-center gap-3 text-sm"><CheckCircle2 size={16} className="text-emerald shrink-0" /><span className="text-gray-700 dark:text-gray-300">{lang === "ar" ? item.ar : item.en}</span></motion.div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function SettingsView({ lang, setLang, dark, setDark, t }: any) {
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={Settings} title={lang === "ar" ? "الإعدادات" : "Settings"} subtitle={lang === "ar" ? "تخصيص تجربة العرض" : "Customize experience"} />
+      <Card className="p-6">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "اللغة" : "Language"}</h3>
+        <div className="flex gap-3">
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setLang("ar")} className={cn("px-6 py-3 rounded-xl font-bold transition-all", lang === "ar" ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}>العربية</motion.button>
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setLang("en")} className={cn("px-6 py-3 rounded-xl font-bold transition-all", lang === "en" ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}>English</motion.button>
+        </div>
+      </Card>
+      <Card className="p-6">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "المظهر" : "Appearance"}</h3>
+        <div className="flex gap-3">
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDark(false)} className={cn("px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2", !dark ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}><Sun size={16} /> {lang === "ar" ? "فاتح" : "Light"}</motion.button>
+          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDark(true)} className={cn("px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2", dark ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}><Moon size={16} /> {lang === "ar" ? "داكن" : "Dark"}</motion.button>
+        </div>
+      </Card>
     </div>
   );
 }
