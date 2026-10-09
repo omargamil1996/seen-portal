@@ -372,16 +372,29 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
           <div className="h-48 w-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
-                <Pie data={[{ name: DATA.financials.useOfFunds.operations[lang === "ar" ? "label_ar" : "label_en"], value: 60 }, { name: DATA.financials.useOfFunds.marketing[lang === "ar" ? "label_ar" : "label_en"], value: 40 }]} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={5} dataKey="value">
-                  <Cell fill="#0F5132" /><Cell fill="#F97316" />
+                <Pie data={DATA.financials.useOfFunds.breakdown.filter((b: any) => b.percentage > 0).map((b: any) => ({ name: lang === "ar" ? b.category_ar : b.category_en, value: b.percentage }))} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
+                  {DATA.financials.useOfFunds.breakdown.filter((b: any) => b.percentage > 0).map((_: any, i: number) => (
+                    <Cell key={i} fill={["#0F5132", "#D4AF37", "#F97316", "#6B7280"][i % 4]} />
+                  ))}
                 </Pie>
                 <Tooltip />
               </PieChart>
             </ResponsiveContainer>
           </div>
           <div className="space-y-3 flex-1">
-            <div className="flex items-center gap-3"><div className="w-4 h-4 rounded bg-emerald" /><div><strong>60% {DATA.financials.useOfFunds.operations[lang === "ar" ? "label_ar" : "label_en"]}</strong><br /><span className="text-xs text-gray-500">SAR {DATA.financials.useOfFunds.operations.amount.toLocaleString()}</span></div></div>
-            <div className="flex items-center gap-3"><div className="w-4 h-4 rounded bg-accent" /><div><strong>40% {DATA.financials.useOfFunds.marketing[lang === "ar" ? "label_ar" : "label_en"]}</strong><br /><span className="text-xs text-gray-500">SAR {DATA.financials.useOfFunds.marketing.amount.toLocaleString()}</span></div></div>
+            {DATA.financials.useOfFunds.breakdown.filter((b: any) => b.percentage > 0).map((item: any, i: number) => {
+              const colors = ["bg-emerald", "bg-gold", "bg-accent", "bg-gray-500"];
+              return (
+                <div key={i} className="flex items-center gap-3">
+                  <div className={`w-4 h-4 rounded ${colors[i % 4]}`} />
+                  <div>
+                    <strong>{item.percentage}% {lang === "ar" ? item.category_ar : item.category_en}</strong>
+                    <br />
+                    <span className="text-xs text-gray-500">${item.amount.toLocaleString()}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </Card>
