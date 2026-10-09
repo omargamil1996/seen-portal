@@ -1,5 +1,31 @@
 # Changelog
 
+## [5.1.0] - 2026-10-09
+
+### Added
+- **Static printable investor briefcase** at `/briefcase` with A4-optimized layout and "Save as PDF" button.
+- **Interactive sector modals** (`SectorModal.tsx`) with strategic justification, sub-sectors, persona, and operational readiness indicators.
+- **Data Room vault** (`DataRoomVault.tsx`) listing all 49 indexed documents without exposing sensitive content.
+- **20-section expanded business plan** with detailed Arabic and English content.
+- **Expanded risk register** across 8 categories: operational, technical, market, regulatory, financial, legal, quality, security.
+- **Verified 2024-2026 data sources** with access dates (IMARC, Grand View, MarketsandMarkets, Richmond Fed, UiPath IR, etc.).
+
+### Changed
+- **Use of funds updated to USD 15,000** with no employee salaries: 67% hardware/CapEx, 20% R&D/infrastructure, 13% marketing, 0% salaries.
+- **Roadmap updated**: first paid client moved from Q3 2026 to Q4 2026.
+- **Dashboard briefcase cards now perform real actions** instead of dead buttons (navigate to Financials, Data Room, or /briefcase).
+- **Header now exposes direct link** to static briefcase route.
+- **Sectors page** opens full interactive modal on click with strategy, persona, and readiness.
+- **Data Room page** now uses dedicated vault component showing 49 indexed files.
+
+### Security
+- No sensitive content from 05_security or 07_migration is exposed in public site data.
+- Data Room shows only filenames, dates, categories, and abstract 2-3 word summaries.
+- Full document access requires direct contact and NDA where applicable.
+
+---
+
+
 ## [5.0.0] - 2026-10-09
 
 ### Major Release: Investor Briefcase v5.0
