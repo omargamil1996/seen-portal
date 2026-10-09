@@ -2373,23 +2373,299 @@ function SecurityView({ t, lang }: any) {
 
 
 function SettingsView({ lang, setLang, dark, setDark, t }: any) {
+  const [fontSize, setFontSize] = useState(16);
+  const [accentColor, setAccentColor] = useState("#F97316");
+  const [animationsEnabled, setAnimationsEnabled] = useState(true);
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
+
+  const colorOptions = [
+    { name: "Emerald", value: "#0F5132" },
+    { name: "Gold", value: "#D4AF37" },
+    { name: "Orange", value: "#F97316" },
+    { name: "Purple", value: "#8B5CF6" },
+    { name: "Pink", value: "#EC4899" },
+    { name: "Blue", value: "#3B82F6" },
+  ];
+
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Settings} title={lang === "ar" ? "الإعدادات" : "Settings"} subtitle={lang === "ar" ? "تخصيص تجربة العرض" : "Customize experience"} />
+      <SectionHeader 
+        icon={Settings} 
+        title={lang === "ar" ? "الإعدادات" : "Settings"} 
+        subtitle={lang === "ar" ? "تخصيص تجربة العرض والتفاعل" : "Customize viewing and interaction experience"} 
+      />
+
+      {/* Language Settings */}
       <Card className="p-6">
-        <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "اللغة" : "Language"}</h3>
-        <div className="flex gap-3">
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setLang("ar")} className={cn("px-6 py-3 rounded-xl font-bold transition-all", lang === "ar" ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}>العربية</motion.button>
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setLang("en")} className={cn("px-6 py-3 rounded-xl font-bold transition-all", lang === "en" ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}>English</motion.button>
+        <h3 className="font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <Globe size={18} />
+          {lang === "ar" ? "اللغة" : "Language"}
+        </h3>
+        <div className="grid grid-cols-2 gap-3">
+          <motion.button 
+            whileHover={{ scale: 1.02 }} 
+            whileTap={{ scale: 0.98 }} 
+            onClick={() => setLang("ar")} 
+            className={cn(
+              "p-5 rounded-xl font-bold transition-all border-2 text-right",
+              lang === "ar" 
+                ? "bg-emerald text-white border-emerald shadow-lg" 
+                : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400 border-transparent hover:border-emerald/40"
+            )}
+          >
+            <div className="text-2xl mb-2">🇸🇦</div>
+            <div className="text-lg font-amiri">العربية</div>
+            <div className="text-xs opacity-75">Arabic (RTL)</div>
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.02 }} 
+            whileTap={{ scale: 0.98 }} 
+            onClick={() => setLang("en")} 
+            className={cn(
+              "p-5 rounded-xl font-bold transition-all border-2",
+              lang === "en" 
+                ? "bg-emerald text-white border-emerald shadow-lg" 
+                : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400 border-transparent hover:border-emerald/40"
+            )}
+          >
+            <div className="text-2xl mb-2">🇬🇧</div>
+            <div className="text-lg">English</div>
+            <div className="text-xs opacity-75">English (LTR)</div>
+          </motion.button>
         </div>
       </Card>
+
+      {/* Theme Settings */}
       <Card className="p-6">
-        <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "المظهر" : "Appearance"}</h3>
-        <div className="flex gap-3">
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDark(false)} className={cn("px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2", !dark ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}><Sun size={16} /> {lang === "ar" ? "فاتح" : "Light"}</motion.button>
-          <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDark(true)} className={cn("px-6 py-3 rounded-xl font-bold transition-all flex items-center gap-2", dark ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400")}><Moon size={16} /> {lang === "ar" ? "داكن" : "Dark"}</motion.button>
+        <h3 className="font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          {dark ? <Moon size={18} /> : <Sun size={18} />}
+          {lang === "ar" ? "المظهر" : "Appearance"}
+        </h3>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setDark(false)} 
+            className={cn(
+              "p-5 rounded-xl font-bold transition-all border-2 bg-white",
+              !dark ? "border-emerald shadow-lg ring-2 ring-emerald/20" : "border-gray-200 hover:border-emerald/40"
+            )}
+          >
+            <Sun size={32} className="mx-auto mb-2 text-amber-500" />
+            <div className="text-emerald">{lang === "ar" ? "فاتح" : "Light"}</div>
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => setDark(true)} 
+            className={cn(
+              "p-5 rounded-xl font-bold transition-all border-2 bg-dark-bg",
+              dark ? "border-gold shadow-lg ring-2 ring-gold/20" : "border-gray-700 hover:border-gold/40"
+            )}
+          >
+            <Moon size={32} className="mx-auto mb-2 text-gold" />
+            <div className="text-white">{lang === "ar" ? "داكن" : "Dark"}</div>
+          </motion.button>
+        </div>
+
+        {/* Font Size Slider */}
+        <div className="mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <label className="text-sm font-semibold">{lang === "ar" ? "حجم الخط" : "Font Size"}</label>
+            <span className="text-sm font-bold text-emerald">{fontSize}px</span>
+          </div>
+          <input 
+            type="range" 
+            min="12" 
+            max="24" 
+            value={fontSize}
+            onChange={(e) => setFontSize(Number(e.target.value))}
+            className="w-full accent-emerald"
+          />
+          <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <span>{lang === "ar" ? "صغير" : "Small"}</span>
+            <span>{lang === "ar" ? "كبير" : "Large"}</span>
+          </div>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400" style={{ fontSize: `${fontSize}px` }}>
+            {lang === "ar" ? "نص تجريبي لمعاينة حجم الخط" : "Sample text to preview font size"}
+          </p>
+        </div>
+
+        {/* Accent Color Picker */}
+        <div>
+          <label className="text-sm font-semibold block mb-3">
+            {lang === "ar" ? "اللون المميز" : "Accent Color"}
+          </label>
+          <div className="flex flex-wrap gap-2">
+            {colorOptions.map((color) => (
+              <motion.button
+                key={color.value}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setAccentColor(color.value)}
+                className={cn(
+                  "w-12 h-12 rounded-xl border-2 transition-all",
+                  accentColor === color.value 
+                    ? "border-emerald ring-4 ring-emerald/20 scale-110" 
+                    : "border-transparent hover:border-border"
+                )}
+                style={{ backgroundColor: color.value }}
+                title={color.name}
+              />
+            ))}
+          </div>
+        </div>
+      </Card>
+
+      {/* Interaction Settings */}
+      <Card className="p-6">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <Zap size={18} />
+          {lang === "ar" ? "التفاعل" : "Interaction"}
+        </h3>
+        <div className="space-y-4">
+          {[
+            { 
+              label_ar: "تفعيل الحركات", 
+              label_en: "Enable Animations",
+              desc_ar: "تفعيل الحركات والانتقالات في الموقع",
+              desc_en: "Enable animations and transitions",
+              value: animationsEnabled,
+              onChange: () => setAnimationsEnabled(!animationsEnabled),
+              icon: Sparkles
+            },
+            { 
+              label_ar: "تفعيل الأصوات", 
+              label_en: "Enable Sounds",
+              desc_ar: "تفعيل أصوات التفاعل (اختياري)",
+              desc_en: "Enable interaction sounds (optional)",
+              value: soundEnabled,
+              onChange: () => setSoundEnabled(!soundEnabled),
+              icon: Volume2
+            },
+            { 
+              label_ar: "الإشعارات", 
+              label_en: "Notifications",
+              desc_ar: "تلقي إشعارات التحديثات",
+              desc_en: "Receive update notifications",
+              value: notificationsEnabled,
+              onChange: () => setNotificationsEnabled(!notificationsEnabled),
+              icon: Bell
+            },
+            { 
+              label_ar: "الحفظ التلقائي", 
+              label_en: "Auto-Save",
+              desc_ar: "حفظ الإعدادات تلقائياً",
+              desc_en: "Auto-save settings",
+              value: autoSaveEnabled,
+              onChange: () => setAutoSaveEnabled(!autoSaveEnabled),
+              icon: Save
+            },
+          ].map((setting, i) => (
+            <div key={i} className="flex items-center justify-between p-4 bg-muted/30 dark:bg-dark-muted/30 rounded-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald/10 flex items-center justify-center text-emerald">
+                  <setting.icon size={18} />
+                </div>
+                <div>
+                  <div className="font-semibold text-sm">
+                    {lang === "ar" ? setting.label_ar : setting.label_en}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {lang === "ar" ? setting.desc_ar : setting.desc_en}
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={setting.onChange}
+                className={cn(
+                  "relative w-14 h-8 rounded-full transition-all",
+                  setting.value 
+                    ? "bg-emerald" 
+                    : "bg-gray-300 dark:bg-gray-700"
+                )}
+              >
+                <motion.div
+                  animate={{ x: setting.value ? 28 : 4 }}
+                  className="absolute top-1 w-6 h-6 bg-white rounded-full shadow-md"
+                />
+              </button>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Data & Privacy */}
+      <Card className="p-6">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <Shield size={18} />
+          {lang === "ar" ? "البيانات والخصوصية" : "Data & Privacy"}
+        </h3>
+        <div className="space-y-3">
+          <button className="w-full flex items-center justify-between p-4 bg-muted/30 dark:bg-dark-muted/30 rounded-xl hover:bg-muted/50 transition-colors">
+            <div className="flex items-center gap-3">
+              <Download size={18} className="text-emerald" />
+              <span className="text-sm font-semibold">{lang === "ar" ? "تصدير البيانات" : "Export Data"}</span>
+            </div>
+            <ChevronDown size={16} className="text-gray-400" />
+          </button>
+          <button className="w-full flex items-center justify-between p-4 bg-muted/30 dark:bg-dark-muted/30 rounded-xl hover:bg-muted/50 transition-colors">
+            <div className="flex items-center gap-3">
+              <Trash2 size={18} className="text-red-500" />
+              <span className="text-sm font-semibold text-red-500">{lang === "ar" ? "مسح البيانات المحلية" : "Clear Local Data"}</span>
+            </div>
+            <ChevronDown size={16} className="text-gray-400" />
+          </button>
+          <button className="w-full flex items-center justify-between p-4 bg-muted/30 dark:bg-dark-muted/30 rounded-xl hover:bg-muted/50 transition-colors">
+            <div className="flex items-center gap-3">
+              <Info size={18} className="text-gold" />
+              <span className="text-sm font-semibold">{lang === "ar" ? "سياسة الخصوصية" : "Privacy Policy"}</span>
+            </div>
+            <ChevronDown size={16} className="text-gray-400" />
+          </button>
+        </div>
+      </Card>
+
+      {/* About Section */}
+      <Card className="p-6 bg-gradient-to-br from-emerald/5 to-gold/5 border-emerald/20">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2 font-amiri">
+          <Info size={18} />
+          {lang === "ar" ? "حول المشروع" : "About Project"}
+        </h3>
+        <div className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+          <div className="flex justify-between p-2 bg-card dark:bg-dark-card rounded-lg">
+            <span className="text-gray-500">{lang === "ar" ? "الإصدار" : "Version"}</span>
+            <span className="font-bold text-emerald">v5.1.0</span>
+          </div>
+          <div className="flex justify-between p-2 bg-card dark:bg-dark-card rounded-lg">
+            <span className="text-gray-500">{lang === "ar" ? "آخر تحديث" : "Last Update"}</span>
+            <span className="font-bold text-gold">2026-10-09</span>
+          </div>
+          <div className="flex justify-between p-2 bg-card dark:bg-dark-card rounded-lg">
+            <span className="text-gray-500">Next.js</span>
+            <span className="font-bold">14.2.0</span>
+          </div>
+          <div className="flex justify-between p-2 bg-card dark:bg-dark-card rounded-lg">
+            <span className="text-gray-500">React</span>
+            <span className="font-bold">18.2.0</span>
+          </div>
+          <div className="flex justify-between p-2 bg-card dark:bg-dark-card rounded-lg">
+            <span className="text-gray-500">TypeScript</span>
+            <span className="font-bold">5.3.3</span>
+          </div>
+        </div>
+        <div className="mt-4 p-4 bg-emerald/10 rounded-xl border border-emerald/20">
+          <p className="text-xs text-center text-emerald dark:text-gold font-semibold">
+            {lang === "ar" 
+              ? "مبني بـ ❤️ بواسطة د.سين وفريق Seen Automation"
+              : "Built with ❤️ by Dr. Seen & Seen Automation Team"}
+          </p>
         </div>
       </Card>
     </div>
   );
 }
+
+
