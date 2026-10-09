@@ -982,124 +982,219 @@ function SectorsView({ t, lang }: any) {
 }
 
 function RoadmapView({ t, lang }: any) {
-  const [selectedPhase, setSelectedPhase] = useState<any>(null);
+  const [selectedPhase, setSelectedPhase] = useState<number | null>(null);
   
+  const phaseDetails = [
+    {
+      milestones_ar: ["دراسة شاملة للسوق السعودي والماليزي", "تحليل 23 منافساً", "إنشاء 49 ملفاً استراتيجياً"],
+      milestones_en: ["Comprehensive Saudi & Malaysian market study", "23 competitor analysis", "Built 49 strategic documents"],
+      kpis_ar: ["✅ TAM/SAM/SOM محدد", "✅ رؤية واضحة", "✅ هوية مؤسسية"],
+      kpis_en: ["✅ TAM/SAM/SOM defined", "✅ Clear vision", "✅ Corporate identity"],
+    },
+    {
+      milestones_ar: ["تسجيل Sdn Bhd في ماليزيا", "شراء العتاد ($10K)", "إعداد Supabase + n8n", "مراجعة شرعية للعقود"],
+      milestones_en: ["Register Sdn Bhd in Malaysia", "Purchase hardware ($10K)", "Setup Supabase + n8n", "Sharia contract review"],
+      kpis_ar: ["✅ كيان قانوني", "✅ بنية تحتية", "✅ امتثال شرعي"],
+      kpis_en: ["✅ Legal entity", "✅ Infrastructure", "✅ Sharia compliance"],
+    },
+    {
+      milestones_ar: ["إطلاق بوابة المستثمرين", "اختبار Landing Bot", "أول 50 زائر تفاعلي", "ضبط الأنظمة"],
+      milestones_en: ["Launch investor portal", "Test Landing Bot", "First 50 interactive visitors", "Systems tuning"],
+      kpis_ar: ["🟡 50 زائر", "🟡 10 تحاليل", "🟡 3 مكالمات"],
+      kpis_en: ["🟡 50 visitors", "🟡 10 analyses", "🟡 3 calls"],
+    },
+    {
+      milestones_ar: ["إغلاق أول عقد مدفوع", "تطبيق بروتوكول Error Node", "أول دراسة حالة", "أول شهادة عميل"],
+      milestones_en: ["Close first paid contract", "Apply Error Node protocol", "First case study", "First client testimonial"],
+      kpis_ar: ["⭐ أول عميل", "⭐ SAR 6,000 تأسيس", "⭐ SLA مُفعّل"],
+      kpis_en: ["⭐ First client", "⭐ SAR 6,000 setup", "⭐ Active SLA"],
+    },
+    {
+      milestones_ar: ["الوصول لـ 20 عميل", "إطلاق رمح الطب", "توظيف أول موظف دعم", "MRR SAR 32K"],
+      milestones_en: ["Reach 20 clients", "Launch medical spear", "Hire first support staff", "MRR SAR 32K"],
+      kpis_ar: ["🎯 20 عميل", "🎯 قطاعان", "🎯 MRR 32K"],
+      kpis_en: ["🎯 20 clients", "🎯 2 sectors", "🎯 MRR 32K"],
+    },
+    {
+      milestones_ar: ["80+ عميل نشط", "إطلاق Micro-SaaS الأول", "توسع جغرافي", "MRR SAR 250K"],
+      milestones_en: ["80+ active clients", "Launch first Micro-SaaS", "Geographic expansion", "MRR SAR 250K"],
+      kpis_ar: ["🏆 80+ عميل", "🏆 منتج SaaS", "🏆 ARR $500K+"],
+      kpis_en: ["🏆 80+ clients", "🏆 SaaS product", "🏆 ARR $500K+"],
+    },
+  ];
+
   return (
     <div className="space-y-6">
       <SectionHeader 
-        icon={Map} 
-        title={lang === "ar" ? "رحلة المشروع" : "Project Roadmap"} 
-        subtitle={lang === "ar" ? "خريطة طريق تفاعلية من الفكرة إلى القيادة الإقليمية (2026-2028)" : "Interactive roadmap from idea to regional leadership (2026-2028)"} 
+        icon={MapIcon} 
+        title={lang === "ar" ? "رحلة المشروع" : "Project Journey"} 
+        subtitle={lang === "ar" ? "من لحظة الفكرة حتى القيادة الإقليمية — اضغط على أي مرحلة للتفاصيل" : "From idea inception to regional leadership — click any phase for details"} 
       />
 
       {/* Timeline Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <Card className="p-5 text-center">
-          <div className="text-3xl font-bold text-emerald font-amiri">36</div>
-          <div className="text-xs text-gray-500 uppercase tracking-wider">{lang === "ar" ? "شهر" : "Months"}</div>
+        <Card className="p-4 text-center">
+          <div className="text-3xl font-bold text-emerald font-amiri">{DATA.roadmap.length}</div>
+          <div className="text-xs text-gray-500 uppercase">{lang === "ar" ? "مراحل" : "Phases"}</div>
         </Card>
-        <Card className="p-5 text-center">
-          <div className="text-3xl font-bold text-gold-dark dark:text-gold font-amiri">6</div>
-          <div className="text-xs text-gray-500 uppercase tracking-wider">{lang === "ar" ? "مراحل رئيسية" : "Key Phases"}</div>
+        <Card className="p-4 text-center">
+          <div className="text-3xl font-bold text-gold-dark dark:text-gold font-amiri">3</div>
+          <div className="text-xs text-gray-500 uppercase">{lang === "ar" ? "سنوات" : "Years"}</div>
         </Card>
-        <Card className="p-5 text-center">
+        <Card className="p-4 text-center">
           <div className="text-3xl font-bold text-accent font-amiri">80+</div>
-          <div className="text-xs text-gray-500 uppercase tracking-wider">{lang === "ar" ? "عميل مستهدف" : "Target Clients"}</div>
+          <div className="text-xs text-gray-500 uppercase">{lang === "ar" ? "عميل Y3" : "Clients Y3"}</div>
         </Card>
-        <Card className="p-5 text-center">
+        <Card className="p-4 text-center">
           <div className="text-3xl font-bold text-emerald font-amiri">250K</div>
-          <div className="text-xs text-gray-500 uppercase tracking-wider">MRR {lang === "ar" ? "شهري" : "Monthly"}</div>
+          <div className="text-xs text-gray-500 uppercase">MRR Y3</div>
         </Card>
       </div>
 
-      {/* Interactive Timeline */}
+      {/* Timeline with Clickable Phases */}
       <div className="relative">
-        {/* Vertical line */}
-        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald via-gold to-accent hidden md:block" />
-        
-        <div className="space-y-4">
-          {DATA.roadmap.map((item: any, i: number) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="relative"
-            >
-              {/* Timeline dot */}
-              <div className="absolute left-6 w-4 h-4 rounded-full bg-gradient-to-br from-emerald to-gold border-4 border-background dark:border-dark-bg shadow-lg hidden md:block z-10" />
-              
-              {/* Card */}
-              <Card 
-                className={cn(
-                  "ml-0 md:ml-16 p-6 cursor-pointer transition-all hover:shadow-elevated",
-                  selectedPhase === item && "ring-2 ring-emerald shadow-elevated"
-                )}
-                onClick={() => setSelectedPhase(selectedPhase === item ? null : item)}
+        <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
+        <div className="space-y-6">
+          {DATA.roadmap.map((item: any, i: number) => {
+            const isSelected = selectedPhase === i;
+            const phase = phaseDetails[i];
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ delay: i * 0.1 }}
+                className="relative flex gap-6 items-start"
               >
-                <div className="flex justify-between items-start mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="text-3xl">{item.phase_ar.slice(0, 2)}</div>
-                    <div>
-                      <h3 className="text-lg font-bold text-emerald dark:text-gold font-amiri">
-                        {lang === "ar" ? item.phase_ar : item.phase_en}
-                      </h3>
-                      <Badge color="gold">{lang === "ar" ? item.date_ar : item.date_en}</Badge>
-                    </div>
-                  </div>
-                  <ChevronDown 
-                    size={20} 
+                <div className="hidden md:flex flex-col items-center shrink-0">
+                  <motion.button
+                    onClick={() => setSelectedPhase(isSelected ? null : i)}
+                    whileHover={{ scale: 1.2 }}
+                    whileTap={{ scale: 0.95 }}
                     className={cn(
-                      "text-gray-400 transition-transform duration-300",
-                      selectedPhase === item && "rotate-180 text-accent"
-                    )} 
-                  />
+                      "w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold shadow-lg border-4 z-10 transition-all",
+                      isSelected 
+                        ? "bg-gold text-white border-gold shadow-glow-gold scale-110" 
+                        : "bg-emerald text-white border-background dark:border-dark-bg hover:bg-emerald-dark"
+                    )}
+                  >
+                    {item.phase_ar.slice(0, 2)}
+                  </motion.button>
+                  {i < DATA.roadmap.length - 1 && (
+                    <div className="w-0.5 h-4 bg-emerald/30 mt-1" />
+                  )}
                 </div>
                 
-                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                  {lang === "ar" ? item.desc_ar : item.desc_en}
-                </p>
-
-                {/* Expanded details */}
-                {selectedPhase === item && item.details && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="mt-4 pt-4 border-t border-border/50"
+                <Card 
+                  className={cn(
+                    "flex-1 overflow-hidden transition-all",
+                    isSelected && "border-emerald/40 shadow-elevated ring-2 ring-emerald/20"
+                  )}
+                >
+                  <button 
+                    onClick={() => setSelectedPhase(isSelected ? null : i)}
+                    className="w-full p-6 text-right hover:bg-muted/30 dark:hover:bg-dark-muted/30 transition-colors"
                   >
-                    <h4 className="font-bold text-emerald dark:text-gold mb-2">
-                      {lang === "ar" ? "التفاصيل:" : "Details:"}
-                    </h4>
-                    <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                      {item.details.map((detail: string, j: number) => (
-                        <li key={j} className="flex items-start gap-2">
-                          <CheckCircle2 size={14} className="text-emerald mt-0.5 shrink-0" />
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {item.kpis && (
-                      <div className="mt-4 grid grid-cols-2 gap-3">
-                        {item.kpis.map((kpi: any, k: number) => (
-                          <div key={k} className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg">
-                            <div className="text-xs text-gray-500">{kpi.label}</div>
-                            <div className="font-bold text-emerald dark:text-gold">{kpi.value}</div>
-                          </div>
-                        ))}
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="text-lg font-bold text-emerald dark:text-gold">
+                        {lang === "ar" ? item.phase_ar : item.phase_en}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <Badge color="gold">{lang === "ar" ? item.date_ar : item.date_en}</Badge>
+                        <ChevronDown 
+                          size={18} 
+                          className={cn("text-accent transition-transform", isSelected && "rotate-180")} 
+                        />
                       </div>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                      {lang === "ar" ? item.desc_ar : item.desc_en}
+                    </p>
+                  </button>
+
+                  {/* Expanded Content */}
+                  <AnimatePresence>
+                    {isSelected && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden border-t border-border dark:border-dark-border"
+                      >
+                        <div className="p-6 space-y-4 bg-gradient-to-br from-emerald/5 to-gold/5">
+                          {/* Milestones */}
+                          <div>
+                            <h4 className="font-bold text-emerald dark:text-gold mb-3 flex items-center gap-2">
+                              <Target size={16} />
+                              {lang === "ar" ? "المعالم الرئيسية" : "Key Milestones"}
+                            </h4>
+                            <div className="space-y-2">
+                              {(lang === "ar" ? phase.milestones_ar : phase.milestones_en).map((m: string, j: number) => (
+                                <motion.div
+                                  key={j}
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: j * 0.05 }}
+                                  className="flex items-start gap-2 text-sm"
+                                >
+                                  <span className="text-gold mt-0.5">▸</span>
+                                  <span className="text-gray-700 dark:text-gray-300">{m}</span>
+                                </motion.div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* KPIs */}
+                          <div>
+                            <h4 className="font-bold text-emerald dark:text-gold mb-3 flex items-center gap-2">
+                              <Activity size={16} />
+                              {lang === "ar" ? "مؤشرات الأداء" : "KPIs"}
+                            </h4>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                              {(lang === "ar" ? phase.kpis_ar : phase.kpis_en).map((kpi: string, j: number) => (
+                                <motion.div
+                                  key={j}
+                                  initial={{ opacity: 0, scale: 0.9 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: j * 0.08 }}
+                                  className="bg-card dark:bg-dark-card p-3 rounded-lg border border-border text-xs font-semibold text-emerald dark:text-gold text-center"
+                                >
+                                  {kpi}
+                                </motion.div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
                     )}
-                  </motion.div>
-                )}
-              </Card>
-            </motion.div>
-          ))}
+                  </AnimatePresence>
+                </Card>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
+
+      {/* Final Destination */}
+      <Card className="p-8 text-center bg-gradient-to-br from-emerald via-emerald-dark to-gold text-white relative overflow-hidden">
+        <div className="absolute inset-0 noise opacity-20" />
+        <div className="relative z-10">
+          <div className="text-5xl mb-4">🎯</div>
+          <h3 className="text-2xl font-bold font-amiri mb-2 text-gold">
+            {lang === "ar" ? "الوجهة النهائية" : "Final Destination"}
+          </h3>
+          <p className="text-white/90 max-w-xl mx-auto">
+            {lang === "ar" 
+              ? "قيادة سوق الأتمتة الهندسي في العالم العربي، مع ARR يتجاوز $2M و80+ عميل نشط."
+              : "Leading engineering automation market in the Arab world, with ARR exceeding $2M and 80+ active clients."}
+          </p>
+        </div>
+      </Card>
     </div>
   );
 }
-
 
 function RisksView({ t, lang }: any) {
   // Group risks by category
