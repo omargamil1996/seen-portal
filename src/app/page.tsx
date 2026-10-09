@@ -1408,30 +1408,171 @@ function TeamView({ t, lang }: any) {
 function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={ShieldCheck} title={lang === "ar" ? "الأمن والامتثال" : "Security & Compliance"} subtitle={lang === "ar" ? "بروتوكول أمني شامل" : "Comprehensive security protocol"} />
+      <SectionHeader 
+        icon={ShieldCheck} 
+        title={lang === "ar" ? "الأمن والامتثال" : "Security & Compliance"} 
+        subtitle={lang === "ar" ? "بروتوكول أمني شامل يحمي بيانات العملاء والأنظمة" : "Comprehensive security protocol protecting client data and systems"} 
+      />
+
+      {/* Big Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-6 text-center"><div className="text-4xl font-bold text-emerald dark:text-gold mb-2">{DATA.securityHighlights.attacks}</div><div className="text-sm text-gray-500">{lang === "ar" ? "هجمة محاكاة" : "Simulated attacks"}</div></Card>
-        <Card className="p-6 text-center"><div className="text-4xl font-bold text-gold-dark dark:text-gold mb-2">{DATA.securityHighlights.hallucinationTests}</div><div className="text-sm text-gray-500">{lang === "ar" ? "سؤال هلوسة" : "Hallucination tests"}</div></Card>
-        <Card className="p-6 text-center"><div className="text-2xl font-bold text-accent mb-2">{DATA.securityHighlights.encryption}</div><div className="text-sm text-gray-500">{lang === "ar" ? "تشفير البيانات" : "Data encryption"}</div></Card>
+        <Card className="p-6 text-center border-emerald/30">
+          <div className="w-16 h-16 rounded-2xl bg-emerald/10 flex items-center justify-center mx-auto mb-4">
+            <Shield size={32} className="text-emerald" />
+          </div>
+          <div className="text-5xl font-bold text-emerald dark:text-gold font-amiri mb-2">{DATA.securityHighlights.attacks}</div>
+          <div className="text-sm text-gray-500 uppercase tracking-wider">
+            {lang === "ar" ? "هجمة محاكاة" : "Simulated Attacks"}
+          </div>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">
+            {lang === "ar" 
+              ? "يتم محاكاة 25 هجمة أمنية مختلفة قبل كل تسليم لضمان صلابة النظام."
+              : "25 different security attacks simulated before each delivery to ensure system resilience."}
+          </p>
+        </Card>
+
+        <Card className="p-6 text-center border-gold/30">
+          <div className="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-4">
+            <Activity size={32} className="text-gold" />
+          </div>
+          <div className="text-5xl font-bold text-gold-dark dark:text-gold font-amiri mb-2">{DATA.securityHighlights.hallucinationTests}</div>
+          <div className="text-sm text-gray-500 uppercase tracking-wider">
+            {lang === "ar" ? "سؤال هلوسة مُختبر" : "Hallucination Tests"}
+          </div>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">
+            {lang === "ar" 
+              ? "100 سؤال هلوسة يتم اختبارها على كل نموذج قبل الإطلاق لضمان دقة المخرجات."
+              : "100 hallucination questions tested on each model before launch to ensure output accuracy."}
+          </p>
+        </Card>
+
+        <Card className="p-6 text-center border-accent/30">
+          <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4">
+            <Lock size={32} className="text-accent" />
+          </div>
+          <div className="text-3xl font-bold text-accent font-amiri mb-2">{DATA.securityHighlights.encryption}</div>
+          <div className="text-sm text-gray-500 uppercase tracking-wider">
+            {lang === "ar" ? "تشفير البيانات" : "Data Encryption"}
+          </div>
+          <p className="text-xs text-gray-600 dark:text-gray-400 mt-3 leading-relaxed">
+            {lang === "ar" 
+              ? "تشفير AES-256 للتخزين، وTLS 1.3 للنقل، لضمان حماية كاملة للبيانات."
+              : "AES-256 encryption at rest, TLS 1.3 in transit, ensuring complete data protection."}
+          </p>
+        </Card>
       </div>
+
+      {/* Security Layers */}
       <Card className="p-6">
-        <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "طبقات الحماية" : "Protection Layers"}</h3>
+        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <Layers size={18} />
+          {lang === "ar" ? "طبقات الحماية المتعددة" : "Multi-Layer Protection"}
+        </h3>
         <div className="space-y-3">
           {[
-            { ar: "Container Isolation لكل عميل", en: "Container Isolation per client" },
-            { ar: "Error Node System", en: "Error Node System" },
-            { ar: "TLS 1.3 للنقل المشفر", en: "TLS 1.3 encrypted transport" },
-            { ar: "إدارة المفاتيح المركزية", en: "Centralized key management" },
-            { ar: "Backup يومي مشفر", en: "Daily encrypted backup" },
-            { ar: "NDA + DPA لكل عميل", en: "NDA + DPA for every client" },
+            { 
+              icon: Server,
+              ar: "Container Isolation لكل عميل", 
+              en: "Container Isolation per client",
+              desc_ar: "كل عميل له حاوية Docker معزولة تماماً، لا مشاركة للبيانات.",
+              desc_en: "Each client has a fully isolated Docker container, no data sharing."
+            },
+            { 
+              icon: Activity,
+              ar: "Error Node System للإشعار الفوري", 
+              en: "Error Node System for instant alerts",
+              desc_ar: "نظام يكتشف الأخطاء ويُرسل تنبيهاً فورياً للطرفين.",
+              desc_en: "System that detects errors and sends instant alerts to both parties."
+            },
+            { 
+              icon: Lock,
+              ar: "TLS 1.3 للنقل المشفر", 
+              en: "TLS 1.3 encrypted transport",
+              desc_ar: "جميع الاتصالات مشفرة بأحدث معايير TLS.",
+              desc_en: "All communications encrypted with latest TLS standards."
+            },
+            { 
+              icon: Shield,
+              ar: "إدارة المفاتيح المركزية (Doppler)", 
+              en: "Centralized key management (Doppler)",
+              desc_ar: "مفاتيح API والأسرار محفوظة في Doppler أو Infisical.",
+              desc_en: "API keys and secrets stored in Doppler or Infisical."
+            },
+            { 
+              icon: CheckCircle2,
+              ar: "Backup يومي مشفر + Offsite", 
+              en: "Daily encrypted backup + Offsite",
+              desc_ar: "نسخ احتياطية يومية مشفرة مع اختبار استعادة أسبوعي.",
+              desc_en: "Daily encrypted backups with weekly recovery testing."
+            },
+            { 
+              icon: FileText,
+              ar: "NDA + DPA لكل عميل", 
+              en: "NDA + DPA for every client",
+              desc_ar: "اتفاقيات سرية ومعالجة بيانات موقعة مع كل عميل.",
+              desc_en: "NDA and DPA agreements signed with every client."
+            },
           ].map((item, i) => (
-            <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex items-center gap-3 text-sm"><CheckCircle2 size={16} className="text-emerald shrink-0" /><span className="text-gray-700 dark:text-gray-300">{lang === "ar" ? item.ar : item.en}</span></motion.div>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="flex items-start gap-4 p-4 bg-muted/30 dark:bg-dark-muted/30 rounded-xl hover:bg-muted/50 transition-colors"
+            >
+              <div className="w-10 h-10 rounded-lg bg-emerald/10 flex items-center justify-center text-emerald shrink-0">
+                <item.icon size={18} />
+              </div>
+              <div className="flex-1">
+                <div className="font-bold text-emerald dark:text-gold mb-1">
+                  {lang === "ar" ? item.ar : item.en}
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {lang === "ar" ? item.desc_ar : item.desc_en}
+                </p>
+              </div>
+            </motion.div>
           ))}
         </div>
       </Card>
+
+      {/* Compliance Standards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="p-6 bg-gradient-to-br from-emerald/5 to-transparent border-emerald/20">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald text-2xl">🕌</div>
+            <h3 className="font-bold text-emerald dark:text-gold text-lg">
+              {lang === "ar" ? "الامتثال الشرعي" : "Sharia Compliance"}
+            </h3>
+          </div>
+          <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <li className="flex items-start gap-2"><span className="text-emerald mt-1">✓</span> {lang === "ar" ? "لا فوائد ربوية في أي تعامل" : "No riba (interest) in any transaction"}</li>
+            <li className="flex items-start gap-2"><span className="text-emerald mt-1">✓</span> {lang === "ar" ? "لا قطاعات محرمة (كحول، قمار، مخدرات)" : "No prohibited sectors (alcohol, gambling, drugs)"}</li>
+            <li className="flex items-start gap-2"><span className="text-emerald mt-1">✓</span> {lang === "ar" ? "عقود مراجعة من هيئة شرعية" : "Contracts reviewed by Sharia board"}</li>
+            <li className="flex items-start gap-2"><span className="text-emerald mt-1">✓</span> {lang === "ar" ? "مصدر المال حلال 100%" : "100% Halal funding source"}</li>
+          </ul>
+        </Card>
+
+        <Card className="p-6 bg-gradient-to-br from-gold/5 to-transparent border-gold/20">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold text-2xl">🛡️</div>
+            <h3 className="font-bold text-emerald dark:text-gold text-lg">
+              {lang === "ar" ? "الامتثال التنظيمي" : "Regulatory Compliance"}
+            </h3>
+          </div>
+          <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <li className="flex items-start gap-2"><span className="text-gold mt-1">✓</span> PDPL {lang === "ar" ? "نظام حماية البيانات السعودي" : "Saudi Data Protection Law"}</li>
+            <li className="flex items-start gap-2"><span className="text-gold mt-1">✓</span> GDPR {lang === "ar" ? "متوافق للمتعاملين الأوروبيين" : "Compliant for EU clients"}</li>
+            <li className="flex items-start gap-2"><span className="text-gold mt-1">✓</span> {lang === "ar" ? "مراجعة قانونية ربع سنوية" : "Quarterly legal review"}</li>
+            <li className="flex items-start gap-2"><span className="text-gold mt-1">✓</span> {lang === "ar" ? "DPA موقّع مع كل عميل" : "DPA signed with every client"}</li>
+          </ul>
+        </Card>
+      </div>
     </div>
   );
 }
+
 
 function SettingsView({ lang, setLang, dark, setDark, t }: any) {
   return (
