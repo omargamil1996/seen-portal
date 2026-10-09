@@ -906,7 +906,7 @@ function RisksView({ t, lang }: any) {
       <SectionHeader 
         icon={AlertTriangle} 
         title={lang === "ar" ? "إدارة المخاطر" : "Risk Management"} 
-        subtitle={lang === "ar" ? "سجل مخاطر شامل موثق مع خطط تخفيف قابلة للتنفيذ" : "Comprehensive documented risk register with executable mitigation plans"} 
+        subtitle={lang === "ar" ? "سجل مخاطر شامل - اضغط على أي مخاطرة لعرض التفاصيل الكاملة وخطة التخفيف" : "Comprehensive risk register - click any risk to see full details and mitigation plan"} 
       />
       
       {/* Risk Stats */}
@@ -958,51 +958,134 @@ function RisksView({ t, lang }: any) {
         </div>
       </Card>
 
-      {/* Risks grouped by category */}
+      {/* Risks grouped by category - EXPANDABLE */}
       {Object.entries(risksByCategory).map(([cat, risks]) => (
-        <Card key={cat} className="overflow-hidden">
-          <div className="bg-emerald text-white p-4">
+        <div key={cat} className="space-y-3">
+          <div className="bg-emerald text-white p-4 rounded-t-2xl">
             <h3 className="font-bold flex items-center gap-2">
               <AlertTriangle size={18} />
               {lang === "ar" ? (risks[0].category_ar || cat) : cat} ({risks.length})
             </h3>
           </div>
-          <div className="divide-y divide-border dark:divide-dark-border">
+          
+          <div className="space-y-2">
             {risks.map((r: any, i: number) => (
-              <motion.div 
+              <motion.details
                 key={i}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                className="p-5 hover:bg-muted/30 dark:hover:bg-dark-muted/30 transition-colors"
+                className="group bg-card dark:bg-dark-card rounded-xl border border-border shadow-card overflow-hidden open:shadow-elevated open:border-emerald/30"
               >
-                <div className="flex justify-between items-start mb-3 flex-wrap gap-2">
-                  <h4 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
-                    <span className="text-xs bg-emerald/10 dark:bg-emerald/20 px-2 py-0.5 rounded font-mono">#{String(DATA.risks.indexOf(r) + 1).padStart(2, "0")}</span>
-                    {lang === "ar" ? r.name_ar : r.name_en}
-                  </h4>
-                  <div className="flex gap-2">
-                    <Badge color={r.prob === "high" ? "red" : r.prob === "medium" ? "yellow" : "green"}>
-                      {lang === "ar" ? (r.prob === "high" ? "احتمال عالي" : r.prob === "medium" ? "احتمال متوسط" : "احتمال منخفض") : `${r.prob} prob`}
-                    </Badge>
-                    <Badge color={r.impact === "high" ? "red" : r.impact === "medium" ? "yellow" : "green"}>
-                      {lang === "ar" ? `أثر ${r.impact === "high" ? "عالي" : r.impact === "medium" ? "متوسط" : "منخفض"}` : `${r.impact} impact`}
-                    </Badge>
+                <summary className="p-5 cursor-pointer flex justify-between items-center select-none hover:bg-muted/50 dark:hover:bg-dark-muted/50 transition-colors">
+                  <div className="flex items-center gap-4 flex-1">
+                    <span className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-white flex items-center justify-center text-sm font-bold font-amiri shadow-md shrink-0">
+                      {String(DATA.risks.indexOf(r) + 1).padStart(2, "0")}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-emerald dark:text-gold mb-1 truncate">
+                        {lang === "ar" ? r.name_ar : r.name_en}
+                      </h4>
+                      <div className="flex gap-2 flex-wrap">
+                        <Badge color={r.prob === "high" ? "red" : r.prob === "medium" ? "yellow" : "green"}>
+                          {lang === "ar" ? (r.prob === "high" ? "احتمال عالي" : r.prob === "medium" ? "احتمال متوسط" : "احتمال منخفض") : `${r.prob} prob`}
+                        </Badge>
+                        <Badge color={r.impact === "high" ? "red" : r.impact === "medium" ? "yellow" : "green"}>
+                          {lang === "ar" ? `أثر ${r.impact === "high" ? "عالي" : r.impact === "medium" ? "متوسط" : "منخفض"}` : `${r.impact} impact`}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                  <ChevronDown size={20} className="text-gray-400 transition-transform duration-300 group-open:rotate-180 text-accent shrink-0" />
+                </summary>
+                
+                <div className="details-content px-5 pb-5 pt-0">
+                  <div className="border-t border-border/50 dark:border-dark-border/50 pt-4 space-y-4">
+                    
+                    {/* Risk Description */}
+                    <div>
+                      <h5 className="text-xs uppercase tracking-wider text-gray-500 mb-2 font-bold">
+                        {lang === "ar" ? "الوصف" : "Description"}
+                      </h5>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {lang === "ar" 
+                          ? `هذه المخاطرة تتعلق بـ ${r.name_ar}. يمكن أن تحدث بسبب ${r.prob === "high" ? "عوامل متعددة وشائعة" : r.prob === "medium" ? "عوامل متوسطة الاحتمال" : "عوامل نادرة"}.`
+                          : `This risk relates to ${r.name_en}. It may occur due to ${r.prob === "high" ? "multiple common factors" : r.prob === "medium" ? "moderate probability factors" : "rare factors"}.`}
+                      </p>
+                    </div>
+
+                    {/* Mitigation Plan */}
+                    <div className="bg-gradient-to-br from-emerald/5 to-gold/5 dark:from-emerald/10 dark:to-gold/10 p-4 rounded-xl border border-emerald/20">
+                      <h5 className="text-xs uppercase tracking-wider text-emerald mb-2 font-bold flex items-center gap-2">
+                        <ShieldCheck size={14} />
+                        {lang === "ar" ? "خطة التخفيف" : "Mitigation Plan"}
+                      </h5>
+                      <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {lang === "ar" ? r.mitigation_ar : r.mitigation_en}
+                      </p>
+                    </div>
+
+                    {/* Impact Analysis */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                        <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "التأثير المالي" : "Financial Impact"}</div>
+                        <div className="font-bold text-sm">
+                          {r.impact === "high" 
+                            ? (lang === "ar" ? "عالي (>50K SAR)" : "High (>50K SAR)")
+                            : r.impact === "medium"
+                            ? (lang === "ar" ? "متوسط (10-50K SAR)" : "Medium (10-50K SAR)")
+                            : (lang === "ar" ? "منخفض (<10K SAR)" : "Low (<10K SAR)")
+                          }
+                        </div>
+                      </div>
+                      <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                        <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "التأثير التشغيلي" : "Operational Impact"}</div>
+                        <div className="font-bold text-sm">
+                          {r.impact === "high" 
+                            ? (lang === "ar" ? "تعطيل كبير" : "Major Disruption")
+                            : r.impact === "medium"
+                            ? (lang === "ar" ? "تأخير متوسط" : "Moderate Delay")
+                            : (lang === "ar" ? "تأثير محدود" : "Limited Impact")
+                          }
+                        </div>
+                      </div>
+                      <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg">
+                        <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "المسؤول" : "Owner"}</div>
+                        <div className="font-bold text-sm">
+                          {lang === "ar" ? "المؤسس + د.سين" : "Founder + Dr. Seen"}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Steps */}
+                    <div>
+                      <h5 className="text-xs uppercase tracking-wider text-gray-500 mb-2 font-bold">
+                        {lang === "ar" ? "خطوات العمل" : "Action Steps"}
+                      </h5>
+                      <div className="space-y-2">
+                        {[1, 2, 3].map((step) => (
+                          <div key={step} className="flex items-start gap-3 p-2 bg-muted/20 dark:bg-dark-muted/20 rounded-lg">
+                            <div className="w-6 h-6 rounded-full bg-emerald/10 flex items-center justify-center text-emerald text-xs font-bold shrink-0">
+                              {step}
+                            </div>
+                            <div className="text-sm text-gray-700 dark:text-gray-300">
+                              {lang === "ar" 
+                                ? `خطوة ${step}: ${step === 1 ? "مراقبة مستمرة وكشف مبكر" : step === 2 ? "تطبيق خطة التخفيف فوراً" : "توثيق الدروس المستفادة وتحديث البروتوكول"}`
+                                : `Step ${step}: ${step === 1 ? "Continuous monitoring and early detection" : step === 2 ? "Apply mitigation plan immediately" : "Document lessons learned and update protocol"}`
+                              }
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
                   </div>
                 </div>
-                <div className="bg-muted/30 dark:bg-dark-muted/30 p-3 rounded-lg border-r-4 border-emerald">
-                  <div className="text-xs text-gray-500 mb-1 uppercase tracking-wider">
-                    {lang === "ar" ? "خطة التخفيف" : "Mitigation Plan"}
-                  </div>
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {lang === "ar" ? r.mitigation_ar : r.mitigation_en}
-                  </p>
-                </div>
-              </motion.div>
+              </motion.details>
             ))}
           </div>
-        </Card>
+        </div>
       ))}
     </div>
   );
