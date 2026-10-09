@@ -439,7 +439,10 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
 
   const FinSlider = ({ label, value, min, max, step, unit, onChange }: any) => (
     <div className="group">
-      <div className="flex justify-between items-center mb-2"><span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{label}</span><span className="text-sm font-bold text-gold tabular-nums">{typeof value === "number" ? value.toLocaleString() : value} {unit}</span></div>
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{label}</span>
+        <span className="text-sm font-bold text-gold tabular-nums">{typeof value === "number" ? value.toLocaleString() : value} {unit}</span>
+      </div>
       <input type="range" min={min} max={max} step={step} value={value} onChange={(e) => onChange(parseFloat(e.target.value))} className="w-full" />
     </div>
   );
@@ -451,32 +454,256 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
     </motion.div>
   );
 
+  const unitColorMap: Record<string, string> = {
+    emerald: "text-emerald bg-emerald/10 border-emerald/20",
+    gold: "text-gold-dark dark:text-gold bg-gold/10 border-gold/20",
+    accent: "text-accent bg-accent/10 border-accent/20",
+    red: "text-red-600 bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800",
+  };
+
   return (
     <div className="space-y-8">
-      <SectionHeader icon={Wallet} title={lang === "ar" ? "النمذجة المالية التفاعلية" : "Interactive Financial Model"} subtitle={lang === "ar" ? "حرّك المؤشرات وشاهد التأثير الفوري" : "Move sliders and see instant impact"} />
+      <SectionHeader icon={Wallet} title={lang === "ar" ? "النمذجة المالية التفاعلية" : "Interactive Financial Model"} subtitle={lang === "ar" ? "حرّك المؤشرات وشاهد التأثير الفوري على الرسوم والمخرجات" : "Move sliders and see instant impact on charts and outputs"} />
+
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-dark-bg dark:bg-black noise" />
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
           <div className="space-y-6">
-            <FinSlider label={lang === "ar" ? "Setup Fees" : "Setup Fees"} value={fin.arpu} min={500} max={5000} step={100} unit="SAR" onChange={(v: number) => setFin({ ...fin, arpu: v })} />
+            <FinSlider label={lang === "ar" ? "ARPU / Setup Value" : "ARPU / Setup Value"} value={fin.arpu} min={500} max={5000} step={100} unit="SAR" onChange={(v: number) => setFin({ ...fin, arpu: v })} />
             <FinSlider label={lang === "ar" ? "Churn Rate" : "Churn Rate"} value={fin.churn} min={1} max={20} step={1} unit="%" onChange={(v: number) => setFin({ ...fin, churn: v })} />
             <FinSlider label="CAC" value={fin.cac} min={500} max={5000} step={100} unit="SAR" onChange={(v: number) => setFin({ ...fin, cac: v })} />
-            <FinSlider label={lang === "ar" ? "New Customers/mo" : "New Customers/mo"} value={fin.newCust} min={1} max={10} step={0.1} unit="" onChange={(v: number) => setFin({ ...fin, newCust: v })} />
+            <FinSlider label={lang === "ar" ? "New Customers / month" : "New Customers / month"} value={fin.newCust} min={1} max={10} step={0.1} unit="" onChange={(v: number) => setFin({ ...fin, newCust: v })} />
             <FinSlider label={lang === "ar" ? "Margin" : "Margin"} value={fin.margin} min={50} max={90} step={5} unit="%" onChange={(v: number) => setFin({ ...fin, margin: v })} />
             <FinSlider label={lang === "ar" ? "Fixed Costs" : "Fixed Costs"} value={fin.fixed} min={1000} max={10000} step={500} unit="SAR" onChange={(v: number) => setFin({ ...fin, fixed: v })} />
           </div>
           <div className="grid grid-cols-2 gap-3 content-start">
             <MetricCard label="LTV" value={`${Math.round(ltv).toLocaleString()} SAR`} />
             <MetricCard label="LTV:CAC" value={`${ltvCac.toFixed(1)}x`} highlight />
-            <MetricCard label={lang === "ar" ? "استرداد CAC" : "CAC Payback"} value={`${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`} />
-            <MetricCard label={lang === "ar" ? "نقطة التعادل" : "Break-even"} value={`${lang === "ar" ? "شهر" : "Mo"} ${be > 0 && be < 36 ? be : ">36"}`} highlight />
-            <MetricCard label={lang === "ar" ? "MRR M12" : "MRR Month 12"} value={`${mrr12.toLocaleString()} SAR`} />
-            <MetricCard label={lang === "ar" ? "MRR M36" : "MRR Month 36"} value={`${mrr36.toLocaleString()} SAR`} highlight />
+            <MetricCard label={lang === "ar" ? "CAC Payback" : "CAC Payback"} value={`${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`} />
+            <MetricCard label={lang === "ar" ? "Break-even" : "Break-even"} value={`${lang === "ar" ? "شهر" : "Mo"} ${be > 0 && be < 36 ? be : ">36"}`} highlight />
+            <MetricCard label={lang === "ar" ? "MRR Month 12" : "MRR Month 12"} value={`${mrr12.toLocaleString()} SAR`} />
+            <MetricCard label={lang === "ar" ? "MRR Month 36" : "MRR Month 36"} value={`${mrr36.toLocaleString()} SAR`} highlight />
           </div>
         </div>
       </Card>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <PieChartIcon size={18} className="text-emerald dark:text-gold" />
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">
+              {lang === "ar" ? `توزيع الأموال ($${DATA.financials.useOfFunds.total.toLocaleString()})` : `Use of Funds ($${DATA.financials.useOfFunds.total.toLocaleString()})`}
+            </h3>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-64 w-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={DATA.financials.useOfFunds.breakdown.map((b: any) => ({ name: lang === "ar" ? b.category_ar : b.category_en, value: b.percentage }))} cx="50%" cy="50%" innerRadius={50} outerRadius={90} paddingAngle={2} dataKey="value">
+                    {DATA.financials.useOfFunds.breakdown.map((_: any, i: number) => (
+                      <Cell key={i} fill={["#0F5132", "#D4AF37", "#F97316", "#6B7280", "#1a7a4c", "#b8962e", "#dc2626", "#3b82f6"][i % 8]} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(v: any) => [`${v}%`, ""]} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="w-full space-y-2">
+              {DATA.financials.useOfFunds.breakdown.map((item: any, i: number) => (
+                <div key={i} className="flex items-center justify-between text-xs p-2 bg-muted/30 dark:bg-dark-muted/30 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <span>{item.icon}</span>
+                    <span className="font-semibold">{lang === "ar" ? item.category_ar : item.category_en}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-500">{item.percentage}%</span>
+                    <span className="font-bold text-emerald dark:text-gold">${item.amount.toLocaleString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp size={18} className="text-emerald dark:text-gold" />
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">
+              {lang === "ar" ? "توزيع مصادر الإيراد (Y1)" : "Revenue Streams (Y1)"}
+            </h3>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-64 w-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={DATA.financials.revenueStreams.map((r: any) => ({ name: lang === "ar" ? r.name_ar : r.name_en, value: r.percentage }))} cx="50%" cy="50%" innerRadius={50} outerRadius={90} paddingAngle={3} dataKey="value">
+                    {DATA.financials.revenueStreams.map((r: any, i: number) => (
+                      <Cell key={i} fill={r.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(v: any) => [`${v}%`, ""]} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="w-full space-y-2">
+              {DATA.financials.revenueStreams.map((item: any, i: number) => (
+                <div key={i} className="flex items-center justify-between text-xs p-2 bg-muted/30 dark:bg-dark-muted/30 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }} />
+                    <span className="font-semibold">{lang === "ar" ? item.name_ar : item.name_en}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-500">{item.percentage}%</span>
+                    <span className="font-bold text-emerald dark:text-gold">SAR {item.amount.toLocaleString()}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+      </div>
+
       <Card className="p-6">
-        <div className="flex items-center gap-2 mb-4"><TrendingUp size={18} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "نمو الإيراد الشهري المتكرر" : "MRR Growth"} (36 {lang === "ar" ? "شهراً" : "months"})</h3></div>
+        <div className="flex items-center gap-2 mb-4">
+          <BarChart3 size={18} className="text-emerald dark:text-gold" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">
+            {lang === "ar" ? "اقتصاديات الوحدة" : "Unit Economics"}
+          </h3>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {DATA.financials.unitEconomics.map((item: any, i: number) => (
+            <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className={cn("p-4 rounded-xl border text-center", unitColorMap[item.color] || unitColorMap.emerald)}>
+              <div className="text-[10px] uppercase tracking-wider opacity-70 mb-1">{lang === "ar" ? item.metric_ar : item.metric_en}</div>
+              <div className="text-lg font-bold font-amiri">{item.value}</div>
+            </motion.div>
+          ))}
+        </div>
+      </Card>
+
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Activity size={18} className="text-emerald dark:text-gold" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">
+            {lang === "ar" ? "مقارنة السيناريوهات" : "Scenarios Comparison"}
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {DATA.financials.scenarios.map((s: any, i: number) => {
+            const isBase = s.name_en.includes("Base");
+            return (
+              <motion.div key={i} whileHover={{ scale: 1.02 }} className={cn("p-5 rounded-xl border-2 transition-all", isBase ? "bg-gradient-to-br from-emerald/10 to-gold/10 border-emerald shadow-elevated" : "bg-muted/30 dark:bg-dark-muted/30 border-border")}>
+                {isBase && (
+                  <div className="inline-block px-2 py-0.5 bg-emerald text-white text-[10px] font-bold rounded-full mb-2 uppercase">
+                    {lang === "ar" ? "المتوقع" : "Expected"}
+                  </div>
+                )}
+                <h4 className="text-lg font-bold text-emerald dark:text-gold font-amiri mb-1">
+                  {lang === "ar" ? s.name_ar : s.name_en}
+                </h4>
+                <div className="text-xs text-gray-500 mb-4">
+                  {lang === "ar" ? "احتمال" : "Probability"}: <span className="font-bold">{s.probability}%</span>
+                </div>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center p-2 bg-card dark:bg-dark-card rounded-lg">
+                    <span className="text-gray-500 text-xs">{lang === "ar" ? "عملاء Y1" : "Clients Y1"}</span>
+                    <span className="font-bold">{s.clients_y1}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-card dark:bg-dark-card rounded-lg">
+                    <span className="text-gray-500 text-xs">{lang === "ar" ? "عملاء Y3" : "Clients Y3"}</span>
+                    <span className="font-bold">{s.clients_y3}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-card dark:bg-dark-card rounded-lg">
+                    <span className="text-gray-500 text-xs">MRR Y1</span>
+                    <span className="font-bold text-emerald">SAR {s.mrr_y1.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-card dark:bg-dark-card rounded-lg">
+                    <span className="text-gray-500 text-xs">MRR Y3</span>
+                    <span className="font-bold text-gold">SAR {s.mrr_y3.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-emerald/10 dark:bg-emerald/20 rounded-lg border border-emerald/30">
+                    <span className="text-xs font-semibold">{lang === "ar" ? "إيراد Y3" : "Revenue Y3"}</span>
+                    <span className="font-bold text-emerald dark:text-gold">SAR {s.revenue_y3.toLocaleString()}</span>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </Card>
+
+      <Card className="p-6 overflow-hidden">
+        <div className="flex items-center gap-2 mb-4">
+          <DollarSign size={18} className="text-emerald dark:text-gold" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">
+            {lang === "ar" ? "التدفق النقدي (12 شهراً)" : "12-Month Cash Flow"}
+          </h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs">
+            <thead className="bg-emerald text-white">
+              <tr>
+                <th className="p-3 text-right">{lang === "ar" ? "الشهر" : "Month"}</th>
+                <th className="p-3 text-right">{lang === "ar" ? "الإيراد" : "Revenue"}</th>
+                <th className="p-3 text-right">{lang === "ar" ? "التكاليف" : "Costs"}</th>
+                <th className="p-3 text-right">{lang === "ar" ? "الربح" : "Profit"}</th>
+                <th className="p-3 text-right">{lang === "ar" ? "التراكمي" : "Cumulative"}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {DATA.financials.cashFlow.map((row: any, i: number) => (
+                <tr key={i} className={cn("border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors", row.cumulative > 0 && "bg-emerald/5 dark:bg-emerald/10")}>
+                  <td className="p-3 font-bold text-emerald dark:text-gold">{row.month}</td>
+                  <td className="p-3">SAR {row.revenue.toLocaleString()}</td>
+                  <td className="p-3 text-red-600">SAR {row.costs.toLocaleString()}</td>
+                  <td className={cn("p-3 font-bold", row.profit >= 0 ? "text-emerald" : "text-red-600")}>SAR {row.profit.toLocaleString()}</td>
+                  <td className={cn("p-3 font-bold", row.cumulative >= 0 ? "text-gold-dark dark:text-gold" : "text-red-600")}>
+                    SAR {row.cumulative.toLocaleString()}
+                    {i === 2 && row.cumulative > 0 && (
+                      <span className="ml-2 text-[9px] bg-gold/20 text-gold-dark dark:text-gold px-1.5 py-0.5 rounded-full font-bold">
+                        {lang === "ar" ? "تعادل!" : "Break-even!"}
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      <Card className="p-6 bg-gradient-to-br from-emerald/5 to-gold/5 border-emerald/20">
+        <div className="flex items-center gap-2 mb-4">
+          <Target size={18} className="text-emerald" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">
+            {lang === "ar" ? `تحليل نقطة التعادل - الشهر ${DATA.financials.breakEven.month}` : `Break-even Analysis - Month ${DATA.financials.breakEven.month}`}
+          </h3>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border text-center">
+            <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "التكاليف الثابتة" : "Fixed Costs"}</div>
+            <div className="text-xl font-bold text-emerald">SAR {DATA.financials.breakEven.fixed_costs.toLocaleString()}</div>
+          </div>
+          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-border text-center">
+            <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "هامش المساهمة" : "Contribution Margin"}</div>
+            <div className="text-xl font-bold text-gold-dark dark:text-gold">SAR {DATA.financials.breakEven.contribution_margin.toLocaleString()}</div>
+          </div>
+          <div className="bg-card dark:bg-dark-card p-4 rounded-xl border border-emerald/30 text-center">
+            <div className="text-xs text-gray-500 mb-1">{lang === "ar" ? "شهر التعادل" : "Break-even Month"}</div>
+            <div className="text-3xl font-bold text-emerald font-amiri">{DATA.financials.breakEven.month}</div>
+          </div>
+        </div>
+        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          {lang === "ar" ? DATA.financials.breakEven.description_ar : DATA.financials.breakEven.description_en}
+        </p>
+      </Card>
+
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <TrendingUp size={18} className="text-emerald dark:text-gold" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">
+            {lang === "ar" ? "نمو الإيراد الشهري المتكرر" : "MRR Growth"} (36 {lang === "ar" ? "شهراً" : "months"})
+          </h3>
+        </div>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={projectionData}>
@@ -490,8 +717,14 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
           </ResponsiveContainer>
         </div>
       </Card>
+
       <Card className="p-6">
-        <div className="flex items-center gap-2 mb-4"><BarChart3 size={18} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "الربحية الشهرية" : "Monthly Profitability"}</h3></div>
+        <div className="flex items-center gap-2 mb-4">
+          <BarChart3 size={18} className="text-emerald dark:text-gold" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">
+            {lang === "ar" ? "الربحية الشهرية" : "Monthly Profitability"}
+          </h3>
+        </div>
         <div className="h-64 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={projectionData}>
@@ -505,10 +738,22 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
           </ResponsiveContainer>
         </div>
       </Card>
+
       <Card className="overflow-hidden">
-        <div className="p-4 border-b border-border dark:border-dark-border bg-muted/30 dark:bg-dark-muted/30"><h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><FileText size={16} /> {lang === "ar" ? "قائمة الأرباح والخسائر" : "P&L Statement"}</h3></div>
+        <div className="p-4 border-b border-border dark:border-dark-border bg-muted/30 dark:bg-dark-muted/30">
+          <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2">
+            <FileText size={16} /> {lang === "ar" ? "قائمة الأرباح والخسائر" : "P&L Statement"}
+          </h3>
+        </div>
         <table className="w-full text-sm">
-          <thead className="bg-emerald text-white"><tr><th className="p-3 text-right">{lang === "ar" ? "البند" : "Item"}</th><th className="p-3 text-right">Y1</th><th className="p-3 text-right">Y2</th><th className="p-3 text-right">Y3</th></tr></thead>
+          <thead className="bg-emerald text-white">
+            <tr>
+              <th className="p-3 text-right">{lang === "ar" ? "البند" : "Item"}</th>
+              <th className="p-3 text-right">Y1</th>
+              <th className="p-3 text-right">Y2</th>
+              <th className="p-3 text-right">Y3</th>
+            </tr>
+          </thead>
           <tbody>
             {[
               { label: lang === "ar" ? "الإيراد" : "Revenue", y1: DATA.financials.projections.y1.revenue, y2: DATA.financials.projections.y2.revenue, y3: DATA.financials.projections.y3.revenue },
@@ -524,38 +769,6 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
             ))}
           </tbody>
         </table>
-      </Card>
-      <Card className="p-6">
-        <div className="flex items-center gap-2 mb-4"><PieChartIcon size={18} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "توزيع استخدام الأموال" : "Use of Funds"}</h3></div>
-        <div className="flex flex-col md:flex-row items-center gap-8">
-          <div className="h-48 w-48">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={DATA.financials.useOfFunds.breakdown.filter((b: any) => b.percentage > 0).map((b: any) => ({ name: lang === "ar" ? b.category_ar : b.category_en, value: b.percentage }))} cx="50%" cy="50%" innerRadius={50} outerRadius={80} paddingAngle={3} dataKey="value">
-                  {DATA.financials.useOfFunds.breakdown.filter((b: any) => b.percentage > 0).map((_: any, i: number) => (
-                    <Cell key={i} fill={["#0F5132", "#D4AF37", "#F97316", "#6B7280"][i % 4]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="space-y-3 flex-1">
-            {DATA.financials.useOfFunds.breakdown.filter((b: any) => b.percentage > 0).map((item: any, i: number) => {
-              const colors = ["bg-emerald", "bg-gold", "bg-accent", "bg-gray-500"];
-              return (
-                <div key={i} className="flex items-center gap-3">
-                  <div className={`w-4 h-4 rounded ${colors[i % 4]}`} />
-                  <div>
-                    <strong>{item.percentage}% {lang === "ar" ? item.category_ar : item.category_en}</strong>
-                    <br />
-                    <span className="text-xs text-gray-500">${item.amount.toLocaleString()}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
       </Card>
     </div>
   );
