@@ -13,7 +13,7 @@ import {
   BarChart3, PieChart as PieChartIcon, Activity, CheckCircle2, XCircle,
   ArrowUpRight, Layers, Server, Lock, Eye, Download, Settings,
   BookOpen, Briefcase, Calendar, CreditCard, ShieldCheck, 
-  Zap, Sparkles, Volume2, Bell, Save, Trash2, Info
+  Zap, Sparkles, Volume2, Bell, Save, Trash2, Info, Sun, Moon
 } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
