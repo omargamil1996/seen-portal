@@ -932,8 +932,181 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
 }
 
 function DataRoomView({ t, lang }: any) {
-  return <DataRoomVault lang={lang} />;
+  const [selectedCat, setSelectedCat] = useState<string>("all");
+  
+  // Group files by category
+  const categories = ["all", "الأساسيات", "الاستراتيجية", "السوق", "العمليات", "الانطلاق", "الأمن", "القانوني", "الهجرة", "الجلسات"];
+  const catEn: Record<string, string> = {
+    "all": "All",
+    "الأساسيات": "Foundation",
+    "الاستراتيجية": "Strategy",
+    "السوق": "Market",
+    "العمليات": "Operations",
+    "الانطلاق": "Launch",
+    "الأمن": "Security",
+    "القانوني": "Legal",
+    "الهجرة": "Migration",
+    "الجلسات": "Sessions",
+  };
+  
+  const filteredFiles = selectedCat === "all" 
+    ? DATA_ROOM_FILES 
+    : DATA_ROOM_FILES.filter((f: any) => f.category === selectedCat);
+  
+  const categoryCounts: Record<string, number> = {};
+  DATA_ROOM_FILES.forEach((f: any) => {
+    categoryCounts[f.category] = (categoryCounts[f.category] || 0) + 1;
+  });
+
+  return (
+    <div className="space-y-6">
+      <SectionHeader 
+        icon={Briefcase} 
+        title={lang === "ar" ? "غرفة البيانات" : "Data Room"} 
+        subtitle={lang === "ar" ? "فهرس تفاعلي لـ 49 وثيقة استراتيجية وتشغيلية. المحتوى الكامل متاح عند طلب الوصول." : "Interactive index of 49 strategic and operational documents. Full content available upon access request."} 
+      />
+
+      {/* Stats Banner */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-gradient-to-br from-emerald/10 to-emerald/5 p-5 rounded-2xl border border-emerald/20 text-center">
+          <div className="text-3xl font-bold text-emerald font-amiri">49</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "وثيقة موثقة" : "Documented Files"}</div>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-gradient-to-br from-gold/10 to-gold/5 p-5 rounded-2xl border border-gold/20 text-center">
+          <div className="text-3xl font-bold text-gold-dark dark:text-gold font-amiri">9</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "فئات" : "Categories"}</div>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-gradient-to-br from-accent/10 to-accent/5 p-5 rounded-2xl border border-accent/20 text-center">
+          <div className="text-3xl font-bold text-accent font-amiri">2026</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "سنة التحديث" : "Update Year"}</div>
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.03 }} className="bg-gradient-to-br from-emerald/10 to-gold/5 p-5 rounded-2xl border border-emerald/20 text-center">
+          <div className="text-3xl font-bold text-emerald font-amiri">🔒</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "NDA مطلوب" : "NDA Required"}</div>
+        </motion.div>
+      </div>
+
+      {/* Security Notice */}
+      <Card className="p-5 bg-gradient-to-l from-emerald/5 to-gold/5 border-emerald/20">
+        <div className="flex items-start gap-3">
+          <div className="w-10 h-10 rounded-lg bg-emerald/10 flex items-center justify-center shrink-0">
+            <Lock size={18} className="text-emerald" />
+          </div>
+          <div>
+            <h3 className="font-bold text-emerald dark:text-gold mb-1">
+              {lang === "ar" ? "ملاحظة أمنية" : "Security Notice"}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+              {lang === "ar" 
+                ? "هذه الواجهة تعرض فقط أسماء الملفات وتواريخها وملخصات مختصرة. المحتوى الكامل لا يُعرض علنياً حفاظاً على الأسرار التجارية والملكية الفكرية. للوصول الكامل، يرجى التواصل مباشرة."
+                : "This interface shows only file names, dates, and brief summaries. Full content is not publicly displayed to protect trade secrets and intellectual property. Contact us directly for full access."}
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      {/* Category Filter */}
+      <Card className="p-4">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+          {categories.map((cat) => {
+            const count = cat === "all" ? DATA_ROOM_FILES.length : (categoryCounts[cat] || 0);
+            const isActive = selectedCat === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCat(cat)}
+                className={cn(
+                  "px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all",
+                  isActive 
+                    ? "bg-emerald text-white shadow-md" 
+                    : "bg-muted dark:bg-dark-muted text-gray-600 dark:text-gray-400 hover:bg-emerald/10"
+                )}
+              >
+                {lang === "ar" ? cat : catEn[cat]} ({count})
+              </button>
+            );
+          })}
+        </div>
+      </Card>
+
+      {/* Files Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        {filteredFiles.map((file: any, index: number) => (
+          <motion.div
+            key={file.id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.02 }}
+            whileHover={{ 
+              scale: 1.02, 
+              borderColor: "#D4AF37",
+              boxShadow: "0 0 15px rgba(212,175,55,0.15)"
+            }}
+            className="group relative bg-card dark:bg-dark-card p-4 rounded-xl border border-border shadow-sm cursor-pointer overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-emerald/5 to-gold/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+            
+            <div className="relative z-10">
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 bg-muted dark:bg-dark-muted rounded-lg text-emerald group-hover:text-gold transition-colors">
+                    <FileText size={14} />
+                  </div>
+                  <span className="text-[10px] font-mono text-gold-dark dark:text-gold font-bold">{file.id}</span>
+                </div>
+                <span className="text-[9px] font-semibold text-gray-500 bg-muted dark:bg-dark-muted px-2 py-0.5 rounded uppercase">
+                  {lang === "ar" ? file.category : catEn[file.category]}
+                </span>
+              </div>
+              
+              <h3 className="font-bold text-sm mb-1 group-hover:text-emerald dark:group-hover:text-gold transition-colors font-mono">
+                {file.name}
+              </h3>
+              
+              <div className="flex items-center gap-2 text-[10px] text-gray-500 mb-2">
+                <Calendar size={10} />
+                <span>{file.date}</span>
+              </div>
+              
+              <p className="text-xs text-gray-600 dark:text-gray-400 italic border-t border-border/50 pt-2 mt-2 line-clamp-2">
+                "{file.summary}"
+              </p>
+            </div>
+
+            <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center gap-1 text-[9px] font-bold text-gold bg-gold/10 px-2 py-1 rounded-full">
+                <Lock size={8} /> {lang === "ar" ? "طلب وصول" : "Request"}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Contact CTA */}
+      <Card className="p-6 text-center bg-gradient-to-br from-emerald/5 via-gold/5 to-accent/5">
+        <div className="max-w-2xl mx-auto">
+          <h3 className="text-xl font-bold text-emerald dark:text-gold mb-2 font-amiri">
+            {lang === "ar" ? "للوصول الكامل للمحتوى" : "For Full Content Access"}
+          </h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+            {lang === "ar" 
+              ? "يرجى التواصل مع المؤسس عبر البريد الإلكتروني بعد توقيع اتفاقية عدم الإفصاح (NDA)."
+              : "Please contact the founder via email after signing a Non-Disclosure Agreement (NDA)."}
+          </p>
+          <a 
+            href="mailto:hello@seen-agency.com" 
+            className="inline-flex items-center gap-2 px-6 py-3 bg-emerald text-white rounded-xl font-bold hover:bg-emerald-dark transition-all shadow-md"
+          >
+            <Lock size={16} />
+            hello@seen-agency.com
+          </a>
+        </div>
+      </Card>
+    </div>
+  );
 }
+
 
 function TeamView({ t, lang }: any) {
   return (
