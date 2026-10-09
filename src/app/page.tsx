@@ -769,18 +769,115 @@ function SectorsView({ t, lang }: any) {
 }
 
 function RoadmapView({ t, lang }: any) {
+  const [selectedPhase, setSelectedPhase] = useState<any>(null);
+  
   return (
     <div className="space-y-6">
-      <SectionHeader icon={MapIcon} title={lang === "ar" ? "رحلة المشروع" : "Project Journey"} subtitle={lang === "ar" ? "من الفكرة إلى القيادة الإقليمية" : "From idea to regional leadership"} />
+      <SectionHeader 
+        icon={Map} 
+        title={lang === "ar" ? "رحلة المشروع" : "Project Roadmap"} 
+        subtitle={lang === "ar" ? "خريطة طريق تفاعلية من الفكرة إلى القيادة الإقليمية (2026-2028)" : "Interactive roadmap from idea to regional leadership (2026-2028)"} 
+      />
+
+      {/* Timeline Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card className="p-5 text-center">
+          <div className="text-3xl font-bold text-emerald font-amiri">36</div>
+          <div className="text-xs text-gray-500 uppercase tracking-wider">{lang === "ar" ? "شهر" : "Months"}</div>
+        </Card>
+        <Card className="p-5 text-center">
+          <div className="text-3xl font-bold text-gold-dark dark:text-gold font-amiri">6</div>
+          <div className="text-xs text-gray-500 uppercase tracking-wider">{lang === "ar" ? "مراحل رئيسية" : "Key Phases"}</div>
+        </Card>
+        <Card className="p-5 text-center">
+          <div className="text-3xl font-bold text-accent font-amiri">80+</div>
+          <div className="text-xs text-gray-500 uppercase tracking-wider">{lang === "ar" ? "عميل مستهدف" : "Target Clients"}</div>
+        </Card>
+        <Card className="p-5 text-center">
+          <div className="text-3xl font-bold text-emerald font-amiri">250K</div>
+          <div className="text-xs text-gray-500 uppercase tracking-wider">MRR {lang === "ar" ? "شهري" : "Monthly"}</div>
+        </Card>
+      </div>
+
+      {/* Interactive Timeline */}
       <div className="relative">
-        <div className="absolute right-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block" />
-        <div className="space-y-6">
-          {DATA.roadmap.map((item, i) => (
-            <motion.div key={i} initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: i * 0.1 }} className="relative flex gap-6 items-start">
-              <div className="hidden md:flex flex-col items-center shrink-0"><motion.div whileHover={{ scale: 1.1 }} className="w-12 h-12 rounded-full bg-emerald text-white flex items-center justify-center text-lg shadow-lg border-4 border-background dark:border-dark-bg z-10">{item.phase_ar.slice(0, 2)}</motion.div></div>
-              <Card className="flex-1 p-6">
-                <div className="flex justify-between items-center mb-2"><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? item.phase_ar : item.phase_en}</h3><Badge color="gold">{lang === "ar" ? item.date_ar : item.date_en}</Badge></div>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? item.desc_ar : item.desc_en}</p>
+        {/* Vertical line */}
+        <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald via-gold to-accent hidden md:block" />
+        
+        <div className="space-y-4">
+          {DATA.roadmap.map((item: any, i: number) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="relative"
+            >
+              {/* Timeline dot */}
+              <div className="absolute left-6 w-4 h-4 rounded-full bg-gradient-to-br from-emerald to-gold border-4 border-background dark:border-dark-bg shadow-lg hidden md:block z-10" />
+              
+              {/* Card */}
+              <Card 
+                className={cn(
+                  "ml-0 md:ml-16 p-6 cursor-pointer transition-all hover:shadow-elevated",
+                  selectedPhase === item && "ring-2 ring-emerald shadow-elevated"
+                )}
+                onClick={() => setSelectedPhase(selectedPhase === item ? null : item)}
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center gap-3">
+                    <div className="text-3xl">{item.phase_ar.slice(0, 2)}</div>
+                    <div>
+                      <h3 className="text-lg font-bold text-emerald dark:text-gold font-amiri">
+                        {lang === "ar" ? item.phase_ar : item.phase_en}
+                      </h3>
+                      <Badge color="gold">{lang === "ar" ? item.date_ar : item.date_en}</Badge>
+                    </div>
+                  </div>
+                  <ChevronDown 
+                    size={20} 
+                    className={cn(
+                      "text-gray-400 transition-transform duration-300",
+                      selectedPhase === item && "rotate-180 text-accent"
+                    )} 
+                  />
+                </div>
+                
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {lang === "ar" ? item.desc_ar : item.desc_en}
+                </p>
+
+                {/* Expanded details */}
+                {selectedPhase === item && item.details && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="mt-4 pt-4 border-t border-border/50"
+                  >
+                    <h4 className="font-bold text-emerald dark:text-gold mb-2">
+                      {lang === "ar" ? "التفاصيل:" : "Details:"}
+                    </h4>
+                    <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                      {item.details.map((detail: string, j: number) => (
+                        <li key={j} className="flex items-start gap-2">
+                          <CheckCircle2 size={14} className="text-emerald mt-0.5 shrink-0" />
+                          <span>{detail}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {item.kpis && (
+                      <div className="mt-4 grid grid-cols-2 gap-3">
+                        {item.kpis.map((kpi: any, k: number) => (
+                          <div key={k} className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg">
+                            <div className="text-xs text-gray-500">{kpi.label}</div>
+                            <div className="font-bold text-emerald dark:text-gold">{kpi.value}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                )}
               </Card>
             </motion.div>
           ))}
@@ -789,6 +886,7 @@ function RoadmapView({ t, lang }: any) {
     </div>
   );
 }
+
 
 function RisksView({ t, lang }: any) {
   // Group risks by category
