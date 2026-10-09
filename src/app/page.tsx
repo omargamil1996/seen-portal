@@ -460,9 +460,74 @@ function BusinessPlanView({ t, lang }: any) {
 
 function SectorsView({ t, lang }: any) {
   const [selected, setSelected] = useState<any>(null);
+  const activeCount = DATA.sectors.filter((s: any) => s.status === "active").length;
+  const totalClients = DATA.sectors.reduce((sum: number, s: any) => sum + s.target_clients, 0);
+  const avgReadiness = Math.round(DATA.sectors.reduce((sum: number, s: any) => sum + s.readiness.percentage, 0) / DATA.sectors.length);
+  
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Target} title={lang === "ar" ? "القطاعات والرماح" : "Sectors & Spears"} subtitle={lang === "ar" ? "اضغط على أي قطاع لفتح التحليل الاستراتيجي الكامل" : "Click any sector to open the full strategic analysis"} />
+      <SectionHeader 
+        icon={Target} 
+        title={lang === "ar" ? "القطاعات والرماح" : "Sectors & Spears"} 
+        subtitle={lang === "ar" ? "معمارية القلعة والرماح: Seen تجمع، وكل رمح يتخصص. اضغط على أي قطاع لفتح التحليل الاستراتيجي الكامل." : "Fortress and Spears architecture: Seen unites, each spear specializes. Click any sector to open full strategic analysis."} 
+      />
+
+      {/* Sector Stats Banner */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <motion.div 
+          whileHover={{ scale: 1.03 }}
+          className="bg-gradient-to-br from-emerald/5 to-emerald/10 p-5 rounded-2xl border border-emerald/20 text-center shadow-sm"
+        >
+          <div className="text-3xl font-bold text-emerald font-amiri">{DATA.sectors.length}</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "قطاعات مستهدفة" : "Target Sectors"}</div>
+        </motion.div>
+        <motion.div 
+          whileHover={{ scale: 1.03 }}
+          className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-5 rounded-2xl border border-green-200 dark:border-green-800 text-center shadow-sm"
+        >
+          <div className="text-3xl font-bold text-green-700 dark:text-green-400 font-amiri">{activeCount}</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "نشط الآن" : "Active Now"}</div>
+        </motion.div>
+        <motion.div 
+          whileHover={{ scale: 1.03 }}
+          className="bg-gradient-to-br from-accent/5 to-accent/10 p-5 rounded-2xl border border-accent/20 text-center shadow-sm"
+        >
+          <div className="text-3xl font-bold text-accent font-amiri">{totalClients}</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "عميل مستهدف" : "Target Clients"}</div>
+        </motion.div>
+        <motion.div 
+          whileHover={{ scale: 1.03 }}
+          className="bg-gradient-to-br from-gold/5 to-gold/10 p-5 rounded-2xl border border-gold/20 text-center shadow-sm"
+        >
+          <div className="text-3xl font-bold text-gold-dark dark:text-gold font-amiri">{avgReadiness}%</div>
+          <div className="text-xs text-gray-600 mt-1 uppercase tracking-wider">{lang === "ar" ? "جاهزية متوسطة" : "Avg Readiness"}</div>
+        </motion.div>
+      </div>
+
+      {/* Fortress & Spears Visual */}
+      <div className="bg-card dark:bg-dark-card rounded-2xl border border-border p-6 shadow-card">
+        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <span className="text-2xl">🏰</span>
+          {lang === "ar" ? "معمارية القلعة والرماح" : "Fortress & Spears Architecture"}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">
+          {lang === "ar" 
+            ? "Seen هي القلعة الأم التي تجمع كل الرماح تحت هوية واحدة. كل رمح له تخصصه وهويته البصرية المستقلة، لكنهم يشتركون في البنية التحتية، البروتوكولات الأمنية، ومعايير الجودة."
+            : "Seen is the mother fortress that unites all spears under one identity. Each spear has its own specialization and visual identity, but they share infrastructure, security protocols, and quality standards."
+          }
+        </p>
+        <div className="flex justify-center items-center gap-2 flex-wrap py-4">
+          <div className="px-4 py-3 bg-emerald text-white rounded-xl font-bold text-sm shadow-lg">🏰 Seen</div>
+          <div className="text-gray-400">→</div>
+          {DATA.sectors.map((s: any) => (
+            <div key={s.id} className={cn("px-3 py-2 rounded-lg text-xs font-semibold border", s.status === "active" ? "bg-gold/20 border-gold text-gold-dark dark:text-gold" : "bg-muted border-border text-gray-500")}>
+              {s.icon} {s.name_en}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Sector Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s, i) => (
           <motion.button
@@ -473,13 +538,17 @@ function SectorsView({ t, lang }: any) {
             transition={{ delay: i * 0.08 }}
             whileHover={{ y: -6, scale: 1.01 }}
             onClick={() => setSelected(s)}
-            className={cn("text-right bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card overflow-hidden", s.status === "active" && "border-emerald/30 dark:border-emerald/50")}
+            className={cn("text-right bg-card dark:bg-dark-card rounded-2xl border shadow-card overflow-hidden transition-all", 
+              s.status === "active" 
+                ? "border-emerald/40 dark:border-emerald/60 shadow-glow" 
+                : "border-border dark:border-dark-border"
+            )}
           >
-            <div className={cn("p-4 flex justify-between items-center", s.status === "active" ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted")}>
+            <div className={cn("p-4 flex justify-between items-center", s.status === "active" ? "bg-gradient-to-l from-emerald to-emerald-dark text-white" : "bg-muted dark:bg-dark-muted")}>
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{s.icon}</span>
+                <span className="text-3xl">{s.icon}</span>
                 <div>
-                  <h3 className="font-bold text-lg">{lang === "ar" ? s.name_ar : s.name_en}</h3>
+                  <h3 className="font-bold text-xl">{lang === "ar" ? s.name_ar : s.name_en}</h3>
                   <p className="text-xs opacity-80">{s.name_en}</p>
                 </div>
               </div>
@@ -488,19 +557,48 @@ function SectorsView({ t, lang }: any) {
               </Badge>
             </div>
             <div className="p-6 space-y-4">
-              <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? s.desc_ar : s.desc_en}</p>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center">
-                  <div className="text-xs text-gray-500">{lang === "ar" ? "الإطلاق" : "Launch"}</div>
-                  <div className="font-bold text-emerald dark:text-gold">{s.timeline}</div>
-                </div>
-                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center">
-                  <div className="text-xs text-gray-500">{lang === "ar" ? "العملاء" : "Clients"}</div>
-                  <div className="font-bold text-accent">{s.target_clients}</div>
+              <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{lang === "ar" ? s.desc_ar : s.desc_en}</p>
+              
+              {/* Strategic Justification Preview */}
+              <div className="bg-emerald/5 dark:bg-emerald/10 p-3 rounded-lg border-r-4 border-emerald">
+                <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 italic">
+                  "{lang === "ar" ? s.justification_ar : s.justification_en}"
+                </p>
+              </div>
+
+              {/* Sub-sectors preview */}
+              <div>
+                <div className="text-xs text-gray-500 mb-2 uppercase tracking-wider">{lang === "ar" ? "التخصصات الفرعية" : "Sub-specializations"}</div>
+                <div className="flex flex-wrap gap-1">
+                  {(lang === "ar" ? s.subSectors_ar : s.subSectors_en).slice(0, 3).map((sub: string, j: number) => (
+                    <span key={j} className="text-[10px] px-2 py-1 rounded-full bg-gold/10 text-gold-dark dark:text-gold border border-gold/20">
+                      {sub}
+                    </span>
+                  ))}
+                  {(lang === "ar" ? s.subSectors_ar : s.subSectors_en).length > 3 && (
+                    <span className="text-[10px] px-2 py-1 rounded-full bg-muted text-gray-500">
+                      +{(lang === "ar" ? s.subSectors_ar : s.subSectors_en).length - 3}
+                    </span>
+                  )}
                 </div>
               </div>
-              <div className="w-full py-2.5 bg-emerald/5 text-emerald rounded-xl text-sm font-bold text-center">
-                {lang === "ar" ? "عرض التحليل الكامل ←" : "View full analysis →"}
+
+              <div className="grid grid-cols-3 gap-2">
+                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center">
+                  <div className="text-[10px] text-gray-500 uppercase">{lang === "ar" ? "الإطلاق" : "Launch"}</div>
+                  <div className="font-bold text-emerald dark:text-gold text-sm">{s.timeline}</div>
+                </div>
+                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center">
+                  <div className="text-[10px] text-gray-500 uppercase">{lang === "ar" ? "العملاء" : "Clients"}</div>
+                  <div className="font-bold text-accent text-sm">{s.target_clients}</div>
+                </div>
+                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center">
+                  <div className="text-[10px] text-gray-500 uppercase">{lang === "ar" ? "الجاهزية" : "Ready"}</div>
+                  <div className="font-bold text-gold-dark dark:text-gold text-sm">{s.readiness.percentage}%</div>
+                </div>
+              </div>
+              <div className="w-full py-2.5 bg-gradient-to-l from-emerald/10 to-gold/10 text-emerald dark:text-gold rounded-xl text-sm font-bold text-center border border-emerald/20 hover:border-emerald/40 transition-colors">
+                {lang === "ar" ? "عرض التحليل الكامل ←" : "View Full Analysis →"}
               </div>
             </div>
           </motion.button>
