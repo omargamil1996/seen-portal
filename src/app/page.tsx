@@ -1266,16 +1266,144 @@ function DataRoomView({ t, lang }: any) {
 function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Users} title={lang === "ar" ? "الفريق" : "Team"} subtitle={lang === "ar" ? "الهيكل التنظيمي" : "Organizational structure"} />
-      <Card className="p-8">
-        <div className="flex items-start gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-white text-4xl font-amiri font-bold shadow-lg shrink-0">{(lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en)[0]}</div>
-          <div><h3 className="text-2xl font-bold text-emerald dark:text-gold mb-1">{lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en}</h3><p className="text-accent font-semibold mb-4">{lang === "ar" ? DATA.company.founder.role_ar : DATA.company.founder.role_en}</p><p className="text-gray-600 dark:text-gray-400 leading-relaxed">{lang === "ar" ? DATA.company.founder.bio_ar : DATA.company.founder.bio_en}</p></div>
+      <SectionHeader 
+        icon={Users} 
+        title={lang === "ar" ? "الفريق المؤسس" : "Founding Team"} 
+        subtitle={lang === "ar" ? "خبرة هندسية ميدانية تلتقي برؤية تشغيلية طموحة" : "Field engineering experience meets ambitious operational vision"} 
+      />
+
+      {/* Founder Card */}
+      <Card className="p-8 overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-emerald/10 to-gold/10 rounded-full blur-3xl" />
+        <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
+          <div className="shrink-0">
+            <div className="w-32 h-32 rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-white text-5xl font-amiri font-bold shadow-xl">
+              {(lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en)[0]}
+            </div>
+          </div>
+          <div className="flex-1">
+            <div className="inline-flex items-center gap-2 bg-emerald/10 px-3 py-1 rounded-full mb-3">
+              <span className="w-2 h-2 rounded-full bg-emerald" />
+              <span className="text-xs font-semibold text-emerald">{lang === "ar" ? "المؤسس التشغيلي" : "Operational Founder"}</span>
+            </div>
+            <h2 className="text-3xl font-bold text-emerald dark:text-gold font-amiri mb-2">
+              {lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en}
+            </h2>
+            <p className="text-lg text-accent font-semibold mb-4">
+              {lang === "ar" ? DATA.company.founder.role_ar : DATA.company.founder.role_en}
+            </p>
+            <p className="text-gray-700 dark:text-gray-300 leading-[1.9] text-base">
+              {lang === "ar" ? DATA.company.founder.bio_ar : DATA.company.founder.bio_en}
+            </p>
+          </div>
         </div>
       </Card>
+
+      {/* Founder Experience */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="p-6 border-emerald/20 bg-gradient-to-br from-emerald/5 to-transparent">
+          <div className="w-12 h-12 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald mb-4">
+            <Users size={24} />
+          </div>
+          <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "الخبرة الميدانية" : "Field Experience"}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {lang === "ar" 
+              ? "خبرة في SABIC، إحدى أكبر شركات البتروكيماويات في العالم، مع فهم عميق للاختناقات التشغيلية في المكاتب الهندسية."
+              : "Experience at SABIC, one of the world's largest petrochemical companies, with deep understanding of operational bottlenecks in engineering firms."}
+          </p>
+        </Card>
+
+        <Card className="p-6 border-gold/20 bg-gradient-to-br from-gold/5 to-transparent">
+          <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold mb-4">
+            <BookOpen size={24} />
+          </div>
+          <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "التعليم" : "Education"}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {lang === "ar" 
+              ? "خريج SEGi University في ماليزيا، تخصص هندسة ميكانيكية مع تركيز على تحسين العمليات وسلاسل الإمداد."
+              : "SEGi University graduate in Malaysia, mechanical engineering major focused on process optimization and supply chains."}
+          </p>
+        </Card>
+
+        <Card className="p-6 border-accent/20 bg-gradient-to-br from-accent/5 to-transparent">
+          <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center text-accent mb-4">
+            <Zap size={24} />
+          </div>
+          <h3 className="font-bold text-emerald dark:text-gold mb-2">{lang === "ar" ? "الرؤية" : "Vision"}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {lang === "ar" 
+              ? "تحرير المهندسين من الروتين الإداري للتركيز على الابتكار والتصميم، من خلال أتمتة ذكية وحلال."
+              : "Liberating engineers from administrative routine to focus on innovation and design, through intelligent Halal automation."}
+          </p>
+        </Card>
+      </div>
+
+      {/* Core Values */}
+      <Card className="p-6">
+        <h3 className="text-lg font-bold text-emerald dark:text-gold mb-4 flex items-center gap-2">
+          <CheckCircle2 size={18} />
+          {lang === "ar" ? "القيم الأساسية" : "Core Values"}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {[
+            { ar: "الامتثال الشرعي: حلال 100% في كل تعامل", en: "Sharia Compliance: 100% Halal in every transaction" },
+            { ar: "الجودة المطلقة: 25 هجمة أمنية + 100 سؤال هلوسة", en: "Absolute Quality: 25 security attacks + 100 hallucination tests" },
+            { ar: "الشفافية الكاملة: لا تكاليف خفية ولا وعود كاذبة", en: "Full Transparency: No hidden costs, no false promises" },
+            { ar: "الابتكار العملي: نخصص الحلول الجاهزة ولا نعيد الاختراع", en: "Practical Innovation: Customize existing solutions, don't reinvent" },
+          ].map((v, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05 }}
+              className="flex items-start gap-3 p-3 bg-muted/30 dark:bg-dark-muted/30 rounded-lg"
+            >
+              <CheckCircle2 size={16} className="text-emerald shrink-0 mt-0.5" />
+              <span className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                {lang === "ar" ? v.ar : v.en}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Supporting Roles */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card className="p-6">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-gold text-xl font-bold font-amiri">أ</div>
+            <div>
+              <h3 className="font-bold text-emerald dark:text-gold">{lang === "ar" ? "أحمد" : "Ahmed"}</h3>
+              <p className="text-xs text-accent">{lang === "ar" ? "الشريك القانوني - ماليزيا" : "Legal Partner - Malaysia"}</p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {lang === "ar" 
+              ? "مسؤول عن التأسيس القانوني للكيان في ماليزيا، والامتثال المحلي، ومراجعة العقود والاتفاقيات."
+              : "Responsible for legal entity formation in Malaysia, local compliance, and contract/agreement review."}
+          </p>
+        </Card>
+
+        <Card className="p-6">
+          <div className="flex items-center gap-4 mb-3">
+            <div className="w-14 h-14 rounded-xl bg-emerald/10 flex items-center justify-center text-emerald text-xl font-bold font-amiri">🤖</div>
+            <div>
+              <h3 className="font-bold text-emerald dark:text-gold">{lang === "ar" ? "د.سين" : "Dr. Seen"}</h3>
+              <p className="text-xs text-accent">{lang === "ar" ? "مدير العمليات الآلي" : "AI Operations Manager"}</p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {lang === "ar" 
+              ? "موظف آلي يعمل 24/7 على توثيق القرارات، متابعة SOPs، ومنع فقدان المعرفة التشغيلية."
+              : "AI agent working 24/7 on documenting decisions, following SOPs, and preventing operational knowledge loss."}
+          </p>
+        </Card>
+      </div>
     </div>
   );
 }
+
 
 function SecurityView({ t, lang }: any) {
   return (
