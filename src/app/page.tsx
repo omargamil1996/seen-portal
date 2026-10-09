@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { DATA } from "@/lib/data";
 import { translations, type Lang } from "@/lib/translations";
 import { cn } from "@/lib/utils";
+import SectorModal from "@/components/SectorModal";
+import DataRoomVault from "@/components/DataRoomVault";
 import {
   LayoutDashboard, Wallet, FileText, Target, Map as MapIcon,
   AlertTriangle, Cpu, FileCheck, Globe, SkipBack, SkipForward,
@@ -112,7 +114,7 @@ export default function InvestorBriefcase() {
 
   const renderContent = () => {
     switch (tab) {
-      case "dashboard": return <DashboardView t={t} lang={lang} />;
+      case "dashboard": return <DashboardView t={t} lang={lang} setTab={setTab} />;
       case "financials": return <FinancialsView fin={fin} setFin={setFin} ltv={ltv} ltvCac={ltvCac} payback={payback} be={be} projectionData={projectionData} t={t} lang={lang} />;
       case "business-plan": return <BusinessPlanView t={t} lang={lang} />;
       case "sectors": return <SectorsView t={t} lang={lang} />;
@@ -158,7 +160,10 @@ export default function InvestorBriefcase() {
               <div className="flex items-center gap-2">
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setDark(!dark)} className="p-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted" title="Toggle Dark Mode">{dark ? <Sun size={16} /> : <Moon size={16} />}</motion.button>
                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setLang(lang === "ar" ? "en" : "ar")} className="px-4 py-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted text-sm font-semibold flex items-center gap-2"><Globe size={14} /> {lang === "ar" ? "EN" : "عربي"}</motion.button>
-                <div className="hidden md:flex items-center gap-2 text-xs text-gray-400 ml-4"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />{t.common.livePlan}</div>
+                <div className="hidden md:flex items-center gap-3 text-xs text-gray-400 ml-4">
+                  <a href="/briefcase" className="px-3 py-2 rounded-lg border border-gold/30 text-gold hover:bg-gold/10 transition-colors font-bold">{lang === "ar" ? "الحقيبة الثابتة" : "Static Briefcase"}</a>
+                  <span className="flex items-center gap-2"><span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />{t.common.livePlan}</span>
+                </div>
               </div>
             </header>
             <AnimatePresence mode="wait">
@@ -174,7 +179,7 @@ export default function InvestorBriefcase() {
   );
 }
 
-function DashboardView({ t, lang }: any) {
+function DashboardView({ t, lang, setTab }: any) {
   return (
     <div className="space-y-8">
       <Card className="p-10 overflow-hidden relative" hover={false}>
@@ -196,19 +201,31 @@ function DashboardView({ t, lang }: any) {
           { ...t.briefcases.investorKit, icon: Briefcase, color: "from-emerald to-emerald-dark", iconBg: "bg-gold/20" },
           { ...t.briefcases.dueDiligence, icon: ShieldCheck, color: "from-gold to-gold-dark", iconBg: "bg-white/20" },
           { ...t.briefcases.portfolio, icon: BookOpen, color: "from-accent to-orange-600", iconBg: "bg-white/20" },
-        ].map((bc, i) => (
-          <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} whileHover={{ y: -8, scale: 1.02 }} className="relative overflow-hidden rounded-2xl cursor-pointer group">
-            <div className={cn("absolute inset-0 bg-gradient-to-br noise", bc.color)} />
-            <div className="relative z-10 p-8 text-white h-full">
-              <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm", bc.iconBg)}><bc.icon size={28} /></div>
-              <h3 className="text-xl font-bold mb-1">{bc.title}</h3>
-              <p className="text-xs text-white/70 mb-3">{bc.subtitle}</p>
-              <p className="text-sm text-white/90 leading-relaxed mb-4">{bc.description}</p>
-              <div className="flex flex-wrap gap-1 mb-6">{bc.items.map((item: string, j: number) => <span key={j} className="text-[10px] px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">{item}</span>)}</div>
-              <button className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all">{bc.cta} <ArrowRight size={16} /></button>
-            </div>
-          </motion.div>
-        ))}
+        ].map((bc, i) => {
+            const action = i === 0 ? () => setTab("financials") : i === 1 ? () => setTab("data-room") : null;
+            const href = i === 2 ? "/briefcase" : null;
+            const inner = (
+              <>
+                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm", bc.iconBg)}><bc.icon size={28} /></div>
+                <h3 className="text-xl font-bold mb-1">{bc.title}</h3>
+                <p className="text-xs text-white/70 mb-3">{bc.subtitle}</p>
+                <p className="text-sm text-white/90 leading-relaxed mb-4">{bc.description}</p>
+                <div className="flex flex-wrap gap-1 mb-6">{bc.items.map((item: string, j: number) => <span key={j} className="text-[10px] px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">{item}</span>)}</div>
+                <span className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all">{bc.cta} <ArrowRight size={16} /></span>
+              </>
+            );
+            return href ? (
+              <motion.a key={i} href={href} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} whileHover={{ y: -8, scale: 1.02 }} className="relative overflow-hidden rounded-2xl cursor-pointer group block">
+                <div className={cn("absolute inset-0 bg-gradient-to-br noise", bc.color)} />
+                <div className="relative z-10 p-8 text-white h-full">{inner}</div>
+              </motion.a>
+            ) : (
+              <motion.button key={i} onClick={action || undefined} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} whileHover={{ y: -8, scale: 1.02 }} className="relative overflow-hidden rounded-2xl cursor-pointer group w-full text-right">
+                <div className={cn("absolute inset-0 bg-gradient-to-br noise", bc.color)} />
+                <div className="relative z-10 p-8 text-white h-full">{inner}</div>
+              </motion.button>
+            );
+          })}
       </div>
 
       <Card className="p-6" delay={100}>
@@ -390,26 +407,54 @@ function BusinessPlanView({ t, lang }: any) {
 }
 
 function SectorsView({ t, lang }: any) {
+  const [selected, setSelected] = useState<any>(null);
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Target} title={lang === "ar" ? "القطاعات والرماح" : "Sectors & Spears"} subtitle={lang === "ar" ? "معمارية القلعة والرماح" : "Fortress and Spears architecture"} />
+      <SectionHeader icon={Target} title={lang === "ar" ? "القطاعات والرماح" : "Sectors & Spears"} subtitle={lang === "ar" ? "اضغط على أي قطاع لفتح التحليل الاستراتيجي الكامل" : "Click any sector to open the full strategic analysis"} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s, i) => (
-          <Card key={s.id} delay={i * 100} className={cn("p-0 overflow-hidden", s.status === "active" && "border-emerald/30 dark:border-emerald/50")}>
+          <motion.button
+            key={s.id}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.08 }}
+            whileHover={{ y: -6, scale: 1.01 }}
+            onClick={() => setSelected(s)}
+            className={cn("text-right bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card overflow-hidden", s.status === "active" && "border-emerald/30 dark:border-emerald/50")}
+          >
             <div className={cn("p-4 flex justify-between items-center", s.status === "active" ? "bg-emerald text-white" : "bg-muted dark:bg-dark-muted")}>
-              <div className="flex items-center gap-3"><span className="text-2xl font-amiri font-bold">{(lang === "ar" ? s.name_ar : s.name_en)[0]}</span><div><h3 className="font-bold text-lg">{lang === "ar" ? s.name_ar : s.name_en}</h3><p className="text-xs opacity-80">{s.name_en}</p></div></div>
-              <Badge color={s.status === "active" ? "green" : "yellow"}>{s.status === "active" ? (lang === "ar" ? "🟢 نشط" : "🟢 Active") : (lang === "ar" ? "🟡 قريباً" : "🟡 Coming")}</Badge>
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{s.icon}</span>
+                <div>
+                  <h3 className="font-bold text-lg">{lang === "ar" ? s.name_ar : s.name_en}</h3>
+                  <p className="text-xs opacity-80">{s.name_en}</p>
+                </div>
+              </div>
+              <Badge color={s.status === "active" ? "green" : "yellow"}>
+                {s.status === "active" ? (lang === "ar" ? "🟢 نشط" : "🟢 Active") : (lang === "ar" ? "🟡 قريباً" : "🟡 Coming")}
+              </Badge>
             </div>
             <div className="p-6 space-y-4">
               <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? s.desc_ar : s.desc_en}</p>
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center"><div className="text-xs text-gray-500">{lang === "ar" ? "الإطلاق" : "Launch"}</div><div className="font-bold text-emerald dark:text-gold">{s.timeline}</div></div>
-                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center"><div className="text-xs text-gray-500">{lang === "ar" ? "العملاء" : "Clients"}</div><div className="font-bold text-accent">{s.target_clients}</div></div>
+                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center">
+                  <div className="text-xs text-gray-500">{lang === "ar" ? "الإطلاق" : "Launch"}</div>
+                  <div className="font-bold text-emerald dark:text-gold">{s.timeline}</div>
+                </div>
+                <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-lg text-center">
+                  <div className="text-xs text-gray-500">{lang === "ar" ? "العملاء" : "Clients"}</div>
+                  <div className="font-bold text-accent">{s.target_clients}</div>
+                </div>
+              </div>
+              <div className="w-full py-2.5 bg-emerald/5 text-emerald rounded-xl text-sm font-bold text-center">
+                {lang === "ar" ? "عرض التحليل الكامل ←" : "View full analysis →"}
               </div>
             </div>
-          </Card>
+          </motion.button>
         ))}
       </div>
+      {selected && <SectorModal sector={selected} lang={lang} onClose={() => setSelected(null)} />}
     </div>
   );
 }
@@ -522,22 +567,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
 }
 
 function DataRoomView({ t, lang }: any) {
-  return (
-    <div className="space-y-6">
-      <SectionHeader icon={Briefcase} title={lang === "ar" ? "غرفة البيانات" : "Data Room"} subtitle={lang === "ar" ? "وثائق الاستعداد للاستثمار" : "Investment-Ready Documentation"} />
-      <Card className="p-6">
-        <div className="flex items-center gap-2 mb-6"><CheckCircle2 size={20} className="text-emerald" /><h3 className="text-lg font-bold text-emerald dark:text-gold">Due Diligence Checklist</h3><Badge color="green">{DATA.checklists.dueDiligence.filter(c => c.done).length}/{DATA.checklists.dueDiligence.length}</Badge></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {DATA.checklists.dueDiligence.map((item, i) => (
-            <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 dark:bg-dark-muted/50 hover:bg-muted dark:hover:bg-dark-muted">
-              <div className="flex items-center gap-3"><CheckCircle2 size={16} className={item.done ? "text-emerald" : "text-gray-300"} /><span className="text-sm">{lang === "ar" ? item.label_ar : item.label_en}</span></div>
-              <button className="p-2 rounded-lg hover:bg-emerald/10 text-emerald"><Download size={14} /></button>
-            </motion.div>
-          ))}
-        </div>
-      </Card>
-    </div>
-  );
+  return <DataRoomVault lang={lang} />;
 }
 
 function TeamView({ t, lang }: any) {
