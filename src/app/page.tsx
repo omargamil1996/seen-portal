@@ -180,99 +180,258 @@ export default function InvestorBriefcase() {
 }
 
 function DashboardView({ t, lang, setTab }: any) {
+  const readinessCount = DATA.checklists.investorReady.filter((c: any) => c.done).length;
+  const totalCount = DATA.checklists.investorReady.length;
+  
   return (
     <div className="space-y-8">
+      {/* HERO BANNER */}
       <Card className="p-10 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald noise" />
         <div className="relative z-10 max-w-3xl text-white">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6"><span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}</motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl md:text-5xl font-amiri font-bold leading-tight mb-4">{lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}</motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{lang === "ar" ? DATA.company.vision_ar : DATA.company.vision_en}</motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="flex flex-wrap gap-3">
-            {["🕌 حلال 100%", "⚡ Zero-Friction", "🏰 قلعة + رماح", "🔒 بروتوكول أمني شامل"].map((tag, i) => (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} 
+            className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6"
+          >
+            <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
+            {t.common.preSeed} • {t.common.investmentReady}
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+            className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4"
+          >
+            {lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+            className="text-xl text-gold font-semibold mb-4 font-amiri"
+          >
+            {lang === "ar" ? DATA.company.tagline_ar : DATA.company.tagline_en}
+          </motion.p>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+            className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6"
+          >
+            {lang === "ar" ? DATA.company.vision_ar : DATA.company.vision_en}
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
+            className="flex flex-wrap gap-3"
+          >
+            {["🕌 " + (lang === "ar" ? "حلال 100%" : "100% Halal"), "⚡ Zero-Friction", "🏰 " + (lang === "ar" ? "قلعة + رماح" : "Fortress + Spears"), "🔒 " + (lang === "ar" ? "بروتوكول أمني" : "Security Protocol")].map((tag, i) => (
               <span key={i} className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">{tag}</span>
             ))}
           </motion.div>
         </div>
       </Card>
 
+      {/* 3 INTERACTIVE BRIEFCASE CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { ...t.briefcases.investorKit, icon: Briefcase, color: "from-emerald to-emerald-dark", iconBg: "bg-gold/20" },
-          { ...t.briefcases.dueDiligence, icon: ShieldCheck, color: "from-gold to-gold-dark", iconBg: "bg-white/20" },
-          { ...t.briefcases.portfolio, icon: BookOpen, color: "from-accent to-orange-600", iconBg: "bg-white/20" },
-        ].map((bc, i) => {
-            const action = i === 0 ? () => setTab("financials") : i === 1 ? () => setTab("data-room") : null;
-            const href = i === 2 ? "/briefcase" : null;
-            const inner = (
-              <>
-                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm", bc.iconBg)}><bc.icon size={28} /></div>
-                <h3 className="text-xl font-bold mb-1">{bc.title}</h3>
-                <p className="text-xs text-white/70 mb-3">{bc.subtitle}</p>
-                <p className="text-sm text-white/90 leading-relaxed mb-4">{bc.description}</p>
-                <div className="flex flex-wrap gap-1 mb-6">{bc.items.map((item: string, j: number) => <span key={j} className="text-[10px] px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">{item}</span>)}</div>
-                <span className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all">{bc.cta} <ArrowRight size={16} /></span>
-              </>
-            );
-            return href ? (
-              <motion.a key={i} href={href} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} whileHover={{ y: -8, scale: 1.02 }} className="relative overflow-hidden rounded-2xl cursor-pointer group block">
-                <div className={cn("absolute inset-0 bg-gradient-to-br noise", bc.color)} />
-                <div className="relative z-10 p-8 text-white h-full">{inner}</div>
-              </motion.a>
-            ) : (
-              <motion.button key={i} onClick={action || undefined} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.15 }} whileHover={{ y: -8, scale: 1.02 }} className="relative overflow-hidden rounded-2xl cursor-pointer group w-full text-right">
-                <div className={cn("absolute inset-0 bg-gradient-to-br noise", bc.color)} />
-                <div className="relative z-10 p-8 text-white h-full">{inner}</div>
-              </motion.button>
-            );
-          })}
+          { ...t.briefcases.investorKit, icon: Briefcase, color: "from-emerald to-emerald-dark", iconBg: "bg-gold/20", onClick: () => setTab("financials") },
+          { ...t.briefcases.dueDiligence, icon: ShieldCheck, color: "from-gold to-gold-dark", iconBg: "bg-white/20", onClick: () => setTab("data-room") },
+          { ...t.briefcases.portfolio, icon: BookOpen, color: "from-accent to-orange-600", iconBg: "bg-white/20", onClick: () => setTab("business-plan") },
+        ].map((bc, i) => (
+          <motion.button 
+            key={i} 
+            onClick={bc.onClick}
+            initial={{ opacity: 0, y: 30 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ delay: i * 0.15 }} 
+            whileHover={{ y: -8, scale: 1.02 }} 
+            className="relative overflow-hidden rounded-2xl group text-right"
+          >
+            <div className={cn("absolute inset-0 bg-gradient-to-br noise", bc.color)} />
+            <div className="relative z-10 p-8 text-white h-full">
+              <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-4 backdrop-blur-sm", bc.iconBg)}>
+                <bc.icon size={28} />
+              </div>
+              <h3 className="text-xl font-bold mb-1 font-amiri">{bc.title}</h3>
+              <p className="text-xs text-white/70 mb-3">{bc.subtitle}</p>
+              <p className="text-sm text-white/90 leading-relaxed mb-4">{bc.description}</p>
+              <div className="flex flex-wrap gap-1 mb-6">
+                {bc.items.map((item: string, j: number) => (
+                  <span key={j} className="text-[10px] px-2 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">{item}</span>
+                ))}
+              </div>
+              <span className="flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all">
+                {bc.cta} <ArrowRight size={16} />
+              </span>
+            </div>
+          </motion.button>
+        ))}
       </div>
 
-      <Card className="p-6" delay={100}>
-        <div className="flex items-center gap-2 mb-6"><Target size={20} className="text-emerald dark:text-gold" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "حجم السوق" : "Market Size"}</h3></div>
+      {/* TAM/SAM/SOM MARKET SIZE */}
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <Target size={20} className="text-emerald dark:text-gold" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">
+            {lang === "ar" ? "حجم السوق" : "Market Size"}
+          </h3>
+        </div>
         <div className="grid grid-cols-3 gap-4">
-          {([
+          {[
             { key: "tam", color: "emerald" },
             { key: "sam", color: "gold" },
             { key: "som", color: "accent" },
-          ] as const).map(({ key, color }) => {
-            const data = DATA.market[key];
-            const Counter = () => {
-              const { count, ref } = useCounter(data.value, 1500, data.unit === "K" ? 0 : 2);
-              return <div ref={ref} className="text-4xl font-bold">{count}</div>;
-            };
+          ].map(({ key, color }) => {
+            const d = DATA.market[key as keyof typeof DATA.market];
             return (
-              <motion.div key={key} whileHover={{ scale: 1.05 }} className={cn("p-6 rounded-2xl text-center border-2", color === "emerald" && "bg-emerald/5 dark:bg-emerald/10 border-emerald/20", color === "gold" && "bg-gold/5 dark:bg-gold/10 border-gold/20", color === "accent" && "bg-accent/5 dark:bg-accent/10 border-accent/20")}>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">{lang === "ar" ? data.label_ar : data.label_en}</p>
-                <div className={cn("font-amiri", color === "emerald" && "text-emerald", color === "gold" && "text-gold-dark dark:text-gold", color === "accent" && "text-accent")}><Counter /><span className="text-2xl">{data.unit === "B" ? "B" : "K"}</span></div>
-                <p className="text-xs text-gray-400 mt-1">${data.unit === "B" ? "Billion" : "Thousand"}</p>
+              <motion.div 
+                key={key} 
+                whileHover={{ scale: 1.05 }} 
+                className={cn(
+                  "p-6 rounded-2xl text-center border-2",
+                  color === "emerald" && "bg-emerald/5 dark:bg-emerald/10 border-emerald/20",
+                  color === "gold" && "bg-gold/5 dark:bg-gold/10 border-gold/20",
+                  color === "accent" && "bg-accent/5 dark:bg-accent/10 border-accent/20"
+                )}
+              >
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">
+                  {lang === "ar" ? d.label_ar : d.label_en}
+                </p>
+                <div className={cn(
+                  "font-amiri",
+                  color === "emerald" && "text-emerald",
+                  color === "gold" && "text-gold-dark dark:text-gold",
+                  color === "accent" && "text-accent"
+                )}>
+                  <div className="text-4xl font-bold">{d.value}<span className="text-2xl">{d.unit}</span></div>
+                </div>
+                <p className="text-xs text-gray-400 mt-1">${d.unit === "B" ? "Billion USD" : "Thousand USD"}</p>
               </motion.div>
             );
           })}
         </div>
       </Card>
 
+      {/* KPIs GRID */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {DATA.kpis.map((kpi, i) => (
+        {DATA.kpis.map((kpi: any, i: number) => (
           <Card key={i} delay={i * 80} className="p-4 text-center">
-            <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">{lang === "ar" ? kpi.label_ar : kpi.label_en}</p>
+            <p className="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+              {lang === "ar" ? kpi.label_ar : kpi.label_en}
+            </p>
             <div className="text-2xl font-bold text-emerald dark:text-gold font-amiri">{kpi.value}</div>
             <p className="text-[10px] text-gray-400 mt-1">{kpi.unit}</p>
           </Card>
         ))}
       </div>
 
-      <Card className="p-6" delay={200}>
-        <div className="flex items-center justify-between mb-6"><div className="flex items-center gap-2"><CheckCircle2 size={20} className="text-emerald" /><h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "جاهزية الاستثمار" : "Investment Readiness"}</h3></div><Badge color="green">{DATA.checklists.investorReady.filter(c => c.done).length}/{DATA.checklists.investorReady.length}</Badge></div>
+      {/* INVESTMENT READINESS CHECKLIST */}
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 size={20} className="text-emerald" />
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">
+              {lang === "ar" ? "جاهزية الاستثمار" : "Investment Readiness"}
+            </h3>
+          </div>
+          <Badge color="green">{readinessCount}/{totalCount}</Badge>
+        </div>
+        
+        {/* Progress Bar */}
+        <div className="mb-6">
+          <div className="flex justify-between text-xs text-gray-500 mb-2">
+            <span>{lang === "ar" ? "التقدم" : "Progress"}</span>
+            <span>{Math.round((readinessCount/totalCount)*100)}%</span>
+          </div>
+          <div className="h-3 bg-muted dark:bg-dark-muted rounded-full overflow-hidden">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: `${(readinessCount/totalCount)*100}%` }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="h-full bg-gradient-to-l from-emerald to-gold rounded-full"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {DATA.checklists.investorReady.map((item, i) => (
-            <motion.div key={i} initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 dark:bg-dark-muted/50"><CheckCircle2 size={16} className={item.done ? "text-emerald" : "text-gray-300"} /><span className="text-sm">{lang === "ar" ? item.label_ar : item.label_en}</span></motion.div>
+          {DATA.checklists.investorReady.map((item: any, i: number) => (
+            <motion.div 
+              key={i} 
+              initial={{ opacity: 0, x: -10 }} 
+              whileInView={{ opacity: 1, x: 0 }} 
+              viewport={{ once: true }} 
+              transition={{ delay: i * 0.05 }} 
+              className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 dark:bg-dark-muted/50 hover:bg-muted dark:hover:bg-dark-muted transition-colors"
+            >
+              <CheckCircle2 
+                size={18} 
+                className={item.done ? "text-emerald shrink-0" : "text-gray-300 shrink-0"} 
+              />
+              <span className="text-sm text-gray-700 dark:text-gray-300">
+                {lang === "ar" ? item.label_ar : item.label_en}
+              </span>
+            </motion.div>
           ))}
         </div>
       </Card>
+
+      {/* FOUNDER PREVIEW */}
+      <Card className="p-6">
+        <div className="flex items-center gap-4">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald to-emerald-dark flex items-center justify-center text-white text-3xl font-amiri font-bold shadow-lg shrink-0">
+            {DATA.company.founder.name[0]}
+          </div>
+          <div className="flex-1">
+            <div className="inline-flex items-center gap-2 bg-emerald/10 px-3 py-1 rounded-full mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald" />
+              <span className="text-xs font-semibold text-emerald">{lang === "ar" ? "المؤسس التشغيلي" : "Operational Founder"}</span>
+            </div>
+            <h3 className="text-xl font-bold text-emerald dark:text-gold font-amiri">
+              {lang === "ar" ? DATA.company.founder.name : DATA.company.founder.name_en}
+            </h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 leading-relaxed">
+              {lang === "ar" ? DATA.company.founder.bio_ar : DATA.company.founder.bio_en}
+            </p>
+            <button 
+              onClick={() => setTab("team")}
+              className="text-sm text-accent hover:text-orange-600 font-semibold mt-2 inline-flex items-center gap-1"
+            >
+              {lang === "ar" ? "عرض الملف الكامل →" : "View full profile →"}
+            </button>
+          </div>
+        </div>
+      </Card>
+
+      {/* QUICK NAV BUTTONS */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {[
+          { tab: "financials", label_ar: "النمذجة المالية", label_en: "Financial Model", icon: Wallet, color: "emerald" },
+          { tab: "business-plan", label_ar: "خطة العمل", label_en: "Business Plan", icon: FileText, color: "gold" },
+          { tab: "sectors", label_ar: "القطاعات", label_en: "Sectors", icon: Target, color: "accent" },
+          { tab: "the-ask", label_ar: "طلب الاستثمار", label_en: "The Ask", icon: FileCheck, color: "emerald" },
+        ].map((nav, i) => (
+          <motion.button
+            key={i}
+            whileHover={{ y: -4 }}
+            onClick={() => setTab(nav.tab as any)}
+            className={cn(
+              "p-4 rounded-2xl border shadow-card hover:shadow-elevated transition-all text-center group",
+              nav.color === "emerald" && "bg-emerald/5 border-emerald/20 hover:border-emerald/40",
+              nav.color === "gold" && "bg-gold/5 border-gold/20 hover:border-gold/40",
+              nav.color === "accent" && "bg-accent/5 border-accent/20 hover:border-accent/40"
+            )}
+          >
+            <nav.icon size={24} className={cn(
+              "mx-auto mb-2 transition-colors",
+              nav.color === "emerald" && "text-emerald",
+              nav.color === "gold" && "text-gold-dark dark:text-gold",
+              nav.color === "accent" && "text-accent"
+            )} />
+            <div className="font-bold text-sm text-foreground">
+              {lang === "ar" ? nav.label_ar : nav.label_en}
+            </div>
+          </motion.button>
+        ))}
+      </div>
     </div>
   );
 }
+
 
 function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData, t, lang }: any) {
   const mrr12 = Math.round(fin.arpu * (fin.newCust * 12 * 0.8));
