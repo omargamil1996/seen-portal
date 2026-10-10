@@ -764,4 +764,41 @@ function SettingsView({ t, lang, dark, setDark, setLang }: any) {
       </div>
     </div>
   );
+  function AdvancedAnalyticsView({ t, lang }: any) {
+  const [activeChart, setActiveChart] = useState("sankey");
+  const charts = [
+    { id: "sankey", name: lang === "ar" ? "مخطط سانكي" : "Sankey", icon: "🌊" },
+    { id: "treemap", name: lang === "ar" ? "المخطط المربعي" : "Treemap", icon: "📊" },
+    { id: "sunburst", name: lang === "ar" ? "انفجار الشمس" : "Sunburst", icon: "☀️" },
+    { id: "radar", name: lang === "ar" ? "المخطط الراداري" : "Radar", icon: "🎯" },
+    { id: "bubble", name: lang === "ar" ? "المخطط الفقاعي" : "Bubble", icon: "🫧" },
+    { id: "gantt", name: lang === "ar" ? "مخطط جانت" : "Gantt", icon: "📅" },
+    { id: "chord", name: lang === "ar" ? "المخطط الوتري" : "Chord", icon: "" },
+  ];
+  return (
+    <div className="space-y-6">
+      <SectionHeader icon={BarChart3} title={lang === "ar" ? "التحليلات المتقدمة" : "Advanced Analytics"} subtitle={lang === "ar" ? "مرئيات بيانات تفاعلية متقدمة" : "Advanced Interactive Data Visualizations"} />
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {charts.map((chart) => (
+          <button key={chart.id} onClick={() => setActiveChart(chart.id)} className={cn("flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold whitespace-nowrap transition-all border", activeChart === chart.id ? "bg-emerald text-white border-emerald shadow-md" : "bg-card dark:bg-dark-card text-gray-600 dark:text-gray-400 border-border hover:border-emerald/40")}>
+            <span className="text-xl">{chart.icon}</span>{chart.name}
+          </button>
+        ))}
+      </div>
+      <Card className="p-6">
+        <AnimatePresence mode="wait">
+          <motion.div key={activeChart} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.3 }}>
+            {activeChart === "sankey" && <SankeyChart lang={lang} />}
+            {activeChart === "treemap" && <TreemapChart lang={lang} />}
+            {activeChart === "sunburst" && <SunburstChart lang={lang} />}
+            {activeChart === "radar" && <RadarChart lang={lang} />}
+            {activeChart === "bubble" && <BubbleChart lang={lang} />}
+            {activeChart === "gantt" && <GanttChart lang={lang} />}
+            {activeChart === "chord" && <ChordDiagram lang={lang} />}
+          </motion.div>
+        </AnimatePresence>
+      </Card>
+    </div>
+  );
+}
 }
