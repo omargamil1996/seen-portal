@@ -34,6 +34,9 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    ".next",
+    "backups",
+    "node_modules",
+    "out"
   ]
 }
