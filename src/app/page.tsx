@@ -954,6 +954,7 @@ function AnimatedHero({ t, lang }: any) {
 function DashboardView({ t, lang, model }: any) {
   return (
     <div className="space-y-8">
+      <p className="text-center font-amiri text-2xl md:text-3xl text-gold drop-shadow-sm">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ</p>
       <AnimatedHero t={t} lang={lang} />
       <div className="flex justify-center">
         <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full border border-gold/60 bg-gradient-to-r from-gold/15 via-white/10 to-emerald/15 shadow-lg backdrop-blur-sm">
