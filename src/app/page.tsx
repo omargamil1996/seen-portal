@@ -1210,7 +1210,6 @@ function BusinessPlanView({ t, lang }: any) {
     <div className="space-y-6">
       <SectionHeader icon={FileText} title={t.menu.businessPlan} subtitle={""} />
       <AutomationScene kind="flow" lang={lang} />
-      <BotsAround leftMode="typing" rightMode="archive" size={80}><Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><PagesStack lang={lang} /></Card></BotsAround>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">{DATA.businessPlan.length}</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div></Card>
         <Card className="p-4 text-center bg-gold/5 border-gold/20"><div className="text-3xl font-bold text-gold font-amiri">AR + EN</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ثنائي اللغة" : "Bilingual"}</div></Card>
@@ -1266,7 +1265,6 @@ function SectorsView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Target} title={t.menu.sectors} subtitle={""} />
-      <AutomationScene kind="network" lang={lang} />
       <BotsAround leftMode="typing" rightMode="guard" size={84}><Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><SectorWheel lang={lang} /></Card></BotsAround>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s: any, i: number) => (
@@ -1298,7 +1296,6 @@ function SectorsView({ t, lang }: any) {
         ))}
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="p-6"><BubbleChart lang={lang} /></Card>
       </div>
       {selected && <SectorAutomationPanel sector={selected} lang={lang} />}
       {selected && <SectorModal sector={selected} lang={lang} onClose={() => setSelected(null)} />}
@@ -1485,8 +1482,8 @@ function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
+      <AutomationScene kind="chip" lang={lang} />
       <div className="flex justify-center"><BotAvatar mode="typing" size={120} /></div>
-      <Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><IsoBlocks lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
         <div className="relative z-10 text-white">
@@ -1708,7 +1705,6 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
-      <Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><GrowthBars lang={lang} /></Card>
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
           <div className="flex items-center gap-3">
@@ -1747,6 +1743,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
           </div>
         </div>
       </Card>
+      <Card className="p-6 bg-transparent dark:bg-transparent border-transparent shadow-none"><GrowthBars lang={lang} /></Card>
     </div>
   );
 }
@@ -1945,19 +1942,26 @@ function DataVaultScene({ lang }: any) {
 function AutomationScene({ kind, lang }: any) {
   const ar = lang === "ar";
   if (kind === "flow") {
-    const p = "M40,110 C140,40 240,180 330,110 S470,40 560,110";
+    const nodes = ar ? ["استقبال", "RFI", "مستند", "معالجة", "AI", "تقرير", "فاتورة", "تسليم"] : ["Intake", "RFI", "Document", "Process", "AI", "Report", "Invoice", "Delivery"];
+    const xs = nodes.map((_, i) => 50 + (i * 500) / (nodes.length - 1));
+    const ys = nodes.map((_, i) => (i % 2 ? 60 : 140));
+    const p = xs.map((x, i) => `${i ? "L" : "M"}${x},${ys[i]}`).join(" ");
     return (
       <svg viewBox="0 0 600 220" className="w-full max-w-3xl h-auto mx-auto" role="img">
         <path d={p} fill="none" stroke="#D4AF37" strokeOpacity="0.35" strokeWidth="2" strokeDasharray="6 8" />
-        {[0, 1, 2, 3].map((i) => (
-          <circle key={i} r="7" fill={i % 2 ? "#F97316" : "#0F5132"}>
-            <animateMotion dur="4.2s" begin={`${i * 1.05}s`} repeatCount="indefinite" path={p} />
+        {[0, 1, 2].map((i) => (
+          <circle key={i} r="6" fill={i % 2 ? "#F97316" : "#0F5132"}>
+            <animateMotion dur="5s" begin={`${i * 1.6}s`} repeatCount="indefinite" path={p} />
           </circle>
         ))}
-        <circle cx="330" cy="110" r="30" fill="#0F5132" stroke="#D4AF37" strokeWidth="3"><animate attributeName="r" values="28;34;28" dur="2.4s" repeatCount="indefinite" /></circle>
-        <text x="330" y="116" textAnchor="middle" fontSize="13" fontWeight="700" fill="#D4AF37">{ar ? "معالجة" : "AI"}</text>
-        <text x="60" y="170" fontSize="12" fill="#6B7280">{ar ? "استقبال" : "Intake"}</text>
-        <text x="520" y="170" fontSize="12" fill="#6B7280">{ar ? "تسليم" : "Delivery"}</text>
+        {xs.map((x, i) => (
+          <g key={i}>
+            <circle cx={x} cy={ys[i]} r="18" fill="#0F5132" stroke="#D4AF37" strokeWidth="2">
+              <animate attributeName="r" values="16;20;16" dur={`${1.6 + i * 0.2}s`} repeatCount="indefinite" />
+            </circle>
+            <text x={x} y={ys[i] + 40} textAnchor="middle" fontSize="11" fill="#6B7280">{nodes[i]}</text>
+          </g>
+        ))}
       </svg>
     );
   }
@@ -1980,6 +1984,27 @@ function AutomationScene({ kind, lang }: any) {
       <svg viewBox="0 0 600 200" className="w-full max-w-3xl h-auto mx-auto" role="img">
         {edges.map(([a, b], i) => (<line key={i} x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} stroke="#D4AF37" strokeOpacity="0.4" strokeWidth="1.5"><animate attributeName="stroke-opacity" values="0.15;0.7;0.15" dur={`${2 + i * 0.3}s`} repeatCount="indefinite" /></line>))}
         {pts.map(([x, y], i) => (<circle key={i} cx={x} cy={y} r={i === 5 ? 10 : 7} fill={i % 2 ? "#D4AF37" : "#0F5132"}><animate attributeName="r" values={`${i === 5 ? 10 : 7};${i === 5 ? 14 : 10};${i === 5 ? 10 : 7}`} dur={`${1.6 + i * 0.2}s`} repeatCount="indefinite" /></circle>))}
+      </svg>
+    );
+  }
+  if (kind === "chip") {
+    const pins = [0, 1, 2, 3, 4, 5, 6, 7];
+    return (
+      <svg viewBox="0 0 400 260" className="w-full max-w-md h-auto mx-auto" role="img">
+        {pins.map((i) => (
+          <g key={i}>
+            <line x1={90 + i * 30} y1="30" x2={90 + i * 30} y2="60" stroke="#D4AF37" strokeWidth="3" />
+            <line x1={90 + i * 30} y1="200" x2={90 + i * 30} y2="230" stroke="#D4AF37" strokeWidth="3" />
+            <circle cx={90 + i * 30} cy="30" r="4" fill="#F97316"><animate attributeName="cy" values="30;60;30" dur={`${1.2 + i * 0.1}s`} repeatCount="indefinite" /></circle>
+          </g>
+        ))}
+        <rect x="120" y="60" width="160" height="140" rx="16" fill="#0F5132" stroke="#D4AF37" strokeWidth="3" />
+        <text x="200" y="135" textAnchor="middle" fontSize="22" fontWeight="700" fill="#D4AF37">AI</text>
+        {[0, 1, 2].map((i) => (
+          <circle key={i} cx="200" cy="130" r={44 + i * 18} fill="none" stroke="#F97316" strokeOpacity="0.5">
+            <animate attributeName="r" values={`${44 + i * 18};${56 + i * 18};${44 + i * 18}`} dur="2.4s" begin={`${i * 0.4}s`} repeatCount="indefinite" />
+          </circle>
+        ))}
       </svg>
     );
   }
