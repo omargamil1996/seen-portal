@@ -29,8 +29,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build
+      - name: Build with verbose output
+        run: |
+          echo "Starting build..."
+          npm run build 2>&1 || {
+            echo "Build failed! Showing npm logs..."
+            npm run build --verbose
+            exit 1
+          }
+          echo "Build completed successfully!"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
