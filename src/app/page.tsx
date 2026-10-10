@@ -177,7 +177,7 @@ function Badge({ children, color = "emerald" }: any) {
 function DashboardView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={LayoutDashboard} title={t.dashboard.title} subtitle={t.dashboard.subtitle} />
+      <SectionHeader icon={LayoutDashboard} title={t.menu.title} subtitle={t.menu.subtitle} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {DATA.kpis.map((kpi, i) => (
           <Card key={i} className="text-center">
@@ -197,7 +197,7 @@ function DashboardView({ t, lang }: any) {
 function FinancialsView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Wallet} title={t.financials.title} subtitle={t.financials.subtitle} />
+      <SectionHeader icon={Wallet} title={t.menu.title} subtitle={t.menu.subtitle} />
       <Card>
         <h3 className="text-xl font-bold mb-4">{lang === "ar" ? "توزيع الأموال" : "Use of Funds"}</h3>
         <div className="space-y-3">
@@ -222,7 +222,7 @@ function FinancialsView({ t, lang }: any) {
 function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={FileText} title={t.businessPlan.title} subtitle={t.businessPlan.subtitle} />
+      <SectionHeader icon={FileText} title={t.menu.title} subtitle={t.menu.subtitle} />
       <div className="space-y-4">
         {DATA.businessPlan.map((section: any, i: number) => (
           <Card key={i}>
@@ -242,7 +242,7 @@ function BusinessPlanView({ t, lang }: any) {
 function SectorsView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Target} title={t.sectors.title} subtitle={t.sectors.subtitle} />
+      <SectionHeader icon={Target} title={t.menu.title} subtitle={t.menu.subtitle} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((sector: any, i: number) => (
           <Card key={i}>
@@ -268,7 +268,7 @@ function SectorsView({ t, lang }: any) {
 function RoadmapView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={MapIcon} title={t.roadmap.title} subtitle={t.roadmap.subtitle} />
+      <SectionHeader icon={MapIcon} title={t.menu.title} subtitle={t.menu.subtitle} />
       <div className="space-y-4">
         {DATA.roadmap.map((item: any, i: number) => (
           <Card key={i}>
@@ -291,7 +291,7 @@ function RoadmapView({ t, lang }: any) {
 function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={AlertTriangle} title={t.risks.title} subtitle={t.risks.subtitle} />
+      <SectionHeader icon={AlertTriangle} title={t.menu.title} subtitle={t.menu.subtitle} />
       <div className="space-y-4">
         {DATA.risks.map((risk: any, i: number) => (
           <Card key={i}>
@@ -327,7 +327,7 @@ function RisksView({ t, lang }: any) {
 function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Cpu} title={t.hardware.title} subtitle={t.hardware.subtitle} />
+      <SectionHeader icon={Cpu} title={t.menu.title} subtitle={t.menu.subtitle} />
       <Card>
         <h3 className="text-xl font-bold mb-4 text-emerald dark:text-gold">
           {lang === "ar" ? DATA.hardware.scenario.name_ar : DATA.hardware.scenario.name_en}
@@ -358,7 +358,7 @@ function HardwareView({ t, lang }: any) {
 function TheAskView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={FileCheck} title={t.theAsk.title} subtitle={t.theAsk.subtitle} />
+      <SectionHeader icon={FileCheck} title={t.menu.title} subtitle={t.menu.subtitle} />
       <Card className="text-center">
         <div className="text-6xl font-bold text-emerald dark:text-gold font-amiri mb-4">
           SAR {DATA.ask.amount.toLocaleString()}
@@ -375,7 +375,7 @@ function TheAskView({ t, lang }: any) {
 function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Briefcase} title={t.dataRoom.title} subtitle={t.dataRoom.subtitle} />
+      <SectionHeader icon={Briefcase} title={t.menu.title} subtitle={t.menu.subtitle} />
       <Card>
         <p className="text-gray-700 dark:text-gray-300">
           {lang === "ar" 
@@ -390,7 +390,7 @@ function DataRoomView({ t, lang }: any) {
 function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Users} title={t.team.title} subtitle={t.team.subtitle} />
+      <SectionHeader icon={Users} title={t.menu.title} subtitle={t.menu.subtitle} />
       <Card>
         <div className="flex items-center gap-4 mb-4">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald to-gold flex items-center justify-center text-white text-3xl font-bold">
@@ -416,7 +416,7 @@ function TeamView({ t, lang }: any) {
 function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Shield} title={t.security.title} subtitle={t.security.subtitle} />
+      <SectionHeader icon={Shield} title={t.menu.title} subtitle={t.menu.subtitle} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="text-center">
           <div className="text-4xl font-bold text-emerald dark:text-gold mb-2">25</div>
@@ -438,7 +438,7 @@ function SecurityView({ t, lang }: any) {
 function SettingsView({ t, lang, dark, setDark, setLang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Settings} title={t.settings.title} subtitle={t.settings.subtitle} />
+      <SectionHeader icon={Settings} title={t.menu.title} subtitle={t.menu.subtitle} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>
           <h3 className="text-lg font-bold mb-4">{lang === "ar" ? "اللغة" : "Language"}</h3>
