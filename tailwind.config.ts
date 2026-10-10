@@ -5,9 +5,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#FAFAF8", foreground: "#1A1A1A", accent: "#F97316",
-        emerald: { DEFAULT: "#0F5132", light: "#1a7a4c", dark: "#0a3d25" },
-        gold: { DEFAULT: "#D4AF37", light: "#e8c94a", dark: "#b8962e" },
+        background: "rgb(var(--background-rgb) / <alpha-value>)", foreground: "#1A1A1A", accent: "#F97316",
+        emerald: { DEFAULT: "rgb(var(--emerald-rgb) / <alpha-value>)", light: "rgb(var(--emerald-light-rgb) / <alpha-value>)", dark: "rgb(var(--emerald-dark-rgb) / <alpha-value>)" },
+        gold: { DEFAULT: "rgb(var(--gold-rgb) / <alpha-value>)", light: "rgb(var(--gold-light-rgb) / <alpha-value>)", dark: "rgb(var(--gold-dark-rgb) / <alpha-value>)" },
         sand: "#E8D5B7", cream: "#FFF8E7", card: "#FFFFFF", muted: "#F5F5F4", border: "#E7E5E4",
         dark: { bg: "#0A0A0A", card: "#171717", border: "#2A2A2A", muted: "#1F1F1F" },
       },

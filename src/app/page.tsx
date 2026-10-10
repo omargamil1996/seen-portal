@@ -23,6 +23,11 @@ import {
 import { SankeyChart, TreemapChart, SunburstChart, RadarChart, BubbleChart, GanttChart, ChordDiagram } from "@/components/AdvancedCharts";
 
 const AppContext = createContext<any>({});
+const PALETTE_CSS = `
+:root { --background-rgb: 250 250 248; --emerald-rgb: 15 81 50; --emerald-light-rgb: 26 122 76; --emerald-dark-rgb: 10 61 37; --gold-rgb: 212 175 55; --gold-light-rgb: 232 201 74; --gold-dark-rgb: 184 150 46; }
+:root[data-palette="warm"] { --background-rgb: 245 245 245; --emerald-rgb: 251 146 60; --emerald-light-rgb: 253 186 116; --emerald-dark-rgb: 234 88 12; }
+`;
+
 const CurrencyContext = createContext<any>({ cur: "SAR", setCur: () => {} });
 
 // أسعار تقريبية للتحويل — حدّثها دورياً
@@ -218,6 +223,10 @@ export default function Home() {
     capital: 15000 * 3.75,
   });
   const [cur, setCur] = useState<"SAR" | "USD" | "MYR">("SAR");
+  const [palette, setPalette] = useState<"green" | "warm">("green");
+  useEffect(() => {
+    document.documentElement.dataset.palette = palette === "warm" ? "warm" : "green";
+  }, [palette]);
   const t: any = translations[lang];
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
   const model = runModel(fin);
@@ -236,7 +245,8 @@ export default function Home() {
     { id: "settings", label: t.menu.settings, icon: Settings },
   ];
   return (
-    <CurrencyContext.Provider value={{ cur, setCur }}>
+    <CurrencyContext.Provider value={{ cur, setCur, palette, setPalette }}>
+    <style>{PALETTE_CSS}</style>
     <AppContext.Provider value={{ lang, setLang, dark, setDark }}>
       <div className="relative min-h-screen bg-background dark:bg-dark-bg text-foreground dark:text-white font-cairo transition-colors duration-300 overflow-hidden">
         <SiteBackground />
@@ -804,7 +814,7 @@ function AnimatedHero({ t, lang }: any) {
       {floats.map((f, i) => (
         <div key={i} className="absolute rounded-full bg-gold/15" style={{ left: `${f.x}%`, top: `${f.y}%`, width: f.s, height: f.s, animation: `heroFloat ${4 + i}s ease-in-out ${f.d}s infinite` }} />
       ))}
-      <div className="absolute right-10 top-1/2 -translate-y-1/2 w-40 h-40 hidden md:block">
+      <div className="relative mx-auto mb-6 w-32 h-32 md:w-40 md:h-40">
         {[0, 1, 2].map((i) => (
           <span key={i} className="absolute inset-0 rounded-full border-2 border-gold/50" style={{ animation: `heroPulse 2.4s ease-out ${i * 0.8}s infinite` }} />
         ))}
@@ -813,14 +823,14 @@ function AnimatedHero({ t, lang }: any) {
           <span className="absolute -top-1.5 left-1/2 w-3 h-3 rounded-full bg-gold" />
         </div>
       </div>
-      <div className="relative z-20 max-w-3xl text-white drop-shadow-md">
+      <div className="relative z-20 max-w-3xl mx-auto text-white drop-shadow-md text-center flex flex-col items-center">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold border border-white/20 mb-6">
           <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}
         </div>
         <h1 className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4">{lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}</h1>
         <p className="text-xl text-gold font-semibold mb-4 font-amiri">{lang === "ar" ? DATA.company.tagline_ar : DATA.company.tagline_en}</p>
-        <p className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{lang === "ar" ? DATA.company.vision_ar : DATA.company.vision_en}</p>
-        <div className="flex flex-wrap gap-3">
+        <p className="text-lg text-white/80 leading-relaxed max-w-2xl mx-auto mb-6">{lang === "ar" ? DATA.company.vision_ar : DATA.company.vision_en}</p>
+        <div className="flex flex-wrap justify-center gap-3">
           {tags.map((tag, i) => (
             <span key={i} className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm" style={{ animation: `heroFade 6s ease-in-out ${i * 1.5}s infinite` }}>{tag}</span>
           ))}
@@ -848,23 +858,30 @@ function DashboardView({ t, lang, model }: any) {
           <KpiCard key={i} kpi={kpi} lang={lang} delay={i * 100} />
         ))}
       </div>
-      <Card className="p-6">
-        <div className="flex items-center gap-2 mb-6">
-          <Target size={20} className="text-emerald dark:text-gold" />
-          <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "حجم السوق" : "Market Size"}</h3>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          {[{ key: "tam", color: "emerald" }, { key: "sam", color: "gold" }, { key: "som", color: "accent" }].map(({ key, color }) => {
-            const d = DATA.market[key as keyof typeof DATA.market];
-            return (
-              <motion.div key={key} whileHover={{ scale: 1.05 }} className={cn("p-6 rounded-2xl text-center border-2 transition-all", color === "emerald" && "bg-emerald/5 dark:bg-emerald/10 border-emerald/20", color === "gold" && "bg-gold/5 dark:bg-gold/10 border-gold/20", color === "accent" && "bg-accent/5 dark:bg-accent/10 border-accent/20")}>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">{lang === "ar" ? d.label_ar : d.label_en}</p>
-                <div className={cn("font-amiri", color === "emerald" && "text-emerald", color === "gold" && "text-gold-dark dark:text-gold", color === "accent" && "text-accent")}>
-                  <div className="text-4xl font-bold">{d.value}<span className="text-2xl">{d.unit}</span></div>
+      <Card className="p-8 relative overflow-hidden" hover={false}>
+        <div className="absolute -top-16 -right-16 w-56 h-56 rounded-full bg-gold/20 blur-3xl" />
+        <div className="absolute -bottom-20 -left-16 w-56 h-56 rounded-full bg-emerald/15 blur-3xl" />
+        <style>{`@keyframes marketGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}`}</style>
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-bold text-emerald dark:text-gold flex items-center gap-2"><Target size={20} /> {lang === "ar" ? "حجم السوق" : "Market Size"}</h3>
+            <span className="text-xs font-mono text-gray-500">TAM → SAM → SOM</span>
+          </div>
+          <div className="space-y-4">
+            {[{ key: "tam", color: "#0F5132", fill: 100 }, { key: "sam", color: "#D4AF37", fill: 70 }, { key: "som", color: "#F97316", fill: 40 }].map(({ key, color, fill }, i) => {
+              const d = DATA.market[key as keyof typeof DATA.market];
+              return (
+                <div key={key} className="relative flex items-center gap-4 p-4 rounded-2xl bg-muted/40 dark:bg-dark-muted/40 border border-border dark:border-dark-border overflow-hidden">
+                  <div className="absolute inset-y-0 left-0 rounded-2xl opacity-20" style={{ width: `${fill}%`, background: color, transformOrigin: "left", animation: `marketGrow 1.4s ease-out ${i * 0.2}s both` }} />
+                  <div className="relative z-10 w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-md" style={{ background: color }}>{key.toUpperCase()}</div>
+                  <div className="relative z-10 flex-1">
+                    <div className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">{lang === "ar" ? d.label_ar : d.label_en}</div>
+                  </div>
+                  <div className="relative z-10 text-3xl font-bold font-amiri" style={{ color }}>{d.value}<span className="text-base ms-1">{d.unit}</span></div>
                 </div>
-              </motion.div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </Card>
     </div>
@@ -1612,7 +1629,7 @@ function SecurityView({ t, lang }: any) {
 }
 
 function SettingsView({ t, lang, dark, setDark, setLang }: any) {
-  const { cur, setCur } = useContext(CurrencyContext);
+  const { cur, setCur, palette, setPalette } = useContext(CurrencyContext);
   return (
     <div className="space-y-6">
       <SectionHeader icon={Settings} title={t.menu.settings} subtitle={""} />
@@ -1632,6 +1649,14 @@ function SettingsView({ t, lang, dark, setDark, setLang }: any) {
           </div>
         </Card>
       </div>
+      <Card className="p-6">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Sparkles size={18} className="text-accent" /> {lang === "ar" ? "لوحة الألوان" : "Color Palette"}</h3>
+        <div className="flex gap-2">
+          <button onClick={() => setPalette("green")} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", palette === "green" ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>{lang === "ar" ? "أخضر (الأصلي)" : "Green (Original)"}</button>
+          <button onClick={() => setPalette("warm")} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", palette === "warm" ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>{lang === "ar" ? "برتقالي فاتح" : "Light Orange"}</button>
+        </div>
+        <p className="text-xs text-gray-500 mt-3">{lang === "ar" ? "يغيّر الألوان الرئيسية في كل الموقع. الوضع الداكن يبقى كما هو." : "Changes the main colors across the site. Dark mode stays as is."}</p>
+      </Card>
       <Card className="p-6">
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Wallet size={18} className="text-emerald" /> {lang === "ar" ? "العملة" : "Currency"}</h3>
         <div className="flex gap-2">
