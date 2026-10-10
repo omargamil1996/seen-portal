@@ -525,6 +525,55 @@ function BotsAround({ children, leftMode = "typing", rightMode = "guard", size =
   );
 }
 
+function GearWorkshop({ lang }: any) {
+  const gear = (cx: number, cy: number, r: number, teeth: number) => {
+    const pts: string[] = [];
+    for (let i = 0; i < teeth * 2; i++) {
+      const a = (i * Math.PI) / teeth; const rr = i % 2 === 0 ? r : r - 10;
+      pts.push(`${(cx + rr * Math.cos(a)).toFixed(1)},${(cy + rr * Math.sin(a)).toFixed(1)}`);
+    }
+    return pts.join(" ");
+  };
+  return (
+    <svg viewBox="0 0 360 200" className="w-full h-auto" role="img">
+      <defs>
+        <pattern id="bp-grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0 L0 0 0 20" fill="none" stroke="#0F5132" strokeOpacity="0.12" /></pattern>
+      </defs>
+      <rect x="0" y="0" width="360" height="200" fill="url(#bp-grid)" />
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 120 100" to="360 120 100" dur="12s" repeatCount="indefinite" />
+        <polygon points={gear(120, 100, 52, 12)} fill="#0F5132" />
+        <circle cx="120" cy="100" r="16" fill="#F5F5F4" />
+      </g>
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="360 230 100" to="0 230 100" dur="12s" repeatCount="indefinite" />
+        <polygon points={gear(230, 100, 40, 10)} fill="#F97316" />
+        <circle cx="230" cy="100" r="12" fill="#F5F5F4" />
+      </g>
+      <text x="180" y="186" textAnchor="middle" fontSize="11" fill="#6B7280">{lang === "ar" ? "أتمتة مترابطة كالتروس" : "Interlocking automation"}</text>
+    </svg>
+  );
+}
+
+function RadarSweep({ size = 320, lang }: any) {
+  return (
+    <svg viewBox="0 0 300 300" width={size} height={size} role="img">
+      {[40, 80, 120, 140].map((r, i) => (<circle key={i} cx="150" cy="150" r={r} fill="none" stroke="#0F5132" strokeOpacity="0.35" strokeWidth="1.5" />))}
+      <line x1="150" y1="0" x2="150" y2="300" stroke="#0F5132" strokeOpacity="0.2" />
+      <line x1="0" y1="150" x2="300" y2="150" stroke="#0F5132" strokeOpacity="0.2" />
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="4s" repeatCount="indefinite" />
+        <path d="M150,150 L150,10 A140,140 0 0,1 249,51 Z" fill="#F97316" fillOpacity="0.25" />
+        <line x1="150" y1="150" x2="150" y2="10" stroke="#F97316" strokeWidth="2" />
+      </g>
+      {[[200, 90], [95, 175], [185, 210]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="5" fill="#F97316"><animate attributeName="r" values="3;7;3" dur={`${1.4 + i * 0.5}s`} repeatCount="indefinite" /></circle>
+      ))}
+      <text x="150" y="296" textAnchor="middle" fontSize="11" fill="#6B7280">{lang === "ar" ? "مسح مستمر" : "Continuous scan"}</text>
+    </svg>
+  );
+}
+
 function OfficeBot({ lang }: any) {
   const msgs = lang === "ar"
     ? ["✅ تم إرسال الرسالة", "📊 تم تحديث الشيت", "🗂️ تمت أرشفة الفاتورة"]
@@ -1694,8 +1743,7 @@ function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Users} title={t.menu.team} subtitle="" />
-      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Constellation lang={lang} /></Card>
-      <Card className="p-8 overflow-hidden relative">
+            <Card className="p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
           <div className="shrink-0 relative">
@@ -1724,6 +1772,7 @@ function TeamView({ t, lang }: any) {
           </div>
         </div>
       </Card>
+      <BotsAround leftMode="typing" rightMode="archive" size={84}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
           <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "أرقام المؤسس" : "Founder Metrics"}</h3>
@@ -1739,17 +1788,19 @@ function TeamView({ t, lang }: any) {
             </ResponsiveContainer>
           </div>
         </Card>
-        <Card className="p-6"><RadarChart lang={lang} /></Card>
+        <Card className="p-5"><GearWorkshop lang={lang} /></Card>
       </div>
+    </BotsAround>
     </div>
   );
 }
 
 function SecurityView({ t, lang }: any) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25 overflow-hidden"><RadarSweep size={620} lang={lang} /></div>
+      <div className="relative z-10 space-y-6">
       <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
-      <div className="flex justify-center"><BotAvatar mode="guard" size={130} /></div>
       <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Heartbeat lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 text-center border-emerald/30">
@@ -1768,6 +1819,7 @@ function SecurityView({ t, lang }: any) {
           <div className="text-sm text-gray-500 uppercase tracking-wider">{lang === "ar" ? "تشفير البيانات" : "Data Encryption"}</div>
         </Card>
       </div>
+    </div>
     </div>
   );
 }
