@@ -1404,6 +1404,37 @@ function RoadmapView({ t, lang }: any) {
   );
 }
 
+function HangingWeight({ lang }: any) {
+  return (
+    <div className="w-full flex justify-center">
+      <svg viewBox="0 0 400 140" className="w-full max-w-md h-auto" role="img">
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="-14 200 0;14 200 0;-14 200 0" dur="3.6s" repeatCount="indefinite" />
+          <line x1="200" y1="0" x2="200" y2="90" stroke="#6B7280" strokeWidth="2" />
+          <circle cx="200" cy="102" r="16" fill="#dc2626"><animate attributeName="r" values="16;19;16" dur="1.8s" repeatCount="indefinite" /></circle>
+        </g>
+        <text x="200" y="136" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "المخاطر المعلّقة تحت المراقبة" : "Risks under watch"}</text>
+      </svg>
+    </div>
+  );
+}
+
+function RiskBars({ prob, impact }: any) {
+  const v = (x: string) => (x === "high" ? 90 : x === "medium" ? 55 : 25);
+  return (
+    <div className="space-y-2 mt-3">
+      {[["P", v(prob), "#eab308"], ["I", v(impact), "#dc2626"]].map(([k, w, c]: any) => (
+        <div key={k} className="flex items-center gap-2 text-xs">
+          <span className="w-4 font-bold">{k}</span>
+          <div className="flex-1 h-2 rounded-full bg-muted dark:bg-dark-muted overflow-hidden">
+            <div className="h-full rounded-full" style={{ width: `${w}%`, background: c, transition: "width 1.2s ease" }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
