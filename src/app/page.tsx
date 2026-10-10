@@ -100,8 +100,10 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-gold flex items-center justify-center text-white font-bold text-xl shadow-lg">S</div>
               <div>
-                <h1 className="text-lg font-bold text-emerald dark:text-gold font-amiri">{DATA.company.name_ar}</h1>
-                <span className="text-xs bg-emerald/10 text-emerald px-2 py-1 rounded-full ml-2">V5.2.0</span>
+                <h1 className="text-lg font-bold text-emerald dark:text-gold font-amiri">
+                 {DATA.company.name_ar}
+                 <span className="text-xs bg-emerald/10 text-emerald px-2 py-1 rounded-full ml-2">V5.2.0</span>
+                </h1>
                 <p className="text-xs text-gray-500">{t.common.investorBriefcase}</p>
               </div>
             </div>
