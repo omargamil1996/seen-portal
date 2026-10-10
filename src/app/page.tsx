@@ -125,26 +125,53 @@ function useCounter(end: number, duration = 1500, decimals = 0) {
   return { count, ref };
 }
 
+// نموذج مالي مُصحَّح:
+// - الرسوم التأسيسية تُحسب مرة واحدة، والاشتراك الشهري متكرر
+// - التسرب شهري: العملاء النشطون = السابقون × (1 - churn) + الجدد
+// - تكلفة الاستحواذ CAC تُصرف عند كل عميل جديد
+// - الربح الشهري = الإيراد × هامش الربح - (التكاليف الثابتة + الجدد × CAC)
+function runModel(f: any) {
+  const c = Math.max(f.churn, 0.01) / 100;
+  const m = f.margin / 100;
+  const ltv = f.setup * m + (f.sub * m) / c;
+  const ltvCac = f.cac > 0 ? ltv / f.cac : 0;
+  const payback = f.sub * m > 0 ? f.cac / (f.sub * m) : 0;
+  let active = 0, cum = f.capital, breakEven: number | null = null, cashOutMonth: number | null = null, minCash = f.capital;
+  const proj: any[] = [];
+  for (let k = 1; k <= 36; k++) {
+    active = active * (1 - c) + f.newCust;
+    const mrr = active * f.sub;
+    const revenue = mrr + f.newCust * f.setup;
+    const costs = f.fixed + f.newCust * f.cac;
+    const profit = revenue * m - costs;
+    cum += profit;
+    minCash = Math.min(minCash, cum);
+    if (breakEven === null && profit >= 0) breakEven = k;
+    if (cashOutMonth === null && cum < 0) cashOutMonth = k;
+    proj.push({ month: `M${k}`, customers: Math.round(active * 10) / 10, mrr: Math.round(mrr), profit: Math.round(profit), cash: Math.round(cum) });
+  }
+  return { ltv, ltvCac, payback, breakEven, cashOutMonth, minCash: Math.round(minCash), proj, mrr12: proj[11].mrr, mrr36: proj[35].mrr };
+}
+
 export default function Home() {
   const [lang, setLang] = useState<Lang>("ar");
   const [dark, setDark] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [slideIdx, setSlideIdx] = useState(0);
-  const [fin, setFin] = useState<any>(DATA.financials);
+  const [fin, setFin] = useState<any>({
+    setup: DATA.financials.arpu,
+    sub: Math.round(DATA.financials.arpu * 0.175),
+    churn: DATA.financials.churn,
+    cac: DATA.financials.cac,
+    margin: DATA.financials.margin,
+    fixed: DATA.financials.fixedCosts,
+    newCust: DATA.financials.newCustomers,
+    capital: 15000 * 3.75,
+  });
   const [cur, setCur] = useState<"SAR" | "USD" | "MYR">("SAR");
   const t: any = translations[lang];
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
-  const ltv = (fin.arpu * 12 * (1 - fin.churn / 100)) / (fin.churn / 100) * (fin.margin / 100);
-  const ltvCac = ltv / fin.cac;
-  const payback = fin.cac / (fin.arpu * (fin.margin / 100));
-  const be = Math.ceil(fin.fixedCosts / (fin.arpu * (fin.newCustomers * (fin.margin / 100))));
-  const projectionData = Array.from({ length: 12 }, (_, i) => {
-    const m = i + 1;
-    const cust = Math.round(fin.newCustomers * m * Math.pow(1 - fin.churn / 100, m));
-    const mrr = cust * fin.arpu;
-    const costs = fin.fixedCosts + cust * (fin.cac / 12);
-    return { month: `M${m}`, customers: cust, mrr: Math.round(mrr), profit: Math.round(mrr - costs) };
-  });
+  const model = runModel(fin);
   const tabs = [
     { id: "dashboard", label: t.menu.dashboard, icon: LayoutDashboard },
     { id: "financials", label: t.menu.financials, icon: Wallet },
@@ -198,7 +225,7 @@ export default function Home() {
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: "easeOut" }}>
               {activeTab === "dashboard" && <DashboardView t={t} lang={lang} />}
-              {activeTab === "financials" && <FinancialsView fin={fin} setFin={setFin} ltv={ltv} ltvCac={ltvCac} payback={payback} be={be} projectionData={projectionData} t={t} lang={lang} />}
+              {activeTab === "financials" && <FinancialsView fin={fin} setFin={setFin} model={model} t={t} lang={lang} />}
               {activeTab === "business-plan" && <BusinessPlanView t={t} lang={lang} />}
               {activeTab === "sectors" && <SectorsView t={t} lang={lang} />}
               {activeTab === "roadmap" && <RoadmapView t={t} lang={lang} />}
@@ -312,7 +339,8 @@ function DashboardView({ t, lang }: any) {
   );
 }
 
-function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData, t, lang }: any) {
+function FinancialsView({ fin, setFin, model, t, lang }: any) {
+  const { ltv, ltvCac, payback, breakEven: be, proj: projectionData } = model;
   const { fmtSAR, fmtUSD, fxSAR } = useMoney();
   const { cur } = useContext(CurrencyContext);
   const COLORS = ["#0F5132", "#D4AF37", "#F97316", "#6B7280", "#1a7a4c", "#b8962e", "#dc2626", "#3b82f6"];
@@ -324,13 +352,14 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
           <div className="space-y-6">
             {[
-              { label: "ARPU / Setup Value", value: fin.arpu, min: 500, max: 5000, step: 100, unit: "SAR", key: "arpu" },
-              { label: lang === "ar" ? "نسبة التسرب (Churn)" : "Churn Rate", value: fin.churn, min: 1, max: 20, step: 1, unit: "%", key: "churn" },
+              { label: lang === "ar" ? "رسوم التأسيس (لمرة واحدة)" : "Setup Fee (one-time)", value: fin.setup, min: 500, max: 5000, step: 100, unit: "SAR", key: "setup" },
+              { label: lang === "ar" ? "الاشتراك الشهري" : "Monthly Subscription", value: fin.sub, min: 100, max: 2000, step: 10, unit: "SAR", key: "sub" },
+              { label: lang === "ar" ? "نسبة التسرب الشهري (Churn)" : "Monthly Churn", value: fin.churn, min: 1, max: 20, step: 1, unit: "%", key: "churn" },
               { label: "CAC", value: fin.cac, min: 500, max: 5000, step: 100, unit: "SAR", key: "cac" },
-              { label: lang === "ar" ? "عملاء جدد / شهر" : "New Customers / month", value: fin.newCustomers, min: 1, max: 10, step: 0.1, unit: "", key: "newCustomers" },
-              { label: lang === "ar" ? "هامش الربح (Margin)" : "Margin", value: fin.margin, min: 50, max: 90, step: 5, unit: "%", key: "margin" },
-              { label: lang === "ar" ? "التكاليف الثابتة" : "Fixed Costs", value: fin.fixedCosts, min: 1000, max: 10000, step: 500, unit: "SAR", key: "fixedCosts" },
-            ].map((slider, i) => (
+              { label: lang === "ar" ? "عملاء جدد / شهر" : "New Customers / month", value: fin.newCust, min: 0.5, max: 10, step: 0.1, unit: "", key: "newCust" },
+              { label: lang === "ar" ? "هامش الربح الإجمالي" : "Gross Margin", value: fin.margin, min: 50, max: 90, step: 5, unit: "%", key: "margin" },
+              { label: lang === "ar" ? "التكاليف الثابتة / شهر" : "Fixed Costs / month", value: fin.fixed, min: 1000, max: 10000, step: 500, unit: "SAR", key: "fixed" },
+                        ].map((slider, i) => (
               <div key={i} className="group">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{slider.label}</span>
@@ -344,10 +373,12 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
             {[
               { label: "LTV", value: fmtSAR(Math.round(ltv)), highlight: false },
               { label: "LTV:CAC", value: `${ltvCac.toFixed(1)}x`, highlight: true },
-              { label: lang === "ar" ? "استرداد CAC" : "CAC Payback", value: `${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`, highlight: false },
-              { label: lang === "ar" ? "نقطة التعادل" : "Break-even", value: `${lang === "ar" ? "شهر" : "Mo"} ${be > 0 && be < 36 ? be : ">36"}`, highlight: true },
-              { label: lang === "ar" ? "MRR الشهر 12" : "MRR Month 12", value: fmtSAR(Math.round(fin.arpu * (fin.newCustomers * 12 * 0.8))), highlight: false },
-              { label: lang === "ar" ? "MRR الشهر 36" : "MRR Month 36", value: fmtSAR(Math.round(fin.arpu * (fin.newCustomers * 36 * 0.6))), highlight: true },
+              { label: lang === "ar" ? "استرداد CAC (شهر)" : "CAC Payback (mo)", value: `${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`, highlight: false },
+              { label: lang === "ar" ? "نقطة التعادل" : "Break-even", value: be ? `${lang === "ar" ? "شهر" : "Mo"} ${be}` : ">36", highlight: true },
+              { label: lang === "ar" ? "MRR الشهر 12" : "MRR Month 12", value: fmtSAR(model.mrr12), highlight: false },
+              { label: lang === "ar" ? "MRR الشهر 36" : "MRR Month 36", value: fmtSAR(model.mrr36), highlight: true },
+              { label: lang === "ar" ? "أدنى رصيد نقدي" : "Lowest Cash Balance", value: fmtSAR(model.minCash), highlight: false },
+              { label: lang === "ar" ? "نفاد النقد" : "Cash-out Month", value: model.cashOutMonth ? `${lang === "ar" ? "شهر" : "Mo"} ${model.cashOutMonth}` : (lang === "ar" ? "لا يوجد" : "None"), highlight: true },
             ].map((metric, i) => (
               <motion.div key={i} whileHover={{ scale: 1.03 }} className={cn("p-4 rounded-xl text-center transition-all duration-300", metric.highlight ? "bg-gradient-to-br from-gold/20 to-accent/10 border border-gold/30" : "bg-white/5 border border-white/10 hover:border-white/20")}>
                 <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">{metric.label}</div>
@@ -356,6 +387,11 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
             ))}
           </div>
         </div>
+      </Card>
+      <Card className="p-4 text-sm text-gray-600 dark:text-gray-400">
+        {lang === "ar"
+          ? "الافتراضات: رصيد البداية = 15,000 دولار (طلب الاستثمار). LTV = رسوم التأسيس × الهامش + (الاشتراك × الهامش ÷ التسرب الشهري). CAC يُصرف عند كل عميل جديد. الأرقام تتغير مباشرة بتحريك الشرائح."
+          : "Assumptions: starting cash = $15,000 (the ask). LTV = setup × margin + (subscription × margin ÷ monthly churn). CAC is paid per new customer. All values update live with the sliders."}
       </Card>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
@@ -426,7 +462,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-6">
           <BarChart3 size={18} className="text-emerald dark:text-gold" />
-          <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "التدفق النقدي والأرباح (12 شهراً)" : "12-Month Cash Flow & Profit"}</h3>
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "التدفق النقدي والأرباح (36 شهراً)" : "36-Month Cash Flow & Profit"}</h3>
         </div>
         <div className="h-72 w-full">
           <ResponsiveContainer width="100%" height="100%">
