@@ -36,18 +36,18 @@ export default function Home() {
   }, [dark]);
 
   const tabs = [
-    { id: "dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
-    { id: "financials", label: t.nav.financials, icon: Wallet },
-    { id: "business-plan", label: t.nav.businessPlan, icon: FileText },
-    { id: "sectors", label: t.nav.sectors, icon: Target },
-    { id: "roadmap", label: t.nav.roadmap, icon: MapIcon },
-    { id: "risks", label: t.nav.risks, icon: AlertTriangle },
-    { id: "hardware", label: t.nav.hardware, icon: Cpu },
-    { id: "the-ask", label: t.nav.theAsk, icon: FileCheck },
-    { id: "data-room", label: t.nav.dataRoom, icon: Briefcase },
-    { id: "team", label: t.nav.team, icon: Users },
-    { id: "security", label: t.nav.security, icon: Shield },
-    { id: "settings", label: t.nav.settings, icon: Settings },
+    { id: "dashboard", label: t.menu.dashboard, icon: LayoutDashboard },
+    { id: "financials", label: t.menu.financials, icon: Wallet },
+    { id: "business-plan", label: t.menu.businessPlan, icon: FileText },
+    { id: "sectors", label: t.menu.sectors, icon: Target },
+    { id: "roadmap", label: t.menu.roadmap, icon: MapIcon },
+    { id: "risks", label: t.menu.risks, icon: AlertTriangle },
+    { id: "hardware", label: t.menu.hardware, icon: Cpu },
+    { id: "the-ask", label: t.menu.theAsk, icon: FileCheck },
+    { id: "data-room", label: t.menu.dataRoom, icon: Briefcase },
+    { id: "team", label: t.menu.team, icon: Users },
+    { id: "security", label: t.menu.security, icon: Shield },
+    { id: "settings", label: t.menu.settings, icon: Settings },
   ];
 
   return (
