@@ -53,18 +53,18 @@ export default function Home() {
   const [dark, setDark] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [slideIdx, setSlideIdx] = useState(0);
-  const [fin, setFin] = useState(DATA.financials);
+  const [fin, setFin] = useState<any>(DATA.financials);
   const t = translations[lang];
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
   const ltv = (fin.arpu * 12 * (1 - fin.churn / 100)) / (fin.churn / 100) * (fin.margin / 100);
   const ltvCac = ltv / fin.cac;
   const payback = fin.cac / (fin.arpu * (fin.margin / 100));
-  const be = Math.ceil(fin.fixed / (fin.arpu * (fin.newCust * (fin.margin / 100))));
+  const be = Math.ceil(fin.fixedCosts / (fin.arpu * (fin.newCustomers * (fin.margin / 100))));
   const projectionData = Array.from({ length: 12 }, (_, i) => {
     const m = i + 1;
-    const cust = Math.round(fin.newCust * m * Math.pow(1 - fin.churn / 100, m));
+    const cust = Math.round(fin.newCustomers * m * Math.pow(1 - fin.churn / 100, m));
     const mrr = cust * fin.arpu;
-    const costs = fin.fixed + cust * (fin.cac / 12);
+    const costs = fin.fixedCosts + cust * (fin.cac / 12);
     return { month: `M${m}`, customers: cust, mrr: Math.round(mrr), profit: Math.round(mrr - costs) };
   });
   const tabs = [
@@ -242,9 +242,9 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
               { label: "ARPU / Setup Value", value: fin.arpu, min: 500, max: 5000, step: 100, unit: "SAR", key: "arpu" },
               { label: lang === "ar" ? "نسبة التسرب (Churn)" : "Churn Rate", value: fin.churn, min: 1, max: 20, step: 1, unit: "%", key: "churn" },
               { label: "CAC", value: fin.cac, min: 500, max: 5000, step: 100, unit: "SAR", key: "cac" },
-              { label: lang === "ar" ? "عملاء جدد / شهر" : "New Customers / month", value: fin.newCust, min: 1, max: 10, step: 0.1, unit: "", key: "newCust" },
+              { label: lang === "ar" ? "عملاء جدد / شهر" : "New Customers / month", value: fin.newCustomers, min: 1, max: 10, step: 0.1, unit: "", key: "newCustomers" },
               { label: lang === "ar" ? "هامش الربح (Margin)" : "Margin", value: fin.margin, min: 50, max: 90, step: 5, unit: "%", key: "margin" },
-              { label: lang === "ar" ? "التكاليف الثابتة" : "Fixed Costs", value: fin.fixed, min: 1000, max: 10000, step: 500, unit: "SAR", key: "fixed" },
+              { label: lang === "ar" ? "التكاليف الثابتة" : "Fixed Costs", value: fin.fixedCosts, min: 1000, max: 10000, step: 500, unit: "SAR", key: "fixedCosts" },
             ].map((slider, i) => (
               <div key={i} className="group">
                 <div className="flex justify-between items-center mb-2">
@@ -261,8 +261,8 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
               { label: "LTV:CAC", value: `${ltvCac.toFixed(1)}x`, highlight: true },
               { label: lang === "ar" ? "استرداد CAC" : "CAC Payback", value: `${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`, highlight: false },
               { label: lang === "ar" ? "نقطة التعادل" : "Break-even", value: `${lang === "ar" ? "شهر" : "Mo"} ${be > 0 && be < 36 ? be : ">36"}`, highlight: true },
-              { label: lang === "ar" ? "MRR الشهر 12" : "MRR Month 12", value: `${Math.round(fin.arpu * (fin.newCust * 12 * 0.8)).toLocaleString()} SAR`, highlight: false },
-              { label: lang === "ar" ? "MRR الشهر 36" : "MRR Month 36", value: `${Math.round(fin.arpu * (fin.newCust * 36 * 0.6)).toLocaleString()} SAR`, highlight: true },
+              { label: lang === "ar" ? "MRR الشهر 12" : "MRR Month 12", value: `${Math.round(fin.arpu * (fin.newCustomers * 12 * 0.8)).toLocaleString()} SAR`, highlight: false },
+              { label: lang === "ar" ? "MRR الشهر 36" : "MRR Month 36", value: `${Math.round(fin.arpu * (fin.newCustomers * 36 * 0.6)).toLocaleString()} SAR`, highlight: true },
             ].map((metric, i) => (
               <motion.div key={i} whileHover={{ scale: 1.03 }} className={cn("p-4 rounded-xl text-center transition-all duration-300", metric.highlight ? "bg-gradient-to-br from-gold/20 to-accent/10 border border-gold/30" : "bg-white/5 border border-white/10 hover:border-white/20")}>
                 <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">{metric.label}</div>
