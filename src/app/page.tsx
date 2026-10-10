@@ -6,7 +6,7 @@ import { DATA } from "@/lib/data";
 import { translations, type Lang } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import SectorModal from "@/components/SectorModal";
-import DataRoomVault from "@/components/DataRoomVault";
+import DataRoomVault, { DATA_ROOM_FILES } from "@/components/DataRoomVault";
 
 import {
   LayoutDashboard, Wallet, FileText, Target, Map as MapIcon,
