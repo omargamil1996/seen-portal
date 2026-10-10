@@ -409,19 +409,273 @@ function CircuitPulse({ lang }: any) {
   );
 }
 
+
+function TickerRail({ lang }: any) {
+  const items = ["واتساب", "n8n", "AI", "Supabase", "بريد", "Notion", "Sheets"];
+  const row = [...items, ...items];
+  return (
+    <div className="overflow-hidden w-full" dir="ltr">
+      <style>{`@keyframes seenTicker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}`}</style>
+      <div className="flex gap-4 w-max" style={{ animation: "seenTicker 18s linear infinite" }}>
+        {row.map((s, i) => (
+          <div key={i} className="px-5 py-3 rounded-xl bg-emerald text-white font-bold text-sm border border-gold/40 whitespace-nowrap">{s}</div>
+        ))}
+      </div>
+      <div className="text-xs text-gray-500 mt-2 text-center">{lang === "ar" ? "أدوات التشغيل المتصلة" : "Connected operating tools"}</div>
+    </div>
+  );
+}
+
+function Constellation({ lang }: any) {
+  const pts = [[80, 60], [200, 40], [320, 90], [450, 50], [520, 150], [380, 180], [230, 160], [120, 170]];
+  const edges = [[0, 1], [1, 2], [2, 3], [3, 4], [2, 5], [5, 6], [6, 0], [6, 7], [7, 0]];
+  return (
+    <svg viewBox="0 0 600 220" className="w-full h-auto" role="img">
+      {edges.map(([a, b], i) => (
+        <line key={i} x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} stroke="#D4AF37" strokeOpacity="0.35" strokeWidth="1.5">
+          <animate attributeName="stroke-opacity" values="0.15;0.6;0.15" dur={`${2 + i * 0.3}s`} repeatCount="indefinite" />
+        </line>
+      ))}
+      {pts.map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r={i === 2 ? 9 : 6} fill={i % 2 ? "#D4AF37" : "#0F5132"} stroke="#D4AF37">
+          <animate attributeName="r" values={`${i === 2 ? 9 : 6};${i === 2 ? 12 : 8};${i === 2 ? 9 : 6}`} dur={`${1.5 + i * 0.2}s`} repeatCount="indefinite" />
+        </circle>
+      ))}
+      <text x="300" y="212" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "شبكة الفريق والمهارات" : "Team & skills network"}</text>
+    </svg>
+  );
+}
+
+function Heartbeat({ lang }: any) {
+  const d = "M0,110 L120,110 L140,110 L155,60 L170,160 L185,90 L200,110 L340,110 L355,40 L372,180 L390,110 L600,110";
+  return (
+    <svg viewBox="0 0 600 220" className="w-full h-auto" role="img">
+      <path d={d} fill="none" stroke="#0F5132" strokeOpacity="0.2" strokeWidth="3" />
+      <path d={d} fill="none" stroke="#D4AF37" strokeWidth="4" strokeLinecap="round" strokeDasharray="60 600">
+        <animate attributeName="stroke-dashoffset" from="660" to="0" dur="2.6s" repeatCount="indefinite" />
+      </path>
+      <text x="300" y="212" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "نبض النظام: مراقبة مستمرة" : "System heartbeat: continuous monitoring"}</text>
+    </svg>
+  );
+}
+
+function PagesStack({ lang }: any) {
+  const rots = [-12, 0, 12];
+  return (
+    <svg viewBox="0 0 600 240" className="w-full h-auto" role="img">
+      {[0, 1, 2].map((i) => (
+        <g key={i}>
+          <animateTransform attributeName="transform" type="rotate" values={`${rots[i]} 300 120;${rots[(i + 1) % 3]} 300 120;${rots[i]} 300 120`} dur={`${3 + i}s`} repeatCount="indefinite" />
+          <rect x="200" y="30" width="200" height="170" rx="12" fill={i === 1 ? "#0F5132" : "#F5F5F4"} stroke="#D4AF37" strokeWidth="2" />
+          <line x1="225" y1="70" x2="375" y2="70" stroke="#D4AF37" strokeOpacity="0.8" strokeWidth="3" />
+          <line x1="225" y1="98" x2="355" y2="98" stroke="#6B7280" strokeOpacity="0.4" />
+          <line x1="225" y1="118" x2="365" y2="118" stroke="#6B7280" strokeOpacity="0.4" />
+        </g>
+      ))}
+      <text x="300" y="232" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "الملفات الاستراتيجية (49 ملف)" : "Strategic files (49)"}</text>
+    </svg>
+  );
+}
+
+function wedge(a0: number, a1: number, r = 110) {
+  const p = (a: number) => [150 + r * Math.cos((a * Math.PI) / 180), 150 + r * Math.sin((a * Math.PI) / 180)];
+  const [x0, y0] = p(a0), [x1, y1] = p(a1);
+  return `M150,150 L${x0},${y0} A${r},${r} 0 0,1 ${x1},${y1} Z`;
+}
+
+function SectorWheel({ lang }: any) {
+  const colors = ["#0F5132", "#D4AF37", "#1a7a4c", "#b8962e", "#6B7280"];
+  return (
+    <svg viewBox="0 0 300 300" className="w-full max-w-xs h-auto mx-auto" role="img">
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="30s" repeatCount="indefinite" />
+        {colors.map((c, i) => (
+          <path key={i} d={wedge(i * 72, i * 72 + 68)} fill={c} fillOpacity="0.85" />
+        ))}
+      </g>
+      <circle cx="150" cy="150" r="42" fill="#F5F5F4" />
+      <text x="150" y="155" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#0F5132">{lang === "ar" ? "5 قطاعات" : "5 sectors"}</text>
+    </svg>
+  );
+}
+
+function TimelineWave({ stages, lang }: any) {
+  const n = stages.length;
+  const xs = stages.map((_: any, i: number) => 60 + (i * 480) / (n - 1));
+  return (
+    <svg viewBox="0 0 600 160" className="w-full h-auto" role="img">
+      <path d="M0,80 Q75,20 150,80 T300,80 T450,80 T600,80" fill="none" stroke="#D4AF37" strokeWidth="4" strokeLinecap="round" strokeDasharray="800">
+        <animate attributeName="stroke-dashoffset" from="800" to="0" dur="3s" repeatCount="indefinite" />
+      </path>
+      {xs.map((x: number, i: number) => (
+        <g key={i}>
+          <circle cx={x} cy={80} r="9" fill="#0F5132" stroke="#D4AF37" strokeWidth="2">
+            <animate attributeName="r" values="9;13;9" dur="2s" begin={`${i * 0.4}s`} repeatCount="indefinite" />
+          </circle>
+          <text x={x} y={122} textAnchor="middle" fontSize="11" fill="#6B7280">{stages[i]}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function RiskHeatmap({ lang }: any) {
+  const colors = [["#16a34a", "#eab308", "#dc2626"], ["#eab308", "#f97316", "#dc2626"], ["#f97316", "#dc2626", "#dc2626"]];
+  return (
+    <svg viewBox="0 0 360 330" className="w-full max-w-sm h-auto mx-auto" role="img">
+      {colors.map((row, r) =>
+        row.map((c, k) => (
+          <rect key={`${r}-${k}`} x={60 + k * 95} y={20 + r * 95} width="88" height="88" rx="10" fill={c} fillOpacity="0.5">
+            <animate attributeName="fill-opacity" values="0.25;0.75;0.25" dur={`${1.5 + (r + k) * 0.3}s`} repeatCount="indefinite" />
+          </rect>
+        ))
+      )}
+      <text x="180" y="325" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "مصفوفة الاحتمال × الأثر" : "Probability × Impact matrix"}</text>
+    </svg>
+  );
+}
+
+function IsoBox({ x, y, color, delay }: any) {
+  const top = `${x},${y} ${x + 40},${y - 20} ${x + 80},${y} ${x + 40},${y + 20}`;
+  const left = `${x},${y} ${x + 40},${y + 20} ${x + 40},${y + 60} ${x},${y + 40}`;
+  const right = `${x + 80},${y} ${x + 40},${y + 20} ${x + 40},${y + 60} ${x + 80},${y + 40}`;
+  return (
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="3s" begin={`${delay}s`} repeatCount="indefinite" />
+      <polygon points={top} fill="#F5F5F4" />
+      <polygon points={left} fill={color} />
+      <polygon points={right} fill="#6B7280" />
+    </g>
+  );
+}
+
+function IsoBlocks({ lang }: any) {
+  return (
+    <svg viewBox="0 0 400 200" className="w-full h-auto" role="img">
+      <IsoBox x={60} y={80} color="#0F5132" delay={0} />
+      <IsoBox x={160} y={60} color="#D4AF37" delay={0.5} />
+      <IsoBox x={260} y={100} color="#1a7a4c" delay={1} />
+      <text x="200" y="195" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "العتاد: لابتوب + Mini PC + ملحقات" : "Hardware: laptop + Mini PC + accessories"}</text>
+    </svg>
+  );
+}
+
+function GrowthBars({ lang }: any) {
+  const base = 170;
+  const hs = [40, 70, 100, 135, 170];
+  const labels = ["Q1", "Q2", "Q3", "Q4", "Q5"];
+  return (
+    <svg viewBox="0 0 400 210" className="w-full h-auto" role="img">
+      {hs.map((h, i) => (
+        <g key={i}>
+          <rect x={40 + i * 70} width="44" rx="6" fill={i % 2 ? "#D4AF37" : "#0F5132"} y={base - h} height={h}>
+            <animate attributeName="height" values={`${h};${h * 0.7};${h}`} dur="3s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
+            <animate attributeName="y" values={`${base - h};${base - h * 0.7};${base - h}`} dur="3s" begin={`${i * 0.2}s`} repeatCount="indefinite" />
+          </rect>
+          <text x={62 + i * 70} y="200" textAnchor="middle" fontSize="11" fill="#6B7280">{labels[i]}</text>
+        </g>
+      ))}
+      <text x="200" y="20" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "مسار النمو المتوقع" : "Projected growth path"}</text>
+    </svg>
+  );
+}
+
+function FileCards({ lang }: any) {
+  const files = lang === "ar" ? ["NDA", "النموذج المالي", "خطة العمل"] : ["NDA", "Financial Model", "Business Plan"];
+  return (
+    <svg viewBox="0 0 600 200" className="w-full h-auto" role="img">
+      {files.map((f, i) => (
+        <g key={i}>
+          <animateTransform attributeName="transform" type="translate" values="-30 0;0 0;0 0;30 0" keyTimes="0;0.3;0.7;1" dur="4s" begin={`${i}s`} repeatCount="indefinite" />
+          <rect x={60 + i * 170} y="50" width="150" height="100" rx="12" fill="#0F5132" stroke="#D4AF37" strokeWidth="2" />
+          <text x={135 + i * 170} y="108" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#F5F5F4">{f}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+function wedgeDummy() { return null; }
+
+function ConveyorLane({ title, items }: any) {
+  return (
+    <div className="w-full">
+      <div className="text-sm font-bold text-emerald dark:text-gold mb-1">{title}</div>
+      <svg viewBox="0 0 600 110" className="w-full h-auto" role="img">
+        <rect x="0" y="60" width="600" height="20" rx="10" fill="#6B7280" fillOpacity="0.2" />
+        {[0, 1, 2].map((k) => (
+          <g key={k}>
+            <animateTransform attributeName="transform" type="translate" from="-80 0" to="680 0" dur="6s" begin={`${-k * 2}s`} repeatCount="indefinite" />
+            <rect x="0" y="36" width="70" height="40" rx="6" fill="#D4AF37" />
+            <text x="35" y="61" textAnchor="middle" fontSize="11" fill="#0F5132">{items[k % items.length]}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function BranchFlow({ title, items }: any) {
+  const paths = ["M60,60 C200,60 220,25 340,25", "M60,60 L340,60", "M60,60 C200,60 220,95 340,95"];
+  const ry = [10, 45, 80];
+  return (
+    <div className="w-full">
+      <div className="text-sm font-bold text-emerald dark:text-gold mb-1">{title}</div>
+      <svg viewBox="0 0 600 120" className="w-full h-auto" role="img">
+        <circle cx="60" cy="60" r="24" fill="#0F5132" stroke="#D4AF37" strokeWidth="2" />
+        <text x="60" y="64" textAnchor="middle" fontSize="10" fill="#F5F5F4">{items[0]}</text>
+        {paths.map((d, i) => (
+          <g key={i}>
+            <path d={d} fill="none" stroke="#D4AF37" strokeOpacity="0.4" strokeWidth="3" />
+            <circle r="5" fill="#D4AF37">
+              <animateMotion dur="2.4s" begin={`${i * 0.5}s`} repeatCount="indefinite" path={d} />
+            </circle>
+            <rect x="340" y={ry[i]} width="200" height="30" rx="8" fill="#0F5132" />
+            <text x="440" y={ry[i] + 20} textAnchor="middle" fontSize="12" fill="#F5F5F4">{items[i + 1]}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function TimerLoop({ title, items }: any) {
+  return (
+    <div className="w-full">
+      <div className="text-sm font-bold text-emerald dark:text-gold mb-1">{title}</div>
+      <svg viewBox="0 0 600 130" className="w-full h-auto" role="img">
+        {items.map((s: string, i: number) => (
+          <g key={i}>
+            <circle cx={60 + i * 120} cy="60" r="28" fill={i === 0 ? "#0F5132" : "#F5F5F4"} stroke="#D4AF37" strokeWidth="2" />
+            <text x={60 + i * 120} y="65" textAnchor="middle" fontSize="11" fill={i === 0 ? "#F5F5F4" : "#0F5132"}>{s}</text>
+            {i < items.length - 1 && <line x1={88 + i * 120} y1="60" x2={132 + i * 120} y2="60" stroke="#D4AF37" strokeWidth="2" strokeDasharray="4 4" />}
+          </g>
+        ))}
+        <circle cx="60" cy="60" r="34" fill="none" stroke="#D4AF37" strokeOpacity="0.5">
+          <animate attributeName="r" values="34;40;34" dur="2s" repeatCount="indefinite" />
+        </circle>
+      </svg>
+    </div>
+  );
+}
+
 const SECTOR_LANES = [
-  { ar: "استقبال الطلبات من واتساب", en: "WhatsApp intake", stagesAr: ["واتساب", "تحقق", "n8n", "CRM", "تأكيد"], stagesEn: ["WhatsApp", "Validate", "n8n", "CRM", "Confirm"] },
-  { ar: "معالجة المستندات بالذكاء الاصطناعي", en: "AI document processing", stagesAr: ["بريد", "استخراج", "AI", "قاعدة بيانات", "تقرير"], stagesEn: ["Email", "Extract", "AI", "Database", "Report"] },
-  { ar: "متابعة وتذكيرات تلقائية", en: "Automated follow-ups", stagesAr: ["موعد", "تذكير", "رد", "تحديث", "إغلاق"], stagesEn: ["Schedule", "Reminder", "Reply", "Update", "Close"] },
+  { kind: "conveyor", ar: "استقبال الطلبات من واتساب", en: "WhatsApp intake", itemsAr: ["طلب", "رسالة", "صورة", "موعد"], itemsEn: ["Order", "Message", "Photo", "Booking"] },
+  { kind: "branch", ar: "توزيع المستندات بالذكاء الاصطناعي", en: "AI document routing", itemsAr: ["مستند", "استخراج", "تقرير", "أرشيف"], itemsEn: ["Document", "Extract", "Report", "Archive"] },
+  { kind: "timer", ar: "متابعة وتذكيرات تلقائية", en: "Automated follow-ups", itemsAr: ["موعد", "تذكير", "رد", "إغلاق"], itemsEn: ["Schedule", "Reminder", "Reply", "Close"] },
 ];
 
 function SectorAutomationPanel({ sector, lang }: any) {
   return (
     <Card className="p-6 space-y-6" hover={false}>
       <h3 className="text-xl font-bold text-emerald dark:text-gold">{lang === "ar" ? `أتمتة قطاع: ${sector.name_ar}` : `Automation for: ${sector.name_en}`}</h3>
-      {SECTOR_LANES.map((lane, i) => (
-        <AutomationFlow key={i} title={lang === "ar" ? lane.ar : lane.en} stages={lang === "ar" ? lane.stagesAr : lane.stagesEn} lang={lang} />
-      ))}
+      {SECTOR_LANES.map((lane, i) => {
+        const title = lang === "ar" ? lane.ar : lane.en;
+        const items = lang === "ar" ? lane.itemsAr : lane.itemsEn;
+        if (lane.kind === "conveyor") return <ConveyorLane key={i} title={title} items={items} />;
+        if (lane.kind === "branch") return <BranchFlow key={i} title={title} items={items} />;
+        return <TimerLoop key={i} title={title} items={items} />;
+      })}
     </Card>
   );
 }
@@ -461,9 +715,14 @@ function DashboardView({ t, lang, model }: any) {
           </motion.div>
         </div>
       </Card>
+      <Card className="p-4 text-sm text-gray-600 dark:text-gray-400" hover={false}>
+        {lang === "ar"
+          ? "هذه الأرقام تمثل السيناريو المحافظ (الأدنى المتوقع). العوائد الفعلية قد تكون أعلى مع العملاء ذوي رسوم التأسيس الأكبر، والنمذجة المالية مفتوحة لتعديل كل المدخلات."
+          : "These figures represent the conservative scenario (the floor). Actual returns may be higher with clients paying larger setup fees. The financial model is fully open for adjusting every input."}
+      </Card>
       <div className="grid md:grid-cols-2 gap-4">
-        <Card className="p-6"><AutomationFlow title={lang === "ar" ? "خط الأتمتة الرئيسي" : "Core automation pipeline"} stages={["واتساب", "n8n", "AI", "Supabase", "بريد"]} lang={lang} /></Card>
-        <Card className="p-6"><AutomationOrbit lang={lang} /></Card>
+        <Card className="p-6"><TickerRail lang={lang} /></Card>
+        <Card className="p-6"><Heartbeat lang={lang} /></Card>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {kpisFromModel(model).map((kpi: any, i: number) => (
@@ -707,7 +966,7 @@ function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileText} title={t.menu.businessPlan} subtitle={""} />
-      <AutomationNeural lang={lang} />
+      <Card className="p-6"><PagesStack lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">{DATA.businessPlan.length}</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div></Card>
         <Card className="p-4 text-center bg-gold/5 border-gold/20"><div className="text-3xl font-bold text-gold font-amiri">AR + EN</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ثنائي اللغة" : "Bilingual"}</div></Card>
@@ -744,6 +1003,7 @@ function SectorsView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Target} title={t.menu.sectors} subtitle={""} />
+      <Card className="p-6"><SectorWheel lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s: any, i: number) => (
           <motion.button key={s.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -6, scale: 1.01 }} onClick={() => setSelected(s)} className={cn("text-right bg-card dark:bg-dark-card rounded-2xl border shadow-card overflow-hidden transition-all", s.status === "active" ? "border-emerald/40 dark:border-emerald/60 shadow-glow" : "border-border dark:border-dark-border")}>
@@ -786,7 +1046,7 @@ function RoadmapView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle={""} />
-      <Card className="p-6"><AutomationFlow title={lang === "ar" ? "مسار الرحلة" : "Journey path"} stages={lang === "ar" ? ["فكرة", "عتاد", "إطلاق", "أول عميل", "توسع"] : ["Idea", "Hardware", "Launch", "First client", "Scale"]} lang={lang} /></Card>
+      <Card className="p-6"><TimelineWave stages={lang === "ar" ? ["فكرة", "عتاد", "إطلاق", "أول عميل", "توسع"] : ["Idea", "Hardware", "Launch", "First client", "Scale"]} lang={lang} /></Card>
       <div className="relative">
         <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
         <div className="space-y-6">
@@ -818,7 +1078,7 @@ function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={AlertTriangle} title={t.menu.risks} subtitle={""} />
-      <Card className="p-6"><AutomationOrbit lang={lang} /></Card>
+      <Card className="p-6"><RiskHeatmap lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {DATA.risks.map((risk: any, i: number) => (
           <Card key={i} delay={i * 50}>
@@ -847,7 +1107,7 @@ function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
-      <Card className="p-6"><CircuitPulse lang={lang} /></Card>
+      <Card className="p-6"><IsoBlocks lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
         <div className="relative z-10 text-white">
@@ -1038,7 +1298,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
-      <AutomationNeural lang={lang} />
+      <Card className="p-6"><GrowthBars lang={lang} /></Card>
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
           <div className="flex items-center gap-3">
@@ -1082,7 +1342,7 @@ function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
-      <Card className="p-6"><AutomationFlow title={lang === "ar" ? "مسار البيانات" : "Data flow"} stages={lang === "ar" ? ["مستند", "تشفير", "تخزين", "مراجعة", "مشاركة"] : ["Document", "Encrypt", "Store", "Review", "Share"]} lang={lang} /></Card>
+      <Card className="p-6"><FileCards lang={lang} /></Card>
       <DataRoomVault lang={lang} />
     </div>
   );
@@ -1100,7 +1360,7 @@ function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Users} title={t.menu.team} subtitle="" />
-      <Card className="p-6"><CircuitPulse lang={lang} /></Card>
+      <Card className="p-6"><Constellation lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
@@ -1155,7 +1415,7 @@ function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
-      <Card className="p-6"><ScanRing lang={lang} /></Card>
+      <Card className="p-6"><Heartbeat lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 text-center border-emerald/30">
           <div className="w-16 h-16 rounded-2xl bg-emerald/10 flex items-center justify-center mx-auto mb-4"><Shield size={32} className="text-emerald" /></div>
