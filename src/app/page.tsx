@@ -531,13 +531,13 @@ function BotsAround({ children, leftMode = "typing", rightMode = "guard", size =
     <div className="relative">
       <style>{`@keyframes netFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}@keyframes netDash{to{stroke-dashoffset:-40}}`}</style>
       <div className="flex items-center justify-center gap-3 md:gap-6">
-        <div className="shrink-0 relative">
+        <div className="shrink-0 relative hidden md:block">
           <BotAvatar mode={leftMode} size={size} />
           <span className="absolute -top-2 -right-4 text-lg" style={{ animation: "netFloat 3s ease-in-out infinite" }}>📄</span>
           <span className="absolute bottom-2 -left-4 text-lg" style={{ animation: "netFloat 4s ease-in-out 0.8s infinite" }}>📊</span>
         </div>
         <div className="flex-1 min-w-0 relative z-10">{children}</div>
-        <div className="shrink-0 relative">
+        <div className="shrink-0 relative hidden md:block">
           <BotAvatar mode={rightMode} size={size} />
           <span className="absolute -top-2 -left-4 text-lg" style={{ animation: "netFloat 3.5s ease-in-out 0.4s infinite" }}>⚙️</span>
           <span className="absolute bottom-2 -right-4 text-lg" style={{ animation: "netFloat 4.2s ease-in-out 1.2s infinite" }}>🔗</span>
@@ -1303,6 +1303,44 @@ function SectorsView({ t, lang }: any) {
   );
 }
 
+function RoadmapGantt({ lang }: any) {
+  const rows = [
+    { ar: "الفكرة والتحقق", en: "Idea & validation", s: 0, e: 6, c: "#0F5132" },
+    { ar: "التأسيس والعتاد", en: "Legal & hardware", s: 6, e: 9, c: "#1a7a4c" },
+    { ar: "الإطلاق التجريبي", en: "Beta launch", s: 9, e: 10, c: "#D4AF37" },
+    { ar: "أول عميل مدفوع", en: "First paid client", s: 9, e: 12, c: "#F97316" },
+    { ar: "التوسع الأول", en: "First expansion", s: 12, e: 18, c: "#b8962e" },
+    { ar: "القيادة الإقليمية", en: "Regional leadership", s: 24, e: 36, c: "#6B7280" },
+  ];
+  const ticks = [[0, "Q1 26"], [6, "Q3 26"], [12, "Q1 27"], [18, "Q3 27"], [24, "Q1 28"], [30, "Q3 28"], [36, "End 28"]];
+  const left = 150, width = 420, rowH = 40, top = 14;
+  const x = (m: number) => left + (m / 36) * width;
+  const H = top + rows.length * rowH + 30;
+  return (
+    <svg viewBox={`0 0 600 ${H}`} className="w-full h-auto" role="img">
+      {ticks.map(([m, l]: any) => (
+        <g key={m}>
+          <line x1={x(m)} y1={top} x2={x(m)} y2={H - 28} stroke="#6B7280" strokeOpacity="0.25" />
+          <text x={x(m)} y={H - 8} textAnchor="middle" fontSize="10" fill="#6B7280">{l}</text>
+        </g>
+      ))}
+      {rows.map((r, i) => {
+        const y = top + i * rowH;
+        const w = Math.max(6, x(r.e) - x(r.s));
+        return (
+          <g key={i}>
+            <text x={left - 8} y={y + 20} textAnchor="end" fontSize="11" fill="#1A1A1A">{lang === "ar" ? r.ar : r.en}</text>
+            <rect x={x(r.s)} y={y + 8} width={w} height={18} rx={9} fill={r.c}>
+              <animate attributeName="width" from="0" to={w} dur="1.2s" fill="freeze" />
+            </rect>
+            <circle cx={x(r.s)} cy={y + 17} r="4" fill="#fff" />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 function RoadmapView({ t, lang }: any) {
   return (
     <div className="space-y-6">
@@ -1330,7 +1368,7 @@ function RoadmapView({ t, lang }: any) {
           ))}
         </div>
       </div>
-      <Card className="p-6"><GanttChart lang={lang} /></Card>
+      <Card className="p-6"><RoadmapGantt lang={lang} /></Card>
     </div>
   );
 }
@@ -1391,7 +1429,6 @@ function RisksView({ t, lang }: any) {
           </Card>
         ))}
       </div>
-      <Card className="p-6"><SunburstChart lang={lang} /></Card>
     </div>
   );
 }
@@ -1739,7 +1776,7 @@ function DataRoomCards({ lang }: any) {
         ))}
       </div>
       <BotsAround leftMode="archive" rightMode="typing" size={84}>
-        <div className="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
           {items.map(({ d, idx }) => {
             const [name, cat] = d;
             const col = DR_CAT[cat];
