@@ -197,11 +197,7 @@ export const DATA = {
       y2: { revenue: 600000, costs: 144000, profit: 456000 },
       y3: { revenue: 936000, costs: 195000, profit: 741000 },
     },
-    projections: {
-      y1: { revenue: 384000, costs: 106800, profit: 277200 },
-      y2: { revenue: 600000, costs: 144000, profit: 456000 },
-      y3: { revenue: 936000, costs: 195000, profit: 741000 },
-    },
+    ,
   },
   packages: [
     { name: "Starter", setup_min: 3000, setup_max: 5000, monthly_min: 600, monthly_max: 1000, sla: "30 دقيقة", workflows: 1, features: ["Workflow واحد", "قناة واحدة", "تقرير شهري", "Error Node أساسي"] },
