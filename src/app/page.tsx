@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef, createContext } from "react";
+import { useState, useEffect, useRef, useContext, createContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DATA } from "@/lib/data";
 import { translations, type Lang } from "@/lib/translations";
@@ -23,6 +23,83 @@ import {
 import { SankeyChart, TreemapChart, SunburstChart, RadarChart, BubbleChart, GanttChart, ChordDiagram } from "@/components/AdvancedCharts";
 
 const AppContext = createContext<any>({});
+const CurrencyContext = createContext<any>({ cur: "SAR", setCur: () => {} });
+
+// أسعار تقريبية للتحويل — حدّثها دورياً
+const FX = {
+  SAR: { symbol: "SAR ", perSAR: 1 },
+  USD: { symbol: "$", perSAR: 1 / 3.75 },
+  MYR: { symbol: "RM ", perSAR: 1.12 },
+} as const;
+
+// أسعار السوق 2026 (مصادر: Liliputing، Slickdeals، HP، Plugable) — مع تحديث الفئات أعلاه
+const MARKET = {
+  minipc: DATA.hardware.minipc.map((r: any) => (r.category === "High-End" ? { ...r, price: "$2,400-3,800" } : r)),
+  laptops: DATA.hardware.laptops.map((r: any) => (r.category.includes("Unified") ? { ...r, price: "$2,700-3,250" } : r)),
+};
+
+const ACCESSORIES_EXTRA = [
+  { name_ar: "Thunderbolt 4 Dock (مثال: Plugable)", name_en: "Thunderbolt 4 Dock (e.g. Plugable)", price: "$200-320" },
+  { name_ar: "شاشة 27 بوصة 4K (تقدير)", name_en: "27in 4K Monitor (estimate)", price: "$300-500" },
+  { name_ar: "UPS 1500VA (تقدير)", name_en: "UPS 1500VA (estimate)", price: "$120-200" },
+];
+
+function useMoney() {
+  const { cur } = useContext(CurrencyContext);
+  const c = (FX as any)[cur] ?? FX.SAR;
+  const fmt = (n: number) => `${c.symbol}${Math.round(n).toLocaleString()}`;
+  const fxSAR = (n: number) => n * c.perSAR;
+  const fxUSD = (n: number) => n * 3.75 * c.perSAR;
+  return {
+    fmtSAR: (n: number) => fmt(fxSAR(n)),
+    fmtUSD: (n: number) => fmt(fxUSD(n)),
+    fmtRange: (s: string) => {
+      const lo = fxUSD(parseLow(s)), hi = fxUSD(parseHigh(s));
+      return `${c.symbol}${Math.round(lo).toLocaleString()}–${Math.round(hi).toLocaleString()}`;
+    },
+    fxSAR, fxUSD,
+  };
+}
+
+function AutomationNeural({ lang }: any) {
+  const hub = { x: 300, y: 140 };
+  const nodes = [
+    { x: 300, y: 40, l: lang === "ar" ? "البريد" : "Email" },
+    { x: 421, y: 90, l: lang === "ar" ? "واتساب" : "WhatsApp" },
+    { x: 421, y: 190, l: lang === "ar" ? "المستندات" : "Docs" },
+    { x: 300, y: 240, l: "n8n" },
+    { x: 179, y: 190, l: "Supabase" },
+    { x: 179, y: 90, l: lang === "ar" ? "الذكاء الاصطناعي" : "AI Models" },
+  ];
+  return (
+    <div className="w-full flex justify-center py-2">
+      <svg viewBox="0 0 600 290" className="w-full max-w-3xl h-auto" role="img" aria-label="automation neural link">
+        {nodes.map((n, i) => (
+          <g key={`line-${i}`}>
+            <line x1={hub.x} y1={hub.y} x2={n.x} y2={n.y} stroke="#D4AF37" strokeOpacity="0.45" strokeWidth="2" strokeDasharray="6 6" />
+            <circle r="4" fill="#D4AF37">
+              <animateMotion dur={`${2 + (i % 3) * 0.6}s`} repeatCount="indefinite" path={`M${hub.x},${hub.y} L${n.x},${n.y}`} />
+            </circle>
+          </g>
+        ))}
+        <circle cx={hub.x} cy={hub.y} r="34" fill="#D4AF37" fillOpacity="0.15">
+          <animate attributeName="r" values="34;44;34" dur="2.4s" repeatCount="indefinite" />
+          <animate attributeName="fill-opacity" values="0.15;0.4;0.15" dur="2.4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx={hub.x} cy={hub.y} r="26" fill="#0F5132" stroke="#D4AF37" strokeWidth="3" />
+        <text x={hub.x} y={hub.y + 5} textAnchor="middle" fontSize="13" fontWeight="bold" fill="#D4AF37">SEEN</text>
+        {nodes.map((n, i) => (
+          <g key={`node-${i}`}>
+            <circle cx={n.x} cy={n.y} r="24" fill="#0F5132" stroke="#D4AF37" strokeWidth="2">
+              <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur={`${1.6 + i * 0.3}s`} repeatCount="indefinite" />
+            </circle>
+            <text x={n.x} y={n.y + 42} textAnchor="middle" fontSize="12" fill="#6B7280">{n.l}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
 
 function useCounter(end: number, duration = 1500, decimals = 0) {
   const [count, setCount] = useState(0);
@@ -54,6 +131,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [slideIdx, setSlideIdx] = useState(0);
   const [fin, setFin] = useState<any>(DATA.financials);
+  const [cur, setCur] = useState<"SAR" | "USD" | "MYR">("SAR");
   const t: any = translations[lang];
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
   const ltv = (fin.arpu * 12 * (1 - fin.churn / 100)) / (fin.churn / 100) * (fin.margin / 100);
@@ -82,6 +160,7 @@ export default function Home() {
     { id: "settings", label: t.menu.settings, icon: Settings },
   ];
   return (
+    <CurrencyContext.Provider value={{ cur, setCur }}>
     <AppContext.Provider value={{ lang, setLang, dark, setDark }}>
       <div className="min-h-screen bg-background dark:bg-dark-bg text-foreground dark:text-white font-cairo transition-colors duration-300">
         <header className="sticky top-0 z-50 bg-card/90 dark:bg-dark-card/90 backdrop-blur-xl border-b border-border dark:border-dark-border shadow-lg">
@@ -135,6 +214,7 @@ export default function Home() {
         </main>
       </div>
     </AppContext.Provider>
+    </CurrencyContext.Provider>
   );
 }
 
@@ -174,10 +254,11 @@ function KpiCard({ kpi, lang, delay }: any) {
   const scale = /K$/i.test(String(kpi.value)) ? 1000 : 1;
   const { count, ref } = useCounter(parseFloat(kpi.value) * scale, 1500, 0);
   const override = kpi.label_en === "LTV:CAC" ? "12–19x" : null;
+  const { fmtSAR } = useMoney();
   return (
     <Card delay={delay} className="p-6 text-center">
       <div ref={ref} className="text-3xl md:text-4xl font-bold text-emerald dark:text-gold font-amiri mb-2">
-        {override ?? `${count.toLocaleString()} ${kpi.unit}`}
+        {override ?? (kpi.unit === "SAR" ? fmtSAR(count) : `${count.toLocaleString()} ${kpi.unit}`)}
       </div>
       <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">{lang === "ar" ? kpi.label_ar : kpi.label_en}</div>
     </Card>
@@ -232,6 +313,8 @@ function DashboardView({ t, lang }: any) {
 }
 
 function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData, t, lang }: any) {
+  const { fmtSAR, fmtUSD, fxSAR } = useMoney();
+  const { cur } = useContext(CurrencyContext);
   const COLORS = ["#0F5132", "#D4AF37", "#F97316", "#6B7280", "#1a7a4c", "#b8962e", "#dc2626", "#3b82f6"];
   return (
     <div className="space-y-8">
@@ -251,7 +334,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
               <div key={i} className="group">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{slider.label}</span>
-                  <span className="text-sm font-bold text-gold tabular-nums">{typeof slider.value === "number" ? slider.value.toLocaleString() : slider.value} {slider.unit}</span>
+                  <span className="text-sm font-bold text-gold tabular-nums">{slider.unit === "SAR" ? fmtSAR(slider.value) : `${slider.value} ${slider.unit}`}</span>
                 </div>
                 <input type="range" min={slider.min} max={slider.max} step={slider.step} value={slider.value} onChange={(e) => setFin({ ...fin, [slider.key]: parseFloat(e.target.value) })} className="w-full accent-gold cursor-pointer" />
               </div>
@@ -259,12 +342,12 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
           </div>
           <div className="grid grid-cols-2 gap-3 content-start">
             {[
-              { label: "LTV", value: `${Math.round(ltv).toLocaleString()} SAR`, highlight: false },
+              { label: "LTV", value: fmtSAR(Math.round(ltv)), highlight: false },
               { label: "LTV:CAC", value: `${ltvCac.toFixed(1)}x`, highlight: true },
               { label: lang === "ar" ? "استرداد CAC" : "CAC Payback", value: `${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`, highlight: false },
               { label: lang === "ar" ? "نقطة التعادل" : "Break-even", value: `${lang === "ar" ? "شهر" : "Mo"} ${be > 0 && be < 36 ? be : ">36"}`, highlight: true },
-              { label: lang === "ar" ? "MRR الشهر 12" : "MRR Month 12", value: `${Math.round(fin.arpu * (fin.newCustomers * 12 * 0.8)).toLocaleString()} SAR`, highlight: false },
-              { label: lang === "ar" ? "MRR الشهر 36" : "MRR Month 36", value: `${Math.round(fin.arpu * (fin.newCustomers * 36 * 0.6)).toLocaleString()} SAR`, highlight: true },
+              { label: lang === "ar" ? "MRR الشهر 12" : "MRR Month 12", value: fmtSAR(Math.round(fin.arpu * (fin.newCustomers * 12 * 0.8))), highlight: false },
+              { label: lang === "ar" ? "MRR الشهر 36" : "MRR Month 36", value: fmtSAR(Math.round(fin.arpu * (fin.newCustomers * 36 * 0.6))), highlight: true },
             ].map((metric, i) => (
               <motion.div key={i} whileHover={{ scale: 1.03 }} className={cn("p-4 rounded-xl text-center transition-all duration-300", metric.highlight ? "bg-gradient-to-br from-gold/20 to-accent/10 border border-gold/30" : "bg-white/5 border border-white/10 hover:border-white/20")}>
                 <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">{metric.label}</div>
@@ -278,7 +361,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
         <Card className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <PieChartIcon size={18} className="text-emerald dark:text-gold" />
-            <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? `توزيع الأموال ($${DATA.financials.useOfFunds.total.toLocaleString()})` : `Use of Funds ($${DATA.financials.useOfFunds.total.toLocaleString()})`}</h3>
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? `توزيع الأموال (${fmtUSD(DATA.financials.useOfFunds.total)})` : `Use of Funds (${fmtUSD(DATA.financials.useOfFunds.total)})`}</h3>
           </div>
           <div className="flex flex-col items-center gap-4">
             <div className="h-64 w-64">
@@ -300,7 +383,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-gray-500">{item.percentage}%</span>
-                    <span className="font-bold text-emerald dark:text-gold">${item.amount.toLocaleString()}</span>
+                    <span className="font-bold text-emerald dark:text-gold">{fmtUSD(item.amount)}</span>
                   </div>
                 </div>
               ))}
@@ -332,7 +415,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-gray-500">{item.percentage}%</span>
-                    <span className="font-bold text-emerald dark:text-gold">SAR {item.amount.toLocaleString()}</span>
+                    <span className="font-bold text-emerald dark:text-gold">{fmtSAR(item.amount)}</span>
                   </div>
                 </div>
               ))}
@@ -379,9 +462,9 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
               ].map((row, i) => (
                 <tr key={i} className={cn("border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors", row.highlight && "bg-emerald/5 dark:bg-emerald/10 font-bold")}>
                   <td className="p-4">{row.label}</td>
-                  <td className={cn("p-4", row.highlight && "text-emerald dark:text-gold")}>SAR {row.y1.toLocaleString()}</td>
-                  <td className={cn("p-4", row.highlight && "text-emerald dark:text-gold")}>SAR {row.y2.toLocaleString()}</td>
-                  <td className={cn("p-4", row.highlight && "text-emerald dark:text-gold")}>SAR {row.y3.toLocaleString()}</td>
+                  <td className={cn("p-4", row.highlight && "text-emerald dark:text-gold")}>{fmtSAR(row.y1)}</td>
+                  <td className={cn("p-4", row.highlight && "text-emerald dark:text-gold")}>{fmtSAR(row.y2)}</td>
+                  <td className={cn("p-4", row.highlight && "text-emerald dark:text-gold")}>{fmtSAR(row.y3)}</td>
                 </tr>
               ))}
             </tbody>
@@ -396,7 +479,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
           </div>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={["y1", "y2", "y3"].map((k) => ({ year: k.toUpperCase(), revenue: (DATA.financials.projections as any)[k].revenue, costs: (DATA.financials.projections as any)[k].costs, profit: (DATA.financials.projections as any)[k].profit }))}>
+              <BarChart data={["y1", "y2", "y3"].map((k) => ({ year: k.toUpperCase(), revenue: fxSAR((DATA.financials.projections as any)[k].revenue), costs: fxSAR((DATA.financials.projections as any)[k].costs), profit: fxSAR((DATA.financials.projections as any)[k].profit) }))}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" />
                 <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
@@ -425,6 +508,7 @@ function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileText} title={t.menu.businessPlan} subtitle={""} />
+      <AutomationNeural lang={lang} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">{DATA.businessPlan.length}</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div></Card>
         <Card className="p-4 text-center bg-gold/5 border-gold/20"><div className="text-3xl font-bold text-gold font-amiri">AR + EN</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ثنائي اللغة" : "Bilingual"}</div></Card>
@@ -502,6 +586,7 @@ function RoadmapView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle={""} />
+      <AutomationNeural lang={lang} />
       <div className="relative">
         <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
         <div className="space-y-6">
@@ -557,6 +642,7 @@ function RisksView({ t, lang }: any) {
 }
 
 function HardwareView({ t, lang }: any) {
+  const { fmtUSD, fmtRange, fxUSD } = useMoney();
   return (
     <div className="space-y-6">
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
@@ -574,23 +660,23 @@ function HardwareView({ t, lang }: any) {
             <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
               <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">💻 {lang === "ar" ? "اللابتوب" : "Laptop"}</div>
               <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.laptop}</div>
-              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.laptop_price.toLocaleString()}</div>
+              <div className="text-gold font-bold text-xl">{fmtUSD(DATA.hardware.scenario.laptop_price)}</div>
             </div>
             <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
               <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🖥️ Mini PC</div>
               <div className="font-bold text-sm mb-2 leading-relaxed">{DATA.hardware.scenario.minipc}</div>
-              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.minipc_price.toLocaleString()}</div>
+              <div className="text-gold font-bold text-xl">{fmtUSD(DATA.hardware.scenario.minipc_price)}</div>
             </div>
             <div className="bg-white/10 border border-white/10 rounded-xl p-5 backdrop-blur-sm">
               <div className="text-xs text-gray-300 mb-2 uppercase tracking-wider">🔌 {lang === "ar" ? "الإكسسوارات" : "Accessories"}</div>
               <div className="font-bold text-sm mb-2 leading-relaxed">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</div>
-              <div className="text-gold font-bold text-xl">${DATA.hardware.scenario.accessories_price.toLocaleString()}</div>
+              <div className="text-gold font-bold text-xl">{fmtUSD(DATA.hardware.scenario.accessories_price)}</div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 bg-gold/20 border border-gold/30 rounded-xl p-5">
-            <div className="text-center"><div className="text-xs text-gold-light uppercase tracking-wider">{lang === "ar" ? "الإجمالي" : "Total"}</div><div className="text-3xl font-bold text-gold font-amiri">${DATA.hardware.scenario.total.toLocaleString()}</div></div>
-            <div className="text-center"><div className="text-xs text-gray-300 uppercase tracking-wider">{lang === "ar" ? "المتبقي" : "Remaining"}</div><div className="text-xl font-bold text-white">${DATA.hardware.scenario.remaining.toLocaleString()}</div></div>
-            <div className="text-center"><div className="text-xs text-gray-300 uppercase tracking-wider">{lang === "ar" ? "الميزانية" : "Budget"}</div><div className="text-xl font-bold text-white/70">${DATA.hardware.scenario.budget.toLocaleString()}</div></div>
+            <div className="text-center"><div className="text-xs text-gold-light uppercase tracking-wider">{lang === "ar" ? "الإجمالي" : "Total"}</div><div className="text-3xl font-bold text-gold font-amiri">{fmtUSD(DATA.hardware.scenario.total)}</div></div>
+            <div className="text-center"><div className="text-xs text-gray-300 uppercase tracking-wider">{lang === "ar" ? "المتبقي" : "Remaining"}</div><div className="text-xl font-bold text-white">{fmtUSD(DATA.hardware.scenario.remaining)}</div></div>
+            <div className="text-center"><div className="text-xs text-gray-300 uppercase tracking-wider">{lang === "ar" ? "الميزانية" : "Budget"}</div><div className="text-xl font-bold text-white/70">{fmtUSD(DATA.hardware.scenario.budget)}</div></div>
           </div>
         </div>
       </Card>
@@ -604,11 +690,11 @@ function HardwareView({ t, lang }: any) {
               <tr><th className="p-4 text-right">{lang === "ar" ? "الفئة" : "Category"}</th><th className="p-4 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th><th className="p-4 text-right">{lang === "ar" ? "السعر" : "Price"}</th></tr>
             </thead>
             <tbody>
-              {DATA.hardware.minipc.map((l: any, i: number) => (
+              {MARKET.minipc.map((l: any, i: number) => (
                 <tr key={i} className="border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors">
                   <td className="p-4 font-semibold text-emerald dark:text-gold">{l.category}</td>
                   <td className="p-4 text-gray-600 dark:text-gray-400">{l.specs}</td>
-                  <td className="p-4 text-accent font-bold">{l.price}</td>
+                  <td className="p-4 text-accent font-bold">{fmtRange(l.price)}</td>
                 </tr>
               ))}
             </tbody>
@@ -617,7 +703,7 @@ function HardwareView({ t, lang }: any) {
       </Card>
       <Card className="p-6">
         <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "مقارنة أسعار Mini PC" : "Mini PC Price Range"}</h3>
-        <PriceRangeChart items={DATA.hardware.minipc} />
+        <PriceRangeChart items={MARKET.minipc} />
         <div className="mt-6"><TreemapChart lang={lang} /></div>
       </Card>
 
@@ -631,13 +717,13 @@ function HardwareView({ t, lang }: any) {
               <tr><th className="p-4 text-right">{lang === "ar" ? "الفئة" : "Category"}</th><th className="p-4 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th><th className="p-4 text-right">{lang === "ar" ? "السعر" : "Price"}</th><th className="p-4 text-right">AI</th></tr>
             </thead>
             <tbody>
-              {DATA.hardware.laptops.map((l: any, i: number) => {
+              {MARKET.laptops.map((l: any, i: number) => {
                 const isSelected = l.category.includes("Unified");
                 return (
                   <tr key={i} className={cn("border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors", isSelected && "bg-gold/10 font-bold")}>
                     <td className="p-4 font-semibold text-emerald dark:text-gold">{l.category}</td>
                     <td className="p-4 text-gray-600 dark:text-gray-400">{l.specs}</td>
-                    <td className="p-4 text-accent font-bold">{l.price}</td>
+                    <td className="p-4 text-accent font-bold">{fmtRange(l.price)}</td>
                     <td className="p-4">{l.ai}</td>
                   </tr>
                 );
@@ -645,14 +731,14 @@ function HardwareView({ t, lang }: any) {
               <tr className="bg-gold/10 font-bold">
                 <td className="p-4 text-gold-dark dark:text-gold">{lang === "ar" ? "المختار" : "Selected"}</td>
                 <td className="p-4">{DATA.hardware.scenario.laptop}</td>
-                <td className="p-4 text-accent">${DATA.hardware.scenario.laptop_price.toLocaleString()}</td>
+                <td className="p-4 text-accent">{fmtUSD(DATA.hardware.scenario.laptop_price)}</td>
                 <td className="p-4">70B-120B</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div className="p-6">
-          <PriceRangeChart items={DATA.hardware.laptops} />
+          <PriceRangeChart items={MARKET.laptops} />
           <div className="mt-6"><RadarChart lang={lang} /></div>
         </div>
       </Card>
@@ -669,8 +755,14 @@ function HardwareView({ t, lang }: any) {
             <tbody>
               <tr className="border-b border-border/50 dark:border-dark-border/50">
                 <td className="p-4 font-semibold text-emerald dark:text-gold">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</td>
-                <td className="p-4 text-accent font-bold">${DATA.hardware.scenario.accessories_price.toLocaleString()}</td>
+                <td className="p-4 text-accent font-bold">{fmtUSD(DATA.hardware.scenario.accessories_price)}</td>
               </tr>
+              {ACCESSORIES_EXTRA.map((a, i) => (
+                <tr key={i} className="border-b border-border/50 dark:border-dark-border/50">
+                  <td className="p-4">{lang === "ar" ? a.name_ar : a.name_en}</td>
+                  <td className="p-4 text-accent font-bold">{fmtRange(a.price)}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -678,10 +770,10 @@ function HardwareView({ t, lang }: any) {
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={[
-                { name: lang === "ar" ? "اللابتوب" : "Laptop", value: DATA.hardware.scenario.laptop_price },
-                { name: "Mini PC", value: DATA.hardware.scenario.minipc_price },
-                { name: lang === "ar" ? "الإكسسوارات" : "Accessories", value: DATA.hardware.scenario.accessories_price },
-                { name: lang === "ar" ? "المتبقي" : "Remaining", value: DATA.hardware.scenario.remaining },
+                { name: lang === "ar" ? "اللابتوب" : "Laptop", value: fxUSD(DATA.hardware.scenario.laptop_price) },
+                { name: "Mini PC", value: fxUSD(DATA.hardware.scenario.minipc_price) },
+                { name: lang === "ar" ? "الإكسسوارات" : "Accessories", value: fxUSD(DATA.hardware.scenario.accessories_price) },
+                { name: lang === "ar" ? "المتبقي" : "Remaining", value: fxUSD(DATA.hardware.scenario.remaining) },
               ]}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" />
                 <XAxis dataKey="name" tick={{ fontSize: 12 }} />
@@ -701,7 +793,8 @@ const parseLow = (s: string) => parseFloat(s.split("-")[0].replace(/[^0-9.]/g, "
 const parseHigh = (s: string) => { const p = s.split("-"); return parseFloat((p[1] ?? p[0]).replace(/[^0-9.]/g, "")) || 0; };
 
 function PriceRangeChart({ items }: any) {
-  const data = items.map((i: any) => ({ name: String(i.category).replace(/⭐/g, "").trim(), min: parseLow(i.price), max: parseHigh(i.price) }));
+  const { fxUSD } = useMoney();
+  const data = items.map((i: any) => ({ name: String(i.category).replace(/⭐/g, "").trim(), min: fxUSD(parseLow(i.price)), max: fxUSD(parseHigh(i.price)) }));
   return (
     <div className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -743,6 +836,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
+      <AutomationNeural lang={lang} />
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
           <div className="flex items-center gap-3">
@@ -786,6 +880,7 @@ function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
+      <AutomationNeural lang={lang} />
       <DataRoomVault lang={lang} />
     </div>
   );
@@ -803,6 +898,7 @@ function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Users} title={t.menu.team} subtitle="" />
+      <AutomationNeural lang={lang} />
       <Card className="p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
@@ -857,6 +953,7 @@ function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
+      <AutomationNeural lang={lang} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 text-center border-emerald/30">
           <div className="w-16 h-16 rounded-2xl bg-emerald/10 flex items-center justify-center mx-auto mb-4"><Shield size={32} className="text-emerald" /></div>
@@ -879,6 +976,7 @@ function SecurityView({ t, lang }: any) {
 }
 
 function SettingsView({ t, lang, dark, setDark, setLang }: any) {
+  const { cur, setCur } = useContext(CurrencyContext);
   return (
     <div className="space-y-6">
       <SectionHeader icon={Settings} title={t.menu.settings} subtitle={""} />
@@ -898,6 +996,15 @@ function SettingsView({ t, lang, dark, setDark, setLang }: any) {
           </div>
         </Card>
       </div>
+      <Card className="p-6">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Wallet size={18} className="text-emerald" /> {lang === "ar" ? "العملة" : "Currency"}</h3>
+        <div className="flex gap-2">
+          {(["SAR", "USD", "MYR"] as const).map((c) => (
+            <button key={c} onClick={() => setCur(c)} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", cur === c ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>{c === "SAR" ? "ريال سعودي (SAR)" : c === "USD" ? "دولار (USD)" : "رنجت (MYR)"}</button>
+          ))}
+        </div>
+        <p className="text-xs text-gray-500 mt-3">{lang === "ar" ? "أسعار التحويل تقريبية وتُحدَّث في الكود." : "Conversion rates are approximate and set in code."}</p>
+      </Card>
     </div>
   );
 }
