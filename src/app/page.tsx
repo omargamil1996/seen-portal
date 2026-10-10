@@ -768,7 +768,7 @@ function FileCards({ lang }: any) {
     <svg viewBox="0 0 600 200" className="w-full h-auto" role="img">
       {files.map((f, i) => (
         <g key={i}>
-          <animateTransform attributeName="transform" type="translate" values="-30 0;0 0;0 0;30 0" keyTimes="0;0.3;0.7;1" dur="4s" begin={`${i}s`} repeatCount="indefinite" />
+          <animateTransform attributeName="transform" type="translate" values="-6 0;0 0;0 0;6 0" keyTimes="0;0.3;0.7;1" dur="4s" begin={`${i}s`} repeatCount="indefinite" />
           <rect x={60 + i * 170} y="50" width="150" height="100" rx="12" fill="#0F5132" stroke="#D4AF37" strokeWidth="2" />
           <text x={135 + i * 170} y="108" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#F5F5F4">{f}</text>
         </g>
@@ -1679,26 +1679,42 @@ const DR_DOCS: [string, string, string, string][] = [
   ["MASTER INDEX", "internal", "الفهرس الرئيسي الداخلي", "Internal master index"],
   ["FIRST FIVE CLIENTS", "internal", "متابعة أول خمسة عملاء", "Tracking of the first five clients"]
 ];
+
+
 const DR_CAT: any = {
-  shared: { ar: "مشترك مع المستثمر", en: "Shared with investors", color: "#16a34a", why_ar: "مشترك مباشرة لأنه لا يحتوي تفاصيل حساسة.", why_en: "Shared directly because it holds no sensitive details." },
-  nda: { ar: "سري: يُتاح بعد NDA", en: "Restricted: after NDA", color: "#dc2626", why_ar: "سري لأنه يحتوي تفاصيل قانونية أو مالية أو أمنية، ويُتاح فقط بعد توقيع اتفاقية عدم الإفصاح.", why_en: "Restricted because it holds legal, financial or security details. Available only after a signed NDA." },
-  internal: { ar: "داخلي: غير مشترك", en: "Internal: not shared", color: "#dc2626", why_ar: "داخلي لأنه مادة تشغيلية أو ذاكرة عمل داخلية، ولا يُعرض على المستثمرين.", why_en: "Internal because it is operational or working memory material and is not shown to investors." },
+  shared: { badge_ar: "مسموح", badge_en: "Allowed", label_ar: "مشترك مع المستثمر", label_en: "Shared with investors", color: "rgba(22,163,74,0.88)",
+    rule_ar: "مسموح للمستثمر الاطلاع عليه مباشرة.", rule_en: "Investors may view it directly.",
+    why_ar: "لا يحتوي تفاصيل حساسة، ولذلك يُعرض بدون شروط إضافية.", why_en: "It contains no sensitive details, so it is shown without extra conditions.",
+    how_ar: "يُعرض مباشرة من غرفة البيانات.", how_en: "Shown directly from the data room." },
+  nda: { badge_ar: "مشدد", badge_en: "Restricted", label_ar: "سري: يُتاح بعد NDA", label_en: "Restricted: after NDA", color: "rgba(220,38,38,0.88)",
+    rule_ar: "مشدد: لا يُعرض إلا بعد توقيع اتفاقية عدم الإفصاح.", rule_en: "Restricted: shown only after a signed NDA.",
+    why_ar: "يحتوي تفاصيل قانونية أو مالية أو أمنية تحتاج حماية.", why_en: "It holds legal, financial or security details that need protection.",
+    how_ar: "اطلب الوصول من المؤسس، ووقّع NDA ثم يُتاح الملف.", how_en: "Request access from the founder, sign the NDA, then the file is shared." },
+  internal: { badge_ar: "ممنوع", badge_en: "Not shared", label_ar: "داخلي: غير مشترك", label_en: "Internal: not shared", color: "rgba(127,29,29,0.92)",
+    rule_ar: "ممنوع: لا يُعرض على أي مستثمر.", rule_en: "Not allowed: never shown to investors.",
+    why_ar: "مادة تشغيلية أو ذاكرة عمل داخلية، ولا علاقة لها بالمستثمر مباشرة.", why_en: "Operational or internal working material, not directly relevant to investors.",
+    how_ar: "لا يُتاح ولا يُشارك خارج الفريق الداخلي.", how_en: "Not available and not shared outside the internal team." },
 };
 
 function DataRoomCards({ lang }: any) {
   const [open, setOpen] = useState<number | null>(null);
   const sel: any = open !== null ? DR_DOCS[open] : null;
+  const c: any = sel ? DR_CAT[sel[1]] : null;
   return (
     <div className="space-y-6">
       <BotsAround leftMode="archive" rightMode="typing" size={84}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
           {DR_DOCS.map(([name, cat, ar, en], i) => (
-            <motion.button key={i} onClick={() => setOpen(i)} whileHover={{ y: -5, scale: 1.04 }} whileTap={{ scale: 0.97 }}
-              initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 8) * 0.03 }}
-              className="relative p-4 min-h-[112px] rounded-2xl text-white text-right shadow-lg overflow-hidden" style={{ background: DR_CAT[cat].color }}>
-              <div className="text-[11px] opacity-85">{lang === "ar" ? DR_CAT[cat].ar : DR_CAT[cat].en}</div>
-              <div className="text-sm font-bold leading-snug mt-1">{name}</div>
-              <svg viewBox="0 0 120 24" className="absolute bottom-1 left-1 w-20 h-5 opacity-80">
+            <motion.button key={i} onClick={() => setOpen(i)} whileHover={{ y: -6, scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 9) * 0.03 }}
+              className="relative p-5 min-h-[150px] rounded-3xl text-white text-right shadow-xl overflow-hidden backdrop-blur-md border border-white/30"
+              style={{ background: DR_CAT[cat].color }}>
+              <div className="flex items-center justify-between gap-2">
+                <span className="px-3 py-1 rounded-full bg-black/25 text-[11px] font-bold">{lang === "ar" ? DR_CAT[cat].badge_ar : DR_CAT[cat].badge_en}</span>
+                <span className="text-[11px] opacity-85">{String(i + 1).padStart(2, "0")}/49</span>
+              </div>
+              <div className="text-base font-bold leading-snug mt-4 break-words">{name}</div>
+              <svg viewBox="0 0 120 24" className="absolute bottom-2 left-2 w-24 h-6 opacity-80">
                 <path d="M0,12 L30,12 L38,4 L46,20 L54,12 L120,12" fill="none" stroke="#fff" strokeWidth="1.5" strokeDasharray="4 4">
                   <animate attributeName="stroke-dashoffset" from="0" to="-16" dur={`${1.2 + (i % 5) * 0.3}s`} repeatCount="indefinite" />
                 </path>
@@ -1709,15 +1725,22 @@ function DataRoomCards({ lang }: any) {
         </div>
       </BotsAround>
       <AnimatePresence>
-        {sel && (
-          <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4" onClick={() => setOpen(null)}>
+        {sel && c && (
+          <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={() => setOpen(null)}>
             <motion.div initial={{ scale: 0.85, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.85, opacity: 0 }} transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl p-7 text-white shadow-2xl" style={{ background: DR_CAT[sel[1]].color }}>
-              <div className="text-xs opacity-85 mb-1">{lang === "ar" ? DR_CAT[sel[1]].ar : DR_CAT[sel[1]].en}</div>
-              <h3 className="text-xl font-bold mb-3 break-words">{sel[0]}</h3>
-              <p className="text-sm leading-relaxed mb-3">{lang === "ar" ? sel[2] : sel[3]}</p>
-              <p className="text-xs leading-relaxed opacity-90 border-t border-white/30 pt-3">{lang === "ar" ? DR_CAT[sel[1]].why_ar : DR_CAT[sel[1]].why_en}</p>
-              <button onClick={() => setOpen(null)} className="mt-5 px-5 py-2 rounded-xl bg-white text-black font-bold text-sm">{lang === "ar" ? "إغلاق" : "Close"}</button>
+              onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-3xl p-7 text-white shadow-2xl border border-white/30" style={{ background: c.color }}>
+              <div className="flex items-center justify-between mb-3">
+                <span className="px-3 py-1 rounded-full bg-black/30 text-xs font-bold">{lang === "ar" ? c.badge_ar : c.badge_en}</span>
+                <span className="text-xs opacity-85">{lang === "ar" ? c.label_ar : c.label_en}</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-3 break-words">{sel[0]}</h3>
+              <p className="text-base leading-relaxed mb-4">{lang === "ar" ? sel[2] : sel[3]}</p>
+              <div className="space-y-3 text-sm leading-relaxed border-t border-white/30 pt-4">
+                <p><span className="font-bold">{lang === "ar" ? "القاعدة: " : "Rule: "}</span>{lang === "ar" ? c.rule_ar : c.rule_en}</p>
+                <p><span className="font-bold">{lang === "ar" ? "السبب: " : "Why: "}</span>{lang === "ar" ? c.why_ar : c.why_en}</p>
+                <p><span className="font-bold">{lang === "ar" ? "طريقة الوصول: " : "How to access: "}</span>{lang === "ar" ? c.how_ar : c.how_en}</p>
+              </div>
+              <button onClick={() => setOpen(null)} className="mt-6 px-6 py-2.5 rounded-xl bg-white text-black font-bold text-sm">{lang === "ar" ? "إغلاق" : "Close"}</button>
             </motion.div>
           </motion.div>
         )}
