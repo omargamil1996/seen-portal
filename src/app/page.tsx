@@ -1341,6 +1341,24 @@ function RoadmapGantt({ lang }: any) {
   );
 }
 
+const RM_ITEMS = [
+  { d: "Q1 2026", ar: "الفكرة والتحقق", en: "Idea & validation", i: "💡", da: "دراسة السوق وتحليل المنافسين وبناء الـ 49 ملفاً الاستراتيجي.", de: "Market study, competitor analysis, and building the 49 strategic files." },
+  { d: "Q2 2026", ar: "اختبار الطلب والتسعير", en: "Demand & pricing tests", i: "🔎", da: "اختبار القطاعات المستهدفة وصياغة الباقات والتسعير.", de: "Testing target sectors and shaping packages and pricing." },
+  { d: "Q3 2026", ar: "التأسيس القانوني والعتاد", en: "Legal setup & hardware", i: "🏛️", da: "تسجيل الكيان في ماليزيا، شراء العتاد، وإعداد البنية التحتية.", de: "Entity registration in Malaysia, hardware purchase, and infrastructure setup." },
+  { d: "أكتوبر 2026", ar: "الإطلاق التجريبي", en: "Beta launch", i: "🚀", da: "إطلاق بوابة المستثمرين، اختبار Landing Bot، وضبط الأنظمة.", de: "Investor portal launch, Landing Bot testing, and systems tuning." },
+  { d: "نوفمبر 2026", ar: "تشغيل تجريبي مع مختبرين", en: "Pilot with early testers", i: "🧪", da: "تشغيل الأنظمة مع أوائل المختبرين وتوثيق الإجراءات.", de: "Running the systems with early testers and documenting procedures." },
+  { d: "Q4 2026", ar: "أول عميل مدفوع", en: "First paid client", i: "⭐", da: "إغلاق أول عقد مع مكتب هندسي، وتطبيق Error Node قبل التسليم.", de: "Closing the first paid engineering contract, with Error Node applied before delivery." },
+  { d: "ديسمبر 2026", ar: "مراجعة نهاية السنة", en: "Year-end review", i: "📋", da: "مراجعة النتائج الأولى وتحديث خطة 2027.", de: "Reviewing first results and updating the 2027 plan." },
+  { d: "Q1 2027", ar: "التوسع الأول", en: "First expansion", i: "📈", da: "الوصول إلى 20 عميل، إطلاق رمح الطب.", de: "Reaching 20 clients and launching the medical spear." },
+  { d: "Q2 2027", ar: "تثبيت التوسع", en: "Consolidating growth", i: "🧱", da: "رفع الاحتفاظ بالعملاء وتوحيد قوالب المسارات.", de: "Improving client retention and standardizing workflow templates." },
+  { d: "Q3 2027", ar: "قوالب قابلة للتكرار", en: "Repeatable templates", i: "🧩", da: "تحويل المسارات المتكررة إلى قوالب حسب نوع العميل.", de: "Turning repeated workflows into templates by client type." },
+  { d: "Q4 2027", ar: "مؤشرات الأداء", en: "Performance metrics", i: "📊", da: "متابعة الاحتفاظ والإيراد الشهري كأساس للتوسع.", de: "Tracking retention and monthly revenue as the basis for scaling." },
+  { d: "Q1 2028", ar: "بداية القيادة الإقليمية", en: "Regional leadership begins", i: "🌱", da: "التوسع إلى قطاعات أوسع بعد إثبات النموذج.", de: "Expanding to wider sectors after proving the model." },
+  { d: "Q2 2028", ar: "القيادة الإقليمية", en: "Regional leadership", i: "🌍", da: "80+ عميل، Micro-SaaS، MRR: SAR 250K.", de: "80+ clients, Micro-SaaS, MRR: SAR 250K." },
+  { d: "Q3 2028", ar: "منتجات الاشتراك", en: "Subscription products", i: "📦", da: "تحويل الخطوط الجاهزة إلى منتجات برمجية للاشتراك.", de: "Turning ready pipelines into subscription software products." },
+  { d: "Q4 2028", ar: "تقييم وتوسيع", en: "Review & scale", i: "🏁", da: "مراجعة الأداء وخطة التوسع للسنوات التالية.", de: "Performance review and the scaling plan for the following years." },
+];
+
 function RoadmapView({ t, lang }: any) {
   const [active, setActive] = useState(0);
   const rmRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -1358,62 +1376,31 @@ function RoadmapView({ t, lang }: any) {
   }, []);
   return (
     <div className="space-y-6">
-      <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle={""} />
-      <Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><TimelineWave stages={lang === "ar" ? ["فكرة", "عتاد", "إطلاق", "أول عميل", "توسع"] : ["Idea", "Hardware", "Launch", "First client", "Scale"]} lang={lang} /></Card>
+      <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle="" />
       <div className="relative">
         <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
-        <div className="space-y-6">
-          {DATA.roadmap.map((item: any, i: number) => (
-            <motion.div key={i} ref={(el) => { rmRefs.current[i] = el; }} initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }} animate={{ opacity: i <= active ? 1 : 0.22, x: 0, scale: i === active ? 1.02 : 1, filter: i <= active ? "none" : "grayscale(1) brightness(0.55)" }} transition={{ duration: 0.5 }} className="relative flex gap-6 items-start">
+        <div className="space-y-5">
+          {RM_ITEMS.map((it, i) => (
+            <motion.div key={i} ref={(el) => { rmRefs.current[i] = el; }}
+              initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }}
+              animate={{ opacity: i <= active ? 1 : 0.2, x: 0, scale: i === active ? 1.02 : 1, filter: i <= active ? "none" : "grayscale(1) brightness(0.55)" }}
+              transition={{ duration: 0.5 }} className="relative flex gap-5 items-start">
               <div className="hidden md:flex flex-col items-center shrink-0">
-                <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold shadow-lg border-4 z-10 bg-emerald text-white border-background dark:border-dark-bg">{item.phase_ar.slice(0, 2)}</div>
-                {i < DATA.roadmap.length - 1 && <div className="w-0.5 h-4 bg-emerald/30 mt-1" />}
+                <div className={cn("w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg border-4 z-10 bg-emerald border-background dark:border-dark-bg", i === active && "ring-4 ring-gold/50")}>{it.i}</div>
               </div>
               <Card className={cn("flex-1 transition-shadow duration-500", i === active && "ring-2 ring-gold shadow-glow-gold")}>
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? item.phase_ar : item.phase_en}</h3>
-                    <Badge color="gold">{lang === "ar" ? item.date_ar : item.date_en}</Badge>
+                <div className="p-5">
+                  <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
+                    <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? it.ar : it.en}</h3>
+                    <Badge color="gold">{it.d}</Badge>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? item.desc_ar : item.desc_en}</p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? it.da : it.de}</p>
                 </div>
               </Card>
             </motion.div>
           ))}
         </div>
       </div>
-      <Card className="p-6"><RoadmapGantt lang={lang} /></Card>
-    </div>
-  );
-}
-
-function HangingWeight({ lang }: any) {
-  return (
-    <div className="w-full flex justify-center">
-      <svg viewBox="0 0 400 140" className="w-full max-w-md h-auto" role="img">
-        <g>
-          <animateTransform attributeName="transform" type="rotate" values="-14 200 0;14 200 0;-14 200 0" dur="3.6s" repeatCount="indefinite" />
-          <line x1="200" y1="0" x2="200" y2="90" stroke="#6B7280" strokeWidth="2" />
-          <circle cx="200" cy="102" r="16" fill="#dc2626"><animate attributeName="r" values="16;19;16" dur="1.8s" repeatCount="indefinite" /></circle>
-        </g>
-        <text x="200" y="136" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "المخاطر المعلّقة تحت المراقبة" : "Risks under watch"}</text>
-      </svg>
-    </div>
-  );
-}
-
-function RiskBars({ prob, impact }: any) {
-  const v = (x: string) => (x === "high" ? 90 : x === "medium" ? 55 : 25);
-  return (
-    <div className="space-y-2 mt-3">
-      {[["P", v(prob), "#eab308"], ["I", v(impact), "#dc2626"]].map(([k, w, c]: any) => (
-        <div key={k} className="flex items-center gap-2 text-xs">
-          <span className="w-4 font-bold">{k}</span>
-          <div className="flex-1 h-2 rounded-full bg-muted dark:bg-dark-muted overflow-hidden">
-            <div className="h-full rounded-full" style={{ width: `${w}%`, background: c, transition: "width 1.2s ease" }} />
-          </div>
-        </div>
-      ))}
     </div>
   );
 }
