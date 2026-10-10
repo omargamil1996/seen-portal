@@ -1952,19 +1952,19 @@ function SecurityView({ t, lang }: any) {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-25 overflow-hidden"><RadarSweep size={620} lang={lang} /></div>
       <div className="relative z-10 space-y-6">
       <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
-      <Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Heartbeat lang={lang} /></Card>
+      <Card className="p-5 bg-transparent dark:bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Heartbeat lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 text-center border-emerald/30">
+        <Card className="p-6 text-center dark:bg-black/40 bg-white/40 border-emerald/30">
           <div className="w-16 h-16 rounded-2xl bg-emerald/10 flex items-center justify-center mx-auto mb-4"><Shield size={32} className="text-emerald" /></div>
           <div className="text-5xl font-bold text-emerald dark:text-gold font-amiri mb-2">{DATA.securityHighlights.attacks}</div>
           <div className="text-sm text-gray-500 uppercase tracking-wider">{lang === "ar" ? "هجمة محاكاة" : "Simulated Attacks"}</div>
         </Card>
-        <Card className="p-6 text-center border-gold/30">
+        <Card className="p-6 text-center dark:bg-black/40 bg-white/40 border-gold/30">
           <div className="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-4"><Activity size={32} className="text-gold" /></div>
           <div className="text-5xl font-bold text-gold-dark dark:text-gold font-amiri mb-2">{DATA.securityHighlights.hallucinationTests}</div>
           <div className="text-sm text-gray-500 uppercase tracking-wider">{lang === "ar" ? "سؤال هلوسة مُختبر" : "Hallucination Tests"}</div>
         </Card>
-        <Card className="p-6 text-center border-accent/30">
+        <Card className="p-6 text-center dark:bg-black/40 bg-white/40 border-accent/30">
           <div className="w-16 h-16 rounded-2xl bg-accent/10 flex items-center justify-center mx-auto mb-4"><Lock size={32} className="text-accent" /></div>
           <div className="text-3xl font-bold text-accent font-amiri mb-2">{DATA.securityHighlights.encryption}</div>
           <div className="text-sm text-gray-500 uppercase tracking-wider">{lang === "ar" ? "تشفير البيانات" : "Data Encryption"}</div>
