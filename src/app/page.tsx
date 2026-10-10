@@ -23,8 +23,8 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell
 } from "recharts";
-import { SankeyChart, TreemapChart, SunburstChart, RadarChart, BubbleChart, GanttChart, ChordDiagram } 
-  from "@/components/AdvancedCharts";
+
+import { SankeyChart, TreemapChart, SunburstChart, RadarChart, BubbleChart, GanttChart, ChordDiagram } from "@/components/AdvancedCharts";
 
 const AppContext = createContext<any>({});
 
@@ -74,7 +74,7 @@ export default function Home() {
     const cust = Math.round(fin.newCust * m * Math.pow(1 - fin.churn / 100, m));
     const mrr = cust * fin.arpu;
     const costs = fin.fixed + cust * (fin.cac / 12);
-    return { month: \`M\${m}\`, customers: cust, mrr: Math.round(mrr), profit: Math.round(mrr - costs) };
+    return { month: `M${m}`, customers: cust, mrr: Math.round(mrr), profit: Math.round(mrr - costs) };
   });
 
   const tabs = [
@@ -89,6 +89,7 @@ export default function Home() {
     { id: "data-room", label: t.nav.dataRoom, icon: Briefcase },
     { id: "team", label: t.nav.team, icon: Users },
     { id: "security", label: t.nav.security, icon: Shield },
+    { id: "advanced-analytics", label: lang === "ar" ? "التحليلات المتقدمة" : "Advanced Analytics", icon: BarChart3 },
     { id: "settings", label: t.nav.settings, icon: Settings },
   ];
 
@@ -101,8 +102,8 @@ export default function Home() {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-gold flex items-center justify-center text-white font-bold text-xl shadow-lg">S</div>
               <div>
                 <h1 className="text-lg font-bold text-emerald dark:text-gold font-amiri">
-                 {DATA.company.name_ar}
-                 <span className="text-xs bg-emerald/10 text-emerald px-2 py-1 rounded-full ml-2">V5.2.0</span>
+                  {DATA.company.name_ar}
+                  <span className="text-xs bg-emerald/10 text-emerald px-2 py-1 rounded-full ml-2">V5.2.0</span>
                 </h1>
                 <p className="text-xs text-gray-500">{t.common.investorBriefcase}</p>
               </div>
@@ -157,6 +158,7 @@ export default function Home() {
               {activeTab === "data-room" && <DataRoomView t={t} lang={lang} />}
               {activeTab === "team" && <TeamView t={t} lang={lang} />}
               {activeTab === "security" && <SecurityView t={t} lang={lang} />}
+              {activeTab === "advanced-analytics" && <AdvancedAnalyticsView t={t} lang={lang} />}
               {activeTab === "settings" && <SettingsView t={t} lang={lang} dark={dark} setDark={setDark} setLang={setLang} />}
             </motion.div>
           </AnimatePresence>
@@ -167,12 +169,12 @@ export default function Home() {
 }
 
 const Card = ({ children, className, delay = 0, hover = true }: any) => (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }} 
-    whileInView={{ opacity: 1, y: 0 }} 
-    viewport={{ once: true, margin: "-50px" }} 
-    transition={{ duration: 0.5, delay: delay / 1000, ease: "easeOut" }} 
-    whileHover={hover ? { y: -6, scale: 1.01 } : {}} 
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.5, delay: delay / 1000, ease: "easeOut" }}
+    whileHover={hover ? { y: -6, scale: 1.01 } : {}}
     className={cn("bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card hover:shadow-elevated transition-all duration-300 overflow-hidden", className)}
   >
     {children}
@@ -194,12 +196,134 @@ const SectionHeader = ({ icon: Icon, title, subtitle }: any) => (
 );
 
 const Badge = ({ children, color = "emerald" }: any) => {
-  const colors: any = { 
-    emerald: "bg-emerald/10 text-emerald border-emerald/20", 
-    gold: "bg-gold/10 text-gold-dark dark:text-gold border-gold/20", 
-    accent: "bg-accent/10 text-accent border-accent/20", 
-    red: "bg-red-100 text-red-600 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800", 
-    yellow: "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800", 
+  const colors: any = {
+    emerald: "bg-emerald/10 text-emerald border-emerald/20",
+    gold: "bg-gold/10 text-gold-dark dark:text-gold border-gold/20",
+    accent: "bg-accent/10 text-accent border-accent/20",
+    red: "bg-red-100 text-red-600 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800",
+    yellow: "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800",
+    green: "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
+  };
+  return <span className={cn("px-3 py-1 rounded-full text-xs font-bold border inline-flex items-center gap-1", colors[color])}>{children}</span>;
+};
+
+function DashboardView({ t, lang }: any) {
+  return (
+    <div className="space-y-8">
+      <Card className="p-10 overflow-hidden relative" hover={false}>
+        <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald noise opacity-90" />
+        <div className="relative z-10 max-w-3xl text-white">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6">
+            <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}
+          </motion.div>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4">{DATA.company.name_ar}</motion.h1>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-xl text-gold font-semibold mb-4 font-amiri">{DATA.company.tagline_ar}</motion.p>
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{DATA.company.vision_ar}</motion.p>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-wrap gap-3">
+            {["🕌 حلال 100%", "⚡ Zero-Friction", "🏰 قلعة + رماح", "🔒 بروتوكول أمني"].map((tag, i) => (
+              <span key={i} className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">{tag}</span>
+            ))}
+          </motion.div>
+        </div>
+      </Card>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {DATA.kpis.map((kpi: any, i: number) => {
+          const { count, ref } = useCounter(parseFloat(kpi.value), 1500, 0);
+          return (
+            <Card key={i} delay={i * 100} className="p-6 text-center">
+              <div ref={ref} className="text-3xl md:text-4xl font-bold text-emerald dark:text-gold font-amiri mb-2">{count}{kpi.unit}</div>
+              <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">{lang === "ar" ? kpi.label_ar : kpi.label_en}</div>
+            </Card>
+          );
+        })}
+      </div>
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-6">
+          <Target size={20} className="text-emerald dark:text-gold" />
+          <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "حجم السوق" : "Market Size"}</h3>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          {[{ key: "tam", color: "emerald" }, { key: "sam", color: "gold" }, { key: "som", color: "accent" }].map(({ key, color }) => {
+            const d = DATA.market[key as keyof typeof DATA.market];
+            return (
+              <motion.div key={key} whileHover={{ scale: 1.05 }} className={cn("p-6 rounded-2xl text-center border-2 transition-all", color === "emerald" && "bg-emerald/5 dark:bg-emerald/10 border-emerald/20", color === "gold" && "bg-gold/5 dark:bg-gold/10 border-gold/20", color === "accent" && "bg-accent/5 dark:bg-accent/10 border-accent/20")}>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wider">{lang === "ar" ? d.label_ar : d.label_en}</p>
+                <div className={cn("font-amiri", color === "emerald" && "text-emerald", color === "gold" && "text-gold-dark dark:text-gold", color === "accent" && "text-accent")}>
+                  <div className="text-4xl font-bold">{d.value}<span className="text-2xl">{d.unit}</span></div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData, t, lang }: any) {
+  const COLORS = ["#0F5132", "#D4AF37", "#F97316", "#6B7280", "#1a7a4c", "#b8962e", "#dc2626", "#3b82f6"];
+  return (
+    <div className="space-y-8">
+      <SectionHeader icon={Wallet} title={t.financials.title} subtitle={t.financials.subtitle} />
+      <Card className="p-8 overflow-hidden relative" hover={false}>
+        <div className="absolute inset-0 bg-dark-bg dark:bg-black noise opacity-50" />
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
+          <div className="space-y-6">
+            {[
+              { label: lang === "ar" ? "ARPU / Setup Value" : "ARPU / Setup Value", value: fin.arpu, min: 500, max: 5000, step: 100, unit: "SAR", key: "arpu" },
+              { label: lang === "ar" ? "نسبة التسرب (Churn)" : "Churn Rate", value: fin.churn, min: 1, max: 20, step: 1, unit: "%", key: "churn" },
+              { label: "CAC", value: fin.cac, min: 500, max: 5000, step: 100, unit: "SAR", key: "cac" },
+              { label: lang === "ar" ? "عملاء جدد / شهر" : "New Customers / month", value: fin.newCust, min: 1, max: 10, step: 0.1, unit: "", key: "newCust" },
+              { label: lang === "ar" ? "هامش الربح (Margin)" : "Margin", value: fin.margin, min: 50, max: 90, step: 5, unit: "%", key: "margin" },
+              { label: lang === "ar" ? "التكاليف الثابتة" : "Fixed Costs", value: fin.fixed, min: 1000, max: 10000, step: 500, unit: "SAR", key: "fixed" },
+            ].map((slider, i) => (
+              <div key={i} className="group">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{slider.label}</span>
+                  <span className="text-sm font-bold text-gold tabular-nums">{typeof slider.value === "number" ? slider.value.toLocaleString() : slider.value} {slider.unit}</span>
+                </div>
+                <input type="range" min={slider.min} max={slider.max} step={slider.step} value={slider.value} onChange={(e) => setFin({ ...fin, [slider.key]: parseFloat(e.target.value) })} className="w-full accent-gold cursor-pointer" />
+              </div>
+            ))}
+          </div>
+          <div className="grid grid-cols-2 gap-3 content-start">
+            {[
+              { label: "LTV", value: `${Math.round(ltv).toLocaleString()} SAR`, highlight: false },
+              { label: "LTV:CAC", value: `${ltvCac.toFixed(1)}x`, highlight: true },
+              { label: lang === "ar" ? "استرداد CAC" : "CAC Payback", value: `${payback.toFixed(1)} ${lang === "ar" ? "شهر" : "mo"}`, highlight: false },
+              { label: lang === "ar" ? "نقطة التعادل" : "Break-even", value: `${lang === "ar" ? "شهر" : "Mo"} ${be > 0 && be < 36 ? be : ">36"}`, highlight: true },
+              { label: lang === "ar" ? "MRR الشهر 12" : "MRR Month 12", value: `${Math.round(fin.arpu * (fin.newCust * 12 * 0.8)).toLocaleString()} SAR`, highlight: false },
+              { label: lang === "ar" ? "MRR الشهر 36" : "MRR Month 36", value: `${Math.round(fin.arpu * (fin.newCust * 36 * 0.6)).toLocaleString()} SAR`, highlight: true },
+            ].map((metric, i) => (
+              <motion.div key={i} whileHover={{ scale: 1.03 }} className={cn("p-4 rounded-xl text-center transition-all duration-300", metric.highlight ? "bg-gradient-to-br from-gold/20 to-accent/10 border border-gold/30 shadow-glow-gold" : "bg-white/5 border border-white/10 hover:border-white/20")}>
+                <div className="text-[10px] uppercase tracking-widest text-gray-400 mb-1">{metric.label}</div>
+                <div className={cn("text-xl font-bold tabular-nums", metric.highlight ? "text-gradient-gold" : "text-white")}>{metric.value}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <PieChartIcon size={18} className="text-emerald dark:text-gold" />
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? `توزيع الأموال ($${DATA.financials.useOfFunds.total.toLocaleString()})` : `Use of Funds ($${DATA.financials.useOfFunds.total.toLocaleString()})`}</h3>
+          </div>
+          <div className="flex flex-col items-center gap-4">
+            <div className="h-64 w-64">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie data={DATA.financials.useOfFunds.breakdown.map((b: any) => ({ name: lang === "ar" ? b.category_ar : b.category_en, value: b.percentage }))} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value">
+                    {DATA.financials.useOfFunds.breakdown.map((_: any, i: number) => (<Cell key={i} fill={COLORS[i % COLORS.length]} />))}
+                  </Pie>
+                  <RechartsTooltip formatter={(v: any) => [`${v}%`, ""]} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="w-full space-y-2">
+              {DATA.financials.useOfFunds.breakdown.map((item: any, i: number) => (
+                <div key={i} className="flex items-center justify-between text-xs p-3 bg-muted/30 dark:bg-dark-muted/30 rounded-lg border border-border/50">
+             "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800", 
     green: "bg-green-100 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800" 
   };
   return <span className={cn("px-3 py-1 rounded-full text-xs font-bold border inline-flex items-center gap-1", colors[color])}>{children}</span>;
