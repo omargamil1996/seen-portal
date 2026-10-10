@@ -187,8 +187,8 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [slideIdx, setSlideIdx] = useState(0);
   const [fin, setFin] = useState<any>({
-    setup: DATA.financials.arpu,
-    sub: Math.round(DATA.financials.arpu * 0.175),
+    setup: 5000,
+    sub: 2800,
     churn: DATA.financials.churn,
     cac: DATA.financials.cac,
     margin: DATA.financials.margin,
