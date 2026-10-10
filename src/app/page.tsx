@@ -797,7 +797,7 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
     <div className="space-y-8">
       <SectionHeader icon={Wallet} title={t.menu.financials} subtitle={""} />
       <Card className="p-8 overflow-hidden relative" hover={false}>
-        <div className="absolute inset-0 bg-dark-bg dark:bg-black opacity-50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950" />
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
           <div className="space-y-6">
             {[
@@ -1005,7 +1005,7 @@ function BusinessPlanView({ t, lang }: any) {
       </div>
       <div className="space-y-4">
         {DATA.businessPlan.map((section: any, i: number) => (
-          <motion.details key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }} open={i < 3} className="group bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card overflow-hidden open:shadow-elevated open:border-emerald/30">
+          <motion.details key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.03 }} open={false} className="group bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card overflow-hidden open:shadow-elevated open:border-emerald/30">
             <summary className="p-6 cursor-pointer flex justify-between items-center select-none hover:bg-muted/50 dark:hover:bg-dark-muted/50 transition-colors">
               <div className="flex items-center gap-4">
                 <span className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald to-emerald-dark text-gold flex items-center justify-center text-sm font-bold font-amiri shadow-md">{i + 1}</span>
@@ -1025,6 +1025,25 @@ function BusinessPlanView({ t, lang }: any) {
         ))}
       </div>
     </div>
+  );
+}
+
+function MiniAutomation({ seed, lang }: any) {
+  const palettes = [["#0F5132", "#D4AF37"], ["#D4AF37", "#1a7a4c"], ["#1a7a4c", "#b8962e"], ["#b8962e", "#0F5132"], ["#6B7280", "#D4AF37"]];
+  const [a, b] = palettes[seed % palettes.length];
+  const path = "M20,30 L140,30 L180,12 L280,12 M140,30 L180,48 L280,48";
+  return (
+    <svg viewBox="0 0 300 60" className="w-full h-auto" role="img">
+      <path d={path} fill="none" stroke={a} strokeOpacity="0.35" strokeWidth="2" strokeDasharray="6 5" />
+      {[0, 1, 2].map((k) => (
+        <circle key={k} r="4" fill={b}>
+          <animateMotion dur={`${2.2 + k * 0.4}s`} begin={`${k * 0.7}s`} repeatCount="indefinite" path={k === 1 ? "M140,30 L180,48 L280,48" : "M20,30 L140,30 L180,12 L280,12"} />
+        </circle>
+      ))}
+      <circle cx="20" cy="30" r="7" fill={a}><animate attributeName="r" values="6;9;6" dur="1.8s" repeatCount="indefinite" /></circle>
+      <circle cx="280" cy="12" r="6" fill={b}><animate attributeName="opacity" values="0.3;1;0.3" dur="1.4s" repeatCount="indefinite" /></circle>
+      <circle cx="280" cy="48" r="6" fill={b}><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" repeatCount="indefinite" /></circle>
+    </svg>
   );
 }
 
@@ -1048,6 +1067,7 @@ function SectorsView({ t, lang }: any) {
               <Badge color={s.status === "active" ? "green" : "yellow"}>{s.status === "active" ? (lang === "ar" ? "🟢 نشط" : "🟢 Active") : (lang === "ar" ? "🟡 قريباً" : "🟡 Coming")}</Badge>
             </div>
             <div className="p-6 space-y-4">
+              <MiniAutomation seed={i} lang={lang} />
               <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{lang === "ar" ? s.desc_ar : s.desc_en}</p>
               <div className="bg-emerald/5 dark:bg-emerald/10 p-3 rounded-lg border-r-4 border-emerald">
                 <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2 italic">"{lang === "ar" ? s.justification_ar : s.justification_en}"</p>
@@ -1104,14 +1124,46 @@ function RoadmapView({ t, lang }: any) {
   );
 }
 
+function HangingWeight({ lang }: any) {
+  return (
+    <div className="w-full flex justify-center">
+      <svg viewBox="0 0 400 140" className="w-full max-w-md h-auto" role="img">
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="-14 200 0;14 200 0;-14 200 0" dur="3.6s" repeatCount="indefinite" />
+          <line x1="200" y1="0" x2="200" y2="90" stroke="#6B7280" strokeWidth="2" />
+          <circle cx="200" cy="102" r="16" fill="#dc2626"><animate attributeName="r" values="16;19;16" dur="1.8s" repeatCount="indefinite" /></circle>
+        </g>
+        <text x="200" y="136" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "المخاطر المعلّقة تحت المراقبة" : "Risks under watch"}</text>
+      </svg>
+    </div>
+  );
+}
+
+function RiskBars({ prob, impact }: any) {
+  const v = (x: string) => (x === "high" ? 90 : x === "medium" ? 55 : 25);
+  return (
+    <div className="space-y-2 mt-3">
+      {[["P", v(prob), "#eab308"], ["I", v(impact), "#dc2626"]].map(([k, w, c]: any) => (
+        <div key={k} className="flex items-center gap-2 text-xs">
+          <span className="w-4 font-bold">{k}</span>
+          <div className="flex-1 h-2 rounded-full bg-muted dark:bg-dark-muted overflow-hidden">
+            <div className="h-full rounded-full" style={{ width: `${w}%`, background: c, transition: "width 1.2s ease" }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={AlertTriangle} title={t.menu.risks} subtitle={""} />
+      <Card className="p-6"><HangingWeight lang={lang} /></Card>
       <Card className="p-6"><RiskHeatmap lang={lang} /></Card>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {DATA.risks.map((risk: any, i: number) => (
-          <Card key={i} delay={i * 50}>
+          <Card key={i} delay={i * 50} className="p-8 min-h-[260px] border-2 hover:border-gold/60">
             <div className="flex items-start justify-between mb-3">
               <h3 className="text-base font-bold text-emerald dark:text-gold leading-snug">{lang === "ar" ? risk.name_ar : risk.name_en}</h3>
               <div className="flex gap-1 shrink-0">
@@ -1120,6 +1172,7 @@ function RisksView({ t, lang }: any) {
               </div>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{lang === "ar" ? risk.category_ar : risk.category_en}</p>
+            <RiskBars prob={risk.prob} impact={risk.impact} />
             <div className="mt-3 p-3 bg-emerald/5 dark:bg-emerald/10 rounded-lg border border-emerald/20">
               <strong className="text-emerald dark:text-gold text-xs uppercase tracking-wider block mb-1">{lang === "ar" ? "خطة التخفيف" : "Mitigation"}</strong>
               <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{lang === "ar" ? risk.mitigation_ar : risk.mitigation_en}</p>
@@ -1344,6 +1397,8 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
         <div className={cn("relative min-h-[400px] flex flex-col items-center justify-center p-10 overflow-hidden bg-gradient-to-br", currentDesign.bg)}>
           <div className="absolute inset-0 opacity-10"><div className="absolute top-10 left-10 text-[200px] leading-none">{currentDesign.icon}</div><div className="absolute bottom-10 right-10 text-[150px] leading-none opacity-50">{currentDesign.icon}</div></div>
           <div className="absolute top-4 left-4 text-gold text-xs font-mono bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-gold/30">SLIDE {slideIdx + 1} / {DATA.pitchSlides.length}</div>
+          <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-gold/20 blur-3xl animate-pulse" />
+          <div className="absolute -bottom-28 -left-16 w-80 h-80 rounded-full bg-white/10 blur-3xl animate-pulse" />
           <motion.div key={slideIdx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 text-center max-w-3xl">
             <div className="text-6xl mb-6">{currentDesign.icon}</div>
             <h2 className={cn("text-3xl md:text-5xl font-amiri font-bold mb-6", currentDesign.accent === "gold" ? "text-gold" : "text-white")}>{lang === "ar" ? currentSlide.title_ar : currentSlide.title_en}</h2>
