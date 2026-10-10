@@ -245,6 +245,7 @@ export default function Home() {
     document.documentElement.dataset.palette = palette === "warm" ? "warm" : "green";
   }, [palette]);
   const t: any = translations[lang];
+  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "auto" }); setShowHeader(true); }, [activeTab]);
   const [showHeader, setShowHeader] = useState(true);
   const [hdrH, setHdrH] = useState(0);
   const hdrRef = useRef<HTMLElement>(null);
@@ -1340,22 +1341,25 @@ function RoadmapGantt({ lang }: any) {
   );
 }
 
-const RM_ITEMS = [
-  { d: "Q1 2026", ar: "الفكرة والتحقق", en: "Idea & validation", i: "💡", da: "دراسة السوق وتحليل المنافسين وبناء الـ 49 ملفاً الاستراتيجي.", de: "Market study, competitor analysis, and building the 49 strategic files." },
-  { d: "Q2 2026", ar: "اختبار الطلب والتسعير", en: "Demand & pricing tests", i: "🔎", da: "اختبار القطاعات المستهدفة وصياغة الباقات والتسعير.", de: "Testing target sectors and shaping packages and pricing." },
-  { d: "Q3 2026", ar: "التأسيس القانوني والعتاد", en: "Legal setup & hardware", i: "🏛️", da: "تسجيل الكيان في ماليزيا، شراء العتاد، وإعداد البنية التحتية.", de: "Entity registration in Malaysia, hardware purchase, and infrastructure setup." },
-  { d: "أكتوبر 2026", ar: "الإطلاق التجريبي", en: "Beta launch", i: "🚀", da: "إطلاق بوابة المستثمرين، اختبار Landing Bot، وضبط الأنظمة.", de: "Investor portal launch, Landing Bot testing, and systems tuning." },
-  { d: "نوفمبر 2026", ar: "تشغيل تجريبي مع مختبرين", en: "Pilot with early testers", i: "🧪", da: "تشغيل الأنظمة مع أوائل المختبرين وتوثيق الإجراءات.", de: "Running the systems with early testers and documenting procedures." },
-  { d: "Q4 2026", ar: "أول عميل مدفوع", en: "First paid client", i: "⭐", da: "إغلاق أول عقد مع مكتب هندسي، وتطبيق Error Node قبل التسليم.", de: "Closing the first paid engineering contract, with Error Node applied before delivery." },
-  { d: "ديسمبر 2026", ar: "مراجعة نهاية السنة", en: "Year-end review", i: "📋", da: "مراجعة النتائج الأولى وتحديث خطة 2027.", de: "Reviewing first results and updating the 2027 plan." },
-  { d: "Q1 2027", ar: "التوسع الأول", en: "First expansion", i: "📈", da: "الوصول إلى 20 عميل، إطلاق رمح الطب.", de: "Reaching 20 clients and launching the medical spear." },
-  { d: "Q2 2027", ar: "تثبيت التوسع", en: "Consolidating growth", i: "🧱", da: "رفع الاحتفاظ بالعملاء وتوحيد قوالب المسارات.", de: "Improving client retention and standardizing workflow templates." },
-  { d: "Q3 2027", ar: "قوالب قابلة للتكرار", en: "Repeatable templates", i: "🧩", da: "تحويل المسارات المتكررة إلى قوالب حسب نوع العميل.", de: "Turning repeated workflows into templates by client type." },
-  { d: "Q4 2027", ar: "مؤشرات الأداء", en: "Performance metrics", i: "📊", da: "متابعة الاحتفاظ والإيراد الشهري كأساس للتوسع.", de: "Tracking retention and monthly revenue as the basis for scaling." },
-  { d: "Q1 2028", ar: "بداية القيادة الإقليمية", en: "Regional leadership begins", i: "🌱", da: "التوسع إلى قطاعات أوسع بعد إثبات النموذج.", de: "Expanding to wider sectors after proving the model." },
-  { d: "Q2 2028", ar: "القيادة الإقليمية", en: "Regional leadership", i: "🌍", da: "80+ عميل، Micro-SaaS، MRR: SAR 250K.", de: "80+ clients, Micro-SaaS, MRR: SAR 250K." },
-  { d: "Q3 2028", ar: "منتجات الاشتراك", en: "Subscription products", i: "📦", da: "تحويل الخطوط الجاهزة إلى منتجات برمجية للاشتراك.", de: "Turning ready pipelines into subscription software products." },
-  { d: "Q4 2028", ar: "تقييم وتوسيع", en: "Review & scale", i: "🏁", da: "مراجعة الأداء وخطة التوسع للسنوات التالية.", de: "Performance review and the scaling plan for the following years." },
+const RM_YEARS = [
+  { y: "2026", q: [
+    { t: "Q1 — الفكرة والتحقق", en: "Q1 — Idea & validation", i: "💡", items: ["دراسة السوق وتحليل المنافسين", "بناء الـ 49 ملفاً الاستراتيجي"], ie: ["Market study and competitor analysis", "Building the 49 strategic files"] },
+    { t: "Q2 — اختبار الطلب والتسعير", en: "Q2 — Demand & pricing tests", i: "🔎", items: ["اختبار القطاعات المستهدفة", "صياغة الباقات والتسعير"], ie: ["Testing target sectors", "Shaping packages and pricing"] },
+    { t: "Q3 — التأسيس القانوني والعتاد", en: "Q3 — Legal setup & hardware", i: "🏛️", items: ["تسجيل الكيان في ماليزيا", "شراء العتاد وإعداد البنية التحتية"], ie: ["Entity registration in Malaysia", "Hardware purchase and infrastructure setup"] },
+    { t: "Q4 — الإطلاق وأول عميل", en: "Q4 — Launch & first client", i: "⭐", items: ["أكتوبر: الإطلاق التجريبي", "نوفمبر: تشغيل مع مختبرين", "Q4: أول عميل مدفوع", "ديسمبر: مراجعة نهاية السنة"], ie: ["October: beta launch", "November: pilot with testers", "Q4: first paid client", "December: year-end review"] },
+  ]},
+  { y: "2027", q: [
+    { t: "Q1 — التوسع الأول", en: "Q1 — First expansion", i: "📈", items: ["الوصول إلى 20 عميل", "إطلاق رمح الطب"], ie: ["Reaching 20 clients", "Launching the medical spear"] },
+    { t: "Q2 — تثبيت التوسع", en: "Q2 — Consolidating growth", i: "🧱", items: ["رفع الاحتفاظ بالعملاء", "توحيد قوالب المسارات"], ie: ["Improving client retention", "Standardizing workflow templates"] },
+    { t: "Q3 — قوالب قابلة للتكرار", en: "Q3 — Repeatable templates", i: "🧩", items: ["تحويل المسارات المتكررة إلى قوالب", "قوالب حسب نوع العميل"], ie: ["Turning repeated workflows into templates", "Templates by client type"] },
+    { t: "Q4 — مؤشرات الأداء", en: "Q4 — Performance metrics", i: "📊", items: ["متابعة الاحتفاظ", "متابعة الإيراد الشهري كأساس للتوسع"], ie: ["Tracking retention", "Tracking monthly revenue as the basis for scaling"] },
+  ]},
+  { y: "2028", q: [
+    { t: "Q1 — بداية القيادة الإقليمية", en: "Q1 — Regional leadership begins", i: "🌱", items: ["التوسع إلى قطاعات أوسع", "بعد إثبات النموذج"], ie: ["Expanding to wider sectors", "After proving the model"] },
+    { t: "Q2 — القيادة الإقليمية", en: "Q2 — Regional leadership", i: "🌍", items: ["80+ عميل", "MRR: SAR 250K"], ie: ["80+ clients", "MRR: SAR 250K"] },
+    { t: "Q3 — منتجات الاشتراك", en: "Q3 — Subscription products", i: "📦", items: ["تحويل الخطوط الجاهزة إلى منتجات برمجية", "منتجات Micro-SaaS للاشتراك"], ie: ["Turning ready pipelines into software products", "Micro-SaaS subscription products"] },
+    { t: "Q4 — تقييم وتوسيع", en: "Q4 — Review & scale", i: "🏁", items: ["مراجعة الأداء", "خطة التوسع للسنوات التالية"], ie: ["Performance review", "Scaling plan for the following years"] },
+  ]},
 ];
 
 function RoadmapView({ t, lang }: any) {
@@ -1373,33 +1377,43 @@ function RoadmapView({ t, lang }: any) {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+  let n = -1;
   return (
-    <div className="space-y-6">
+    <div className="space-y-10">
       <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle="" />
-      <div className="relative">
-        <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
-        <div className="space-y-5">
-          {RM_ITEMS.map((it, i) => (
-            <motion.div key={i} ref={(el) => { rmRefs.current[i] = el; }}
-              initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }}
-              animate={{ opacity: i <= active ? 1 : 0.2, x: 0, scale: i === active ? 1.02 : 1, filter: i <= active ? "none" : "grayscale(1) brightness(0.55)" }}
-              transition={{ duration: 0.5 }} className="relative flex gap-5 items-start">
-              <div className="hidden md:flex flex-col items-center shrink-0">
-                <div className={cn("w-14 h-14 rounded-full flex items-center justify-center text-2xl shadow-lg border-4 z-10 bg-emerald border-background dark:border-dark-bg", i === active && "ring-4 ring-gold/50")}>{it.i}</div>
-              </div>
-              <Card className={cn("flex-1 transition-shadow duration-500", i === active && "ring-2 ring-gold shadow-glow-gold")}>
-                <div className="p-5">
-                  <div className="flex flex-wrap justify-between items-center gap-2 mb-2">
-                    <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? it.ar : it.en}</h3>
-                    <Badge color="gold">{it.d}</Badge>
-                  </div>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{lang === "ar" ? it.da : it.de}</p>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
+      {RM_YEARS.map((yr) => (
+        <div key={yr.y} className="space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="px-4 py-1.5 rounded-full bg-emerald text-white font-bold text-lg">{yr.y}</span>
+            <div className="flex-1 h-px bg-gradient-to-r from-gold/60 to-transparent" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {yr.q.map((q) => {
+              n += 1;
+              const idx = n;
+              const lit = idx <= active;
+              return (
+                <motion.div key={idx} ref={(el) => { rmRefs.current[idx] = el; }}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: lit ? 1 : 0.2, y: 0, scale: idx === active ? 1.03 : 1, filter: lit ? "none" : "grayscale(1) brightness(0.55)" }}
+                  transition={{ duration: 0.5 }}>
+                  <Card className={cn("h-full transition-shadow duration-500", idx === active && "ring-2 ring-gold shadow-glow-gold")}>
+                    <div className="p-5">
+                      <div className="text-3xl mb-2">{q.i}</div>
+                      <h3 className="text-base font-bold text-emerald dark:text-gold mb-3">{lang === "ar" ? q.t : q.en}</h3>
+                      <ul className="space-y-2">
+                        {(lang === "ar" ? q.items : q.ie).map((it, k) => (
+                          <li key={k} className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex gap-2"><span className="text-gold">•</span><span>{it}</span></li>
+                        ))}
+                      </ul>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   );
 }
