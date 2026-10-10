@@ -246,6 +246,27 @@ export default function Home() {
     document.documentElement.dataset.palette = palette === "warm" ? "warm" : "green";
   }, [palette]);
   const t: any = translations[lang];
+  const [showHeader, setShowHeader] = useState(true);
+  const [hdrH, setHdrH] = useState(0);
+  const hdrRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      const d = y - last;
+      last = y;
+      if (y < 80 || d < 0) setShowHeader(true);
+      else if (d > 0) setShowHeader(false);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+  useEffect(() => {
+    const measure = () => setHdrH(hdrRef.current?.offsetHeight ?? 0);
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
   const model = runModel(fin);
   const tabs = [
@@ -268,7 +289,7 @@ export default function Home() {
     <AppContext.Provider value={{ lang, setLang, dark, setDark }}>
       <div className="relative min-h-screen bg-background dark:bg-dark-bg text-foreground dark:text-white font-cairo transition-colors duration-300 overflow-hidden">
         <SiteBackground />
-        <header className="sticky top-0 z-50 bg-card/90 dark:bg-dark-card/90 backdrop-blur-xl border-b border-border dark:border-dark-border shadow-lg">
+        <header ref={hdrRef} className={cn("fixed top-0 inset-x-0 z-50 transition-transform duration-300 bg-card/90 dark:bg-dark-card/90 backdrop-blur-xl border-b border-border dark:border-dark-border shadow-lg", showHeader ? "translate-y-0" : "-translate-y-full")}>
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-gold flex items-center justify-center text-white font-bold shadow-lg overflow-hidden p-1"><SeenLogo size={36} /></div>
@@ -299,6 +320,7 @@ export default function Home() {
             </div>
           </div>
         </header>
+        <div style={{ height: hdrH }} aria-hidden="true" />
         <main className="relative z-10 max-w-7xl mx-auto px-4 py-8">
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: "easeOut" }}>
@@ -1274,7 +1296,6 @@ function SectorsView({ t, lang }: any) {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6"><BubbleChart lang={lang} /></Card>
-        <Card className="p-6"><ChordDiagram lang={lang} /></Card>
       </div>
       {selected && <SectorAutomationPanel sector={selected} lang={lang} />}
       {selected && <SectorModal sector={selected} lang={lang} onClose={() => setSelected(null)} />}
