@@ -54,7 +54,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [slideIdx, setSlideIdx] = useState(0);
   const [fin, setFin] = useState<any>(DATA.financials);
-  const t = translations[lang];
+  const t: any = translations[lang];
   useEffect(() => { document.documentElement.classList.toggle("dark", dark); }, [dark]);
   const ltv = (fin.arpu * 12 * (1 - fin.churn / 100)) / (fin.churn / 100) * (fin.margin / 100);
   const ltvCac = ltv / fin.cac;
@@ -68,19 +68,19 @@ export default function Home() {
     return { month: `M${m}`, customers: cust, mrr: Math.round(mrr), profit: Math.round(mrr - costs) };
   });
   const tabs = [
-    { id: "dashboard", label: t.nav.dashboard, icon: LayoutDashboard },
-    { id: "financials", label: t.nav.financials, icon: Wallet },
-    { id: "business-plan", label: t.nav.businessPlan, icon: FileText },
-    { id: "sectors", label: t.nav.sectors, icon: Target },
-    { id: "roadmap", label: t.nav.roadmap, icon: MapIcon },
-    { id: "risks", label: t.nav.risks, icon: AlertTriangle },
-    { id: "hardware", label: t.nav.hardware, icon: Cpu },
-    { id: "the-ask", label: t.nav.theAsk, icon: FileCheck },
-    { id: "data-room", label: t.nav.dataRoom, icon: Briefcase },
-    { id: "team", label: t.nav.team, icon: Users },
-    { id: "security", label: t.nav.security, icon: Shield },
+    { id: "dashboard", label: t.menu.dashboard, icon: LayoutDashboard },
+    { id: "financials", label: t.menu.financials, icon: Wallet },
+    { id: "business-plan", label: t.menu.businessPlan, icon: FileText },
+    { id: "sectors", label: t.menu.sectors, icon: Target },
+    { id: "roadmap", label: t.menu.roadmap, icon: MapIcon },
+    { id: "risks", label: t.menu.risks, icon: AlertTriangle },
+    { id: "hardware", label: t.menu.hardware, icon: Cpu },
+    { id: "the-ask", label: t.menu.theAsk, icon: FileCheck },
+    { id: "data-room", label: t.menu.dataRoom, icon: Briefcase },
+    { id: "team", label: t.menu.team, icon: Users },
+    { id: "security", label: t.menu.security, icon: Shield },
     { id: "advanced-analytics", label: lang === "ar" ? "التحليلات المتقدمة" : "Advanced Analytics", icon: BarChart3 },
-    { id: "settings", label: t.nav.settings, icon: Settings },
+    { id: "settings", label: t.menu.settings, icon: Settings },
   ];
   return (
     <AppContext.Provider value={{ lang, setLang, dark, setDark }}>
@@ -233,7 +233,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
   const COLORS = ["#0F5132", "#D4AF37", "#F97316", "#6B7280", "#1a7a4c", "#b8962e", "#dc2626", "#3b82f6"];
   return (
     <div className="space-y-8">
-      <SectionHeader icon={Wallet} title={t.financials.title} subtitle={t.financials.subtitle} />
+      <SectionHeader icon={Wallet} title={t.menu.financials} subtitle={""} />
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-dark-bg dark:bg-black opacity-50" />
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
@@ -393,7 +393,7 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
 function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={FileText} title={t.businessPlan.title} subtitle={t.businessPlan.subtitle} />
+      <SectionHeader icon={FileText} title={t.menu.businessPlan} subtitle={""} />
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">{DATA.businessPlan.length}</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div></Card>
         <Card className="p-4 text-center bg-gold/5 border-gold/20"><div className="text-3xl font-bold text-gold font-amiri">AR + EN</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ثنائي اللغة" : "Bilingual"}</div></Card>
@@ -429,7 +429,7 @@ function SectorsView({ t, lang }: any) {
   const [selected, setSelected] = useState<any>(null);
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Target} title={t.sectors.title} subtitle={t.sectors.subtitle} />
+      <SectionHeader icon={Target} title={t.menu.sectors} subtitle={""} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s: any, i: number) => (
           <motion.button key={s.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -6, scale: 1.01 }} onClick={() => setSelected(s)} className={cn("text-right bg-card dark:bg-dark-card rounded-2xl border shadow-card overflow-hidden transition-all", s.status === "active" ? "border-emerald/40 dark:border-emerald/60 shadow-glow" : "border-border dark:border-dark-border")}>
@@ -466,7 +466,7 @@ function SectorsView({ t, lang }: any) {
 function RoadmapView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={MapIcon} title={t.roadmap.title} subtitle={t.roadmap.subtitle} />
+      <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle={""} />
       <div className="relative">
         <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
         <div className="space-y-6">
@@ -496,7 +496,7 @@ function RoadmapView({ t, lang }: any) {
 function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={AlertTriangle} title={t.risks.title} subtitle={t.risks.subtitle} />
+      <SectionHeader icon={AlertTriangle} title={t.menu.risks} subtitle={""} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {DATA.risks.map((risk: any, i: number) => (
           <Card key={i} delay={i * 50}>
@@ -522,7 +522,7 @@ function RisksView({ t, lang }: any) {
 function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Cpu} title={t.hardware.title} subtitle={t.hardware.subtitle} />
+      <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
         <div className="relative z-10 text-white">
@@ -605,7 +605,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   const lines = (lang === "ar" ? currentSlide.content_ar : currentSlide.content_en).split("\n").filter((l: string) => l.trim());
   return (
     <div className="space-y-6">
-      <SectionHeader icon={FileCheck} title={t.theAsk.title} subtitle={t.theAsk.subtitle} />
+      <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
           <div className="flex items-center gap-3">
@@ -648,7 +648,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
 function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Briefcase} title={t.dataRoom.title} subtitle={t.dataRoom.subtitle} />
+      <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
       <DataRoomVault lang={lang} />
     </div>
   );
@@ -657,7 +657,7 @@ function DataRoomView({ t, lang }: any) {
 function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Users} title={t.team.title} subtitle={t.team.subtitle} />
+      <SectionHeader icon={Users} title={t.menu.team} subtitle={""} />
       <Card className="p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
@@ -692,7 +692,7 @@ function TeamView({ t, lang }: any) {
 function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Shield} title={t.security.title} subtitle={t.security.subtitle} />
+      <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 text-center border-emerald/30">
           <div className="w-16 h-16 rounded-2xl bg-emerald/10 flex items-center justify-center mx-auto mb-4"><Shield size={32} className="text-emerald" /></div>
@@ -717,7 +717,7 @@ function SecurityView({ t, lang }: any) {
 function SettingsView({ t, lang, dark, setDark, setLang }: any) {
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Settings} title={t.settings.title} subtitle={t.settings.subtitle} />
+      <SectionHeader icon={Settings} title={t.menu.settings} subtitle={""} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="p-6">
           <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Globe size={18} className="text-emerald" /> {lang === "ar" ? "اللغة" : "Language"}</h3>
