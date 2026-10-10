@@ -32,9 +32,10 @@ function SeenLogo({ size = 48 }: any) {
           <stop offset="1" stopColor="#F97316" />
         </linearGradient>
       </defs>
-      <text x="80" y="92" textAnchor="middle" fontSize="92" fontWeight="800" fill="url(#sa-grad)" style={{ fontFamily: "Cairo, sans-serif" }}>س</text>
-      <path d="M18,104 C52,124 108,124 142,104" fill="none" stroke="#F97316" strokeWidth="6" strokeLinecap="round" />
-      <text x="80" y="136" textAnchor="middle" fontSize="15" fontWeight="700" fill="currentColor" style={{ fontFamily: "Cairo, sans-serif" }}>seen</text>
+      <path d="M14,58 C30,18 52,16 62,44 C72,16 94,16 104,44 C114,16 136,18 146,50" fill="none" stroke="url(#sa-grad)" strokeWidth="12" strokeLinecap="round" />
+      <path d="M18,78 C34,104 118,104 142,72" fill="none" stroke="#F97316" strokeWidth="6" strokeLinecap="round" opacity="0.9" />
+      <circle cx="136" cy="120" r="5" fill="#0F5132" />
+      <text x="80" y="136" textAnchor="middle" fontSize="20" fontWeight="700" fill="currentColor" style={{ fontFamily: "Cairo, sans-serif" }}>agentic</text>
     </svg>
   );
 }
