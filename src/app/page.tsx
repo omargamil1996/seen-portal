@@ -1342,6 +1342,20 @@ function RoadmapGantt({ lang }: any) {
 }
 
 function RoadmapView({ t, lang }: any) {
+  const [active, setActive] = useState(0);
+  const rmRefs = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    const onScroll = () => {
+      let idx = 0;
+      rmRefs.current.forEach((el, i) => {
+        if (el && el.getBoundingClientRect().top < window.innerHeight * 0.6) idx = i;
+      });
+      setActive(idx);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
   return (
     <div className="space-y-6">
       <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle={""} />
@@ -1350,12 +1364,12 @@ function RoadmapView({ t, lang }: any) {
         <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
         <div className="space-y-6">
           {DATA.roadmap.map((item: any, i: number) => (
-            <motion.div key={i} initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ delay: i * 0.1 }} className="relative flex gap-6 items-start">
+            <motion.div key={i} ref={(el) => { rmRefs.current[i] = el; }} initial={{ opacity: 0, x: lang === "ar" ? 30 : -30 }} animate={{ opacity: i <= active ? 1 : 0.22, x: 0, scale: i === active ? 1.02 : 1, filter: i <= active ? "none" : "grayscale(1) brightness(0.55)" }} transition={{ duration: 0.5 }} className="relative flex gap-6 items-start">
               <div className="hidden md:flex flex-col items-center shrink-0">
                 <div className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold shadow-lg border-4 z-10 bg-emerald text-white border-background dark:border-dark-bg">{item.phase_ar.slice(0, 2)}</div>
                 {i < DATA.roadmap.length - 1 && <div className="w-0.5 h-4 bg-emerald/30 mt-1" />}
               </div>
-              <Card className="flex-1">
+              <Card className={cn("flex-1 transition-shadow duration-500", i === active && "ring-2 ring-gold shadow-glow-gold")}>
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? item.phase_ar : item.phase_en}</h3>
