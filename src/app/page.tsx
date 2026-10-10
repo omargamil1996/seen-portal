@@ -696,25 +696,55 @@ function KpiCard({ kpi, lang, delay }: any) {
   );
 }
 
+function AnimatedHero({ t, lang }: any) {
+  const tags = ["🕌 حلال 100%", "⚡ Zero-Friction", "🏰 قلعة + رماح", "🔒 بروتوكول أمني"];
+  const floats = [
+    { x: 6, y: 18, s: 44, d: 0 }, { x: 78, y: 12, s: 26, d: 1.2 }, { x: 66, y: 68, s: 56, d: 0.6 },
+    { x: 18, y: 72, s: 22, d: 1.8 }, { x: 90, y: 52, s: 34, d: 2.4 },
+  ];
+  return (
+    <Card className="relative p-10 md:p-14 overflow-hidden" hover={false}>
+      <style>{`
+        @keyframes heroFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-18px)}}
+        @keyframes heroPulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(2.2);opacity:0}}
+        @keyframes heroFade{0%,100%{opacity:.35;transform:translateY(6px)}20%,80%{opacity:1;transform:translateY(0)}}
+        @keyframes heroSpin{to{transform:rotate(360deg)}}
+        @keyframes heroGlow{0%,100%{box-shadow:0 0 0 rgba(212,175,55,0)}50%{box-shadow:0 0 40px rgba(212,175,55,.5)}}
+      `}</style>
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald via-emerald-dark to-slate-900" />
+      {floats.map((f, i) => (
+        <div key={i} className="absolute rounded-full bg-gold/20 blur-sm" style={{ left: `${f.x}%`, top: `${f.y}%`, width: f.s, height: f.s, animation: `heroFloat ${4 + i}s ease-in-out ${f.d}s infinite` }} />
+      ))}
+      <div className="absolute right-10 top-1/2 -translate-y-1/2 w-40 h-40 hidden md:block">
+        {[0, 1, 2].map((i) => (
+          <span key={i} className="absolute inset-0 rounded-full border-2 border-gold/50" style={{ animation: `heroPulse 2.4s ease-out ${i * 0.8}s infinite` }} />
+        ))}
+        <div className="absolute inset-6 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-2xl" style={{ animation: "heroGlow 2.4s ease-in-out infinite" }}>S</div>
+        <div className="absolute inset-0" style={{ animation: "heroSpin 12s linear infinite" }}>
+          <span className="absolute -top-1.5 left-1/2 w-3 h-3 rounded-full bg-gold" />
+        </div>
+      </div>
+      <div className="relative z-10 max-w-3xl text-white">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6">
+          <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}
+        </div>
+        <h1 className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4">{DATA.company.name_ar}</h1>
+        <p className="text-xl text-gold font-semibold mb-4 font-amiri">{DATA.company.tagline_ar}</p>
+        <p className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{DATA.company.vision_ar}</p>
+        <div className="flex flex-wrap gap-3">
+          {tags.map((tag, i) => (
+            <span key={i} className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm" style={{ animation: `heroFade 6s ease-in-out ${i * 1.5}s infinite` }}>{tag}</span>
+          ))}
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 function DashboardView({ t, lang, model }: any) {
   return (
     <div className="space-y-8">
-      <Card className="p-10 overflow-hidden relative" hover={false}>
-        <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
-        <div className="relative z-10 max-w-3xl text-white">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6">
-            <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}
-          </motion.div>
-          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4">{DATA.company.name_ar}</motion.h1>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="text-xl text-gold font-semibold mb-4 font-amiri">{DATA.company.tagline_ar}</motion.p>
-          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{DATA.company.vision_ar}</motion.p>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="flex flex-wrap gap-3">
-            {["🕌 حلال 100%", "⚡ Zero-Friction", "🏰 قلعة + رماح", "🔒 بروتوكول أمني"].map((tag, i) => (
-              <span key={i} className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm">{tag}</span>
-            ))}
-          </motion.div>
-        </div>
-      </Card>
+      <AnimatedHero t={t} lang={lang} />
       <Card className="p-4 text-sm text-gray-600 dark:text-gray-400" hover={false}>
         {lang === "ar"
           ? "هذه الأرقام تمثل السيناريو المحافظ (الأدنى المتوقع). العوائد الفعلية قد تكون أعلى مع العملاء ذوي رسوم التأسيس الأكبر، والنمذجة المالية مفتوحة لتعديل كل المدخلات."
