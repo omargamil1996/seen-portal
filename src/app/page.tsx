@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DATA } from "@/lib/data";
@@ -6,7 +7,22 @@ import { translations, type Lang } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import SectorModal from "@/components/SectorModal";
 import DataRoomVault from "@/components/DataRoomVault";
+
 import {
+  LayoutDashboard, Wallet, FileText, Target, Map as MapIcon,
+  AlertTriangle, Cpu, FileCheck, Globe, SkipBack, SkipForward,
+  ChevronDown, TrendingUp, Shield, Users, Clock, DollarSign,
+  BarChart3, Activity, CheckCircle2, XCircle, ArrowUpRight,
+  Layers, Server, Lock, Eye, Download, Settings, BookOpen,
+  Briefcase, Calendar, CreditCard, ShieldCheck, Zap, Sparkles,
+  Volume2, Bell, Save, Trash2, Info, Sun, Moon, ArrowRight
+} from "lucide-react";
+
+import {
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area, PieChart, Pie, Cell
+} from "recharts";
+
   LayoutDashboard, Wallet, FileText, Target, MapIcon,
   AlertTriangle, Cpu, FileCheck, Globe, SkipBack,
   SkipForward, ChevronDown, TrendingUp, Shield, Users,
