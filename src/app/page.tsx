@@ -2023,7 +2023,7 @@ function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
-      <div className="flex justify-center"><BotAvatar mode="archive" size={120} /></div>
+      <DataVaultScene lang={lang} />
       <DataRoomCards lang={lang} />
     </div>
   );
