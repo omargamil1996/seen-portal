@@ -148,9 +148,34 @@ function runModel(f: any) {
     minCash = Math.min(minCash, cum);
     if (breakEven === null && profit >= 0) breakEven = k;
     if (cashOutMonth === null && cum < 0) cashOutMonth = k;
-    proj.push({ month: `M${k}`, customers: Math.round(active * 10) / 10, mrr: Math.round(mrr), profit: Math.round(profit), cash: Math.round(cum) });
+    proj.push({ month: `M${k}`, customers: Math.round(active * 10) / 10, mrr: Math.round(mrr), revenue: Math.round(revenue), costs: Math.round(costs), profit: Math.round(profit), cash: Math.round(cum) });
   }
   return { ltv, ltvCac, payback, breakEven, cashOutMonth, minCash: Math.round(minCash), proj, mrr12: proj[11].mrr, mrr36: proj[35].mrr };
+}
+
+// توزيع طلب الاستثمار 15,000 دولار حسب الخطة
+const USE_OF_FUNDS_TOTAL = 15000;
+const USE_OF_FUNDS = {
+  total: USE_OF_FUNDS_TOTAL,
+  currency: "USD",
+  breakdown: [
+    { category_ar: "العتاد والأجهزة (فيزيائي)", category_en: "Hardware & Physical Equipment", amount: 9097, icon: "💻", description_ar: "لابتوب HP ZBook Ultra + Mini PC + الشاشات والدوكينق واليو بي إس", description_en: "HP ZBook Ultra laptop + Mini PC + displays, dock and UPS" },
+    { category_ar: "الـ APIs والبنية السحابية", category_en: "APIs & Cloud", amount: 1000, icon: "☁️", description_ar: "نماذج الذكاء الاصطناعي، Supabase، n8n، Vercel، Doppler", description_en: "AI model APIs, Supabase, n8n, Vercel, Doppler" },
+    { category_ar: "التسويق والوصول للعملاء", category_en: "Marketing & Outreach", amount: 2000, icon: "📣", description_ar: "المحتوى، الإعلانات، والتواصل المباشر مع القطاعات المستهدفة", description_en: "Content, ads and direct outreach to target sectors" },
+    { category_ar: "التأسيس القانوني والتشغيل", category_en: "Legal & Operations", amount: 1000, icon: "🏛️", description_ar: "تسجيل الكيان وأعمال تشغيلية أخرى (تقدير)", description_en: "Entity registration and other operations (estimate)" },
+    { category_ar: "احتياطي", category_en: "Reserve", amount: 1903, icon: "🛟", description_ar: "احتياطي مالي للطوارئ والفجوات التشغيلية", description_en: "Financial buffer for emergencies and operational gaps" },
+  ].map((b) => ({ ...b, percentage: Math.round((b.amount / USE_OF_FUNDS_TOTAL) * 100) })),
+};
+
+function kpisFromModel(model: any) {
+  return [
+    { label_ar: "الإيراد الشهري (شهر 12)", label_en: "MRR Month 12", value: String(model.mrr12), unit: "SAR", decimals: 0 },
+    { label_ar: "الإيراد الشهري (شهر 36)", label_en: "MRR Month 36", value: String(model.mrr36), unit: "SAR", decimals: 0 },
+    { label_ar: "LTV:CAC", label_en: "LTV:CAC", value: model.ltvCac.toFixed(2), unit: "x", decimals: 1 },
+    { label_ar: "نقطة التعادل", label_en: "Break-even", value: String(model.breakEven ?? 36), unit: "شهر", decimals: 0 },
+    { label_ar: "عملاء (شهر 12)", label_en: "Customers M12", value: String(Math.round(model.proj[11].customers)), unit: "", decimals: 0 },
+    { label_ar: "عملاء (شهر 36)", label_en: "Customers M36", value: String(Math.round(model.proj[35].customers)), unit: "", decimals: 0 },
+  ];
 }
 
 export default function Home() {
@@ -224,7 +249,7 @@ export default function Home() {
         <main className="max-w-7xl mx-auto px-4 py-8">
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: "easeOut" }}>
-              {activeTab === "dashboard" && <DashboardView t={t} lang={lang} />}
+              {activeTab === "dashboard" && <DashboardView t={t} lang={lang} model={model} />}
               {activeTab === "financials" && <FinancialsView fin={fin} setFin={setFin} model={model} t={t} lang={lang} />}
               {activeTab === "business-plan" && <BusinessPlanView t={t} lang={lang} />}
               {activeTab === "sectors" && <SectorsView t={t} lang={lang} />}
@@ -279,20 +304,21 @@ const Badge = ({ children, color = "emerald" }: any) => {
 
 function KpiCard({ kpi, lang, delay }: any) {
   const scale = /K$/i.test(String(kpi.value)) ? 1000 : 1;
-  const { count, ref } = useCounter(parseFloat(kpi.value) * scale, 1500, 0);
-  const override = kpi.label_en === "LTV:CAC" ? "12–19x" : null;
+  const dec = kpi.decimals ?? 0;
+  const { count, ref } = useCounter(parseFloat(kpi.value) * scale, 1500, dec);
   const { fmtSAR } = useMoney();
+  const display = kpi.unit === "SAR" ? fmtSAR(count) : `${count.toFixed(dec)}${kpi.unit === "x" ? "x" : kpi.unit ? " " + kpi.unit : ""}`;
   return (
     <Card delay={delay} className="p-6 text-center">
       <div ref={ref} className="text-3xl md:text-4xl font-bold text-emerald dark:text-gold font-amiri mb-2">
-        {override ?? (kpi.unit === "SAR" ? fmtSAR(count) : `${count.toLocaleString()} ${kpi.unit}`)}
+        {display}
       </div>
       <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">{lang === "ar" ? kpi.label_ar : kpi.label_en}</div>
     </Card>
   );
 }
 
-function DashboardView({ t, lang }: any) {
+function DashboardView({ t, lang, model }: any) {
   return (
     <div className="space-y-8">
       <Card className="p-10 overflow-hidden relative" hover={false}>
@@ -312,7 +338,7 @@ function DashboardView({ t, lang }: any) {
         </div>
       </Card>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {DATA.kpis.map((kpi: any, i: number) => (
+        {kpisFromModel(model).map((kpi: any, i: number) => (
           <KpiCard key={i} kpi={kpi} lang={lang} delay={i * 100} />
         ))}
       </div>
@@ -341,6 +367,12 @@ function DashboardView({ t, lang }: any) {
 
 function FinancialsView({ fin, setFin, model, t, lang }: any) {
   const { ltv, ltvCac, payback, breakEven: be, proj: projectionData } = model;
+  const sumYear = (y: number, key: string) => model.proj.slice((y - 1) * 12, y * 12).reduce((s: number, r: any) => s + r[key], 0);
+  const yearly: any = {
+    y1: { revenue: sumYear(1, "revenue"), costs: sumYear(1, "costs"), profit: sumYear(1, "profit") },
+    y2: { revenue: sumYear(2, "revenue"), costs: sumYear(2, "costs"), profit: sumYear(2, "profit") },
+    y3: { revenue: sumYear(3, "revenue"), costs: sumYear(3, "costs"), profit: sumYear(3, "profit") },
+  };
   const { fmtSAR, fmtUSD, fxSAR } = useMoney();
   const { cur } = useContext(CurrencyContext);
   const COLORS = ["#0F5132", "#D4AF37", "#F97316", "#6B7280", "#1a7a4c", "#b8962e", "#dc2626", "#3b82f6"];
@@ -397,21 +429,21 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
         <Card className="p-6">
           <div className="flex items-center gap-2 mb-4">
             <PieChartIcon size={18} className="text-emerald dark:text-gold" />
-            <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? `توزيع الأموال (${fmtUSD(DATA.financials.useOfFunds.total)})` : `Use of Funds (${fmtUSD(DATA.financials.useOfFunds.total)})`}</h3>
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? `توزيع الأموال (${fmtUSD(USE_OF_FUNDS.total)})` : `Use of Funds (${fmtUSD(USE_OF_FUNDS.total)})`}</h3>
           </div>
           <div className="flex flex-col items-center gap-4">
             <div className="h-64 w-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={DATA.financials.useOfFunds.breakdown.map((b: any) => ({ name: lang === "ar" ? b.category_ar : b.category_en, value: b.percentage }))} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value">
-                    {DATA.financials.useOfFunds.breakdown.map((_: any, i: number) => (<Cell key={i} fill={COLORS[i % COLORS.length]} />))}
+                  <Pie data={USE_OF_FUNDS.breakdown.map((b: any) => ({ name: lang === "ar" ? b.category_ar : b.category_en, value: b.percentage }))} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={2} dataKey="value">
+                    {USE_OF_FUNDS.breakdown.map((_: any, i: number) => (<Cell key={i} fill={COLORS[i % COLORS.length]} />))}
                   </Pie>
                   <RechartsTooltip formatter={(v: any) => [`${v}%`, ""]} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="w-full space-y-2">
-              {DATA.financials.useOfFunds.breakdown.map((item: any, i: number) => (
+              {USE_OF_FUNDS.breakdown.map((item: any, i: number) => (
                 <div key={i} className="flex items-center justify-between text-xs p-3 bg-muted/30 dark:bg-dark-muted/30 rounded-lg border border-border/50">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">{item.icon}</span>
@@ -492,9 +524,9 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
             </thead>
             <tbody>
               {[
-                { label: lang === "ar" ? "الإيراد" : "Revenue", y1: DATA.financials.projections.y1.revenue, y2: DATA.financials.projections.y2.revenue, y3: DATA.financials.projections.y3.revenue },
-                { label: lang === "ar" ? "التكاليف" : "Costs", y1: DATA.financials.projections.y1.costs, y2: DATA.financials.projections.y2.costs, y3: DATA.financials.projections.y3.costs },
-                { label: lang === "ar" ? "صافي الربح" : "Net Profit", y1: DATA.financials.projections.y1.profit, y2: DATA.financials.projections.y2.profit, y3: DATA.financials.projections.y3.profit, highlight: true },
+                { label: lang === "ar" ? "الإيراد" : "Revenue", y1: yearly.y1.revenue, y2: yearly.y2.revenue, y3: yearly.y3.revenue },
+                { label: lang === "ar" ? "التكاليف" : "Costs", y1: yearly.y1.costs, y2: yearly.y2.costs, y3: yearly.y3.costs },
+                { label: lang === "ar" ? "صافي الربح" : "Net Profit", y1: yearly.y1.profit, y2: yearly.y2.profit, y3: yearly.y3.profit, highlight: true },
               ].map((row, i) => (
                 <tr key={i} className={cn("border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors", row.highlight && "bg-emerald/5 dark:bg-emerald/10 font-bold")}>
                   <td className="p-4">{row.label}</td>
@@ -515,7 +547,7 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
           </div>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={["y1", "y2", "y3"].map((k) => ({ year: k.toUpperCase(), revenue: fxSAR((DATA.financials.projections as any)[k].revenue), costs: fxSAR((DATA.financials.projections as any)[k].costs), profit: fxSAR((DATA.financials.projections as any)[k].profit) }))}>
+              <BarChart data={["y1", "y2", "y3"].map((k) => ({ year: k.toUpperCase(), revenue: fxSAR(yearly[k].revenue), costs: fxSAR(yearly[k].costs), profit: fxSAR(yearly[k].profit) }))}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" />
                 <XAxis dataKey="year" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} />
