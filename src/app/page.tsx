@@ -504,6 +504,27 @@ function BotAvatar({ mode = "typing", size = 150 }: any) {
   );
 }
 
+function BotsAround({ children, leftMode = "typing", rightMode = "guard", size = 84 }: any) {
+  return (
+    <div className="relative">
+      <style>{`@keyframes netFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}@keyframes netDash{to{stroke-dashoffset:-40}}`}</style>
+      <div className="flex items-center justify-center gap-3 md:gap-6">
+        <div className="shrink-0 relative">
+          <BotAvatar mode={leftMode} size={size} />
+          <span className="absolute -top-2 -right-4 text-lg" style={{ animation: "netFloat 3s ease-in-out infinite" }}>📄</span>
+          <span className="absolute bottom-2 -left-4 text-lg" style={{ animation: "netFloat 4s ease-in-out 0.8s infinite" }}>📊</span>
+        </div>
+        <div className="flex-1 min-w-0 relative z-10">{children}</div>
+        <div className="shrink-0 relative">
+          <BotAvatar mode={rightMode} size={size} />
+          <span className="absolute -top-2 -left-4 text-lg" style={{ animation: "netFloat 3.5s ease-in-out 0.4s infinite" }}>⚙️</span>
+          <span className="absolute bottom-2 -right-4 text-lg" style={{ animation: "netFloat 4.2s ease-in-out 1.2s infinite" }}>🔗</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function OfficeBot({ lang }: any) {
   const msgs = lang === "ar"
     ? ["✅ تم إرسال الرسالة", "📊 تم تحديث الشيت", "🗂️ تمت أرشفة الفاتورة"]
@@ -1116,11 +1137,11 @@ function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileText} title={t.menu.businessPlan} subtitle={""} />
-      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><PagesStack lang={lang} /></Card>
+      <BotsAround leftMode="typing" rightMode="archive" size={80}><Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><PagesStack lang={lang} /></Card></BotsAround>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">{DATA.businessPlan.length}</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div></Card>
         <Card className="p-4 text-center bg-gold/5 border-gold/20"><div className="text-3xl font-bold text-gold font-amiri">AR + EN</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ثنائي اللغة" : "Bilingual"}</div></Card>
-        <Card className="p-4 text-center bg-accent/5 border-accent/20"><div className="text-3xl font-bold text-accent font-amiri">49+</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ملف استراتيجي" : "Strategic Files"}</div></Card>
+        <Card className="p-4 text-center bg-accent/5 border-accent/20"><div className="text-3xl font-bold text-accent font-amiri">49</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ملف استراتيجي" : "Strategic Files"}</div></Card>
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">100%</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "جاهز للتنفيذ" : "Ready to Execute"}</div></Card>
       </div>
       <div className="space-y-4">
@@ -1172,7 +1193,7 @@ function SectorsView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Target} title={t.menu.sectors} subtitle={""} />
-      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><SectorWheel lang={lang} /></Card>
+      <BotsAround leftMode="typing" rightMode="guard" size={84}><Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><SectorWheel lang={lang} /></Card></BotsAround>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s: any, i: number) => (
           <motion.button key={s.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -6, scale: 1.01 }} onClick={() => setSelected(s)} className={cn("text-right bg-card dark:bg-dark-card rounded-2xl border shadow-card overflow-hidden transition-all", s.status === "active" ? "border-emerald/40 dark:border-emerald/60 shadow-glow" : "border-border dark:border-dark-border")}>
@@ -1279,8 +1300,8 @@ function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={AlertTriangle} title={t.menu.risks} subtitle={""} />
-      <Card className="p-6"><HangingWeight lang={lang} /></Card>
-      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><RiskHeatmap lang={lang} /></Card>
+      <BotsAround leftMode="guard" rightMode="typing" size={80}><Card className="p-6"><HangingWeight lang={lang} /></Card></BotsAround>
+      <BotsAround leftMode="typing" rightMode="archive" size={80}><Card className="p-5 [&_svg]:max-h-56 [&_svg]:w-auto [&_svg]:mx-auto"><RiskHeatmap lang={lang} /></Card></BotsAround>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {DATA.risks.map((risk: any, i: number) => (
           <Card key={i} delay={i * 50} className="p-8 min-h-[260px] border-2 hover:border-gold/60">
@@ -1310,6 +1331,7 @@ function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
+      <div className="flex justify-center"><BotAvatar mode="typing" size={120} /></div>
       <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><IsoBlocks lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
@@ -1501,7 +1523,6 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
-      <div className="flex justify-center"><BotAvatar mode="present" size={120} /></div>
       <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><GrowthBars lang={lang} /></Card>
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
@@ -1558,47 +1579,90 @@ const DR_CATS = [
   { ar: "مواد داخلية", en: "Internal Materials", color: "#6b7280", icon: "🗂️" },
 ];
 
+const DR_DOCS: [string, string][] = [
+  ["ONE PAGER", "shared"],
+  ["PITCH DECK", "shared"],
+  ["MARKET SIZING", "shared"],
+  ["MARKET POSITIONING", "shared"],
+  ["COMPETITOR INTELLIGENCE", "shared"],
+  ["CUSTOMER PERSONAS", "shared"],
+  ["SERVICES OFFERS", "shared"],
+  ["PRICING VALIDATION", "shared"],
+  ["FOUNDER PROFILE", "shared"],
+  ["BRAND IDENTITY", "shared"],
+  ["LANDING PAGE COPY", "shared"],
+  ["GLOSSARY", "shared"],
+  ["DATA ROOM INDEX", "shared"],
+  ["PROJECT TRUTH", "shared"],
+  ["HARDWARE SPECIFICATIONS", "shared"],
+  ["DELIVERY PROCESS", "shared"],
+  ["SALES PROCESS", "shared"],
+  ["SOURCE REGISTER", "shared"],
+  ["MAIN WEBSITE SPECIFICATION", "shared"],
+  ["CAP TABLE", "nda"],
+  ["INVESTOR STRUCTURE", "nda"],
+  ["MUDARABAH AGREEMENT", "nda"],
+  ["NDA TEMPLATE", "nda"],
+  ["MSA TEMPLATE", "nda"],
+  ["SOW TEMPLATE", "nda"],
+  ["SLA TEMPLATE", "nda"],
+  ["DPA TEMPLATE", "nda"],
+  ["PARTNER AGREEMENT", "nda"],
+  ["SUPPORT SLA", "nda"],
+  ["SECURITY PROTOCOL", "nda"],
+  ["ATTACK SIMULATIONS", "nda"],
+  ["HALLUCINATION TESTS", "nda"],
+  ["QUALITY CONTROL", "nda"],
+  ["TEST CASES", "nda"],
+  ["SOPS LIBRARY", "nda"],
+  ["SALES SCRIPTS", "nda"],
+  ["EMAIL TEMPLATES", "nda"],
+  ["INTERVIEW PROTOCOL", "nda"],
+  ["DR SEEN IDENTITY", "nda"],
+  ["ASSUMPTIONS AND GAPS", "internal"],
+  ["CHANGELOG", "internal"],
+  ["DECISION LOG", "internal"],
+  ["FIRST FIVE CLIENTS", "internal"],
+  ["HANDOVER SUMMARY", "internal"],
+  ["LATEST SESSION", "internal"],
+  ["MASTER INDEX", "internal"],
+  ["NEW AGENT SYSTEM PROMPT", "internal"],
+  ["OPERATIONAL COMMANDS", "internal"],
+  ["SESSION MEMORY ARCHIVE", "internal"]
+];
+const DR_CAT: any = {
+  shared: { ar: "مشترك مع المستثمر", en: "Shared with investors", color: "#16a34a", icon: "📂" },
+  nda: { ar: "متاح بعد NDA", en: "Available after NDA", color: "#dc2626", icon: "⚖️" },
+  internal: { ar: "داخلي غير مشترك", en: "Internal, not shared", color: "#6b7280", icon: "🗂️" },
+};
+
 function DataRoomCards({ lang }: any) {
   const [open, setOpen] = useState<number | null>(null);
-  const cats = [
-    { c: DR_CATS[0], n: 19, body: ["ONE PAGER", "PITCH DECK", "MARKET SIZING", "COMPETITOR INTELLIGENCE", "SERVICES OFFERS", "PRICING VALIDATION", "FOUNDER PROFILE", "HARDWARE SPECIFICATIONS", "DELIVERY PROCESS"] },
-    { c: DR_CATS[1], n: 10, body: ["CAP TABLE", "INVESTOR STRUCTURE", "MUDARABAH AGREEMENT", "NDA TEMPLATE", "MSA TEMPLATE", "SOW TEMPLATE", "SLA TEMPLATE", "DPA TEMPLATE", "PARTNER AGREEMENT", "SUPPORT SLA"] },
-    { c: DR_CATS[2], n: 6, body: ["SOPS LIBRARY", "QUALITY CONTROL", "INTERVIEW PROTOCOL", "SALES PROCESS", "TEST CASES", "OPERATIONAL COMMANDS"] },
-    { c: DR_CATS[3], n: 4, body: [lang === "ar" ? "متاحة بعد NDA فقط" : "Available after NDA only"] },
-    { c: DR_CATS[4], n: 4, body: ["SALES SCRIPTS", "EMAIL TEMPLATES", "LANDING PAGE COPY", "BRAND IDENTITY"] },
-    { c: DR_CATS[5], n: 10, body: [lang === "ar" ? "غير مشتركة مع المستثمرين" : "Not shared with investors"] },
-  ];
-  const sel = open !== null ? cats[open] : null;
+  const sel: any = open !== null ? DR_DOCS[open] : null;
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-        {cats.map((x, i) => (
-          <motion.button key={i} onClick={() => setOpen(i)} whileHover={{ y: -6, scale: 1.03 }} whileTap={{ scale: 0.97 }}
-            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
-            className="relative p-6 rounded-2xl text-white text-right shadow-lg overflow-hidden" style={{ background: x.c.color }}>
-            <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-white/10" />
-            <div className="absolute -bottom-8 -right-4 w-20 h-20 rounded-full bg-white/10" />
-            <div className="relative text-3xl">{x.c.icon}</div>
-            <div className="relative mt-3 font-bold text-lg">{lang === "ar" ? x.c.ar : x.c.en}</div>
-            <div className="relative text-xs opacity-80 mt-1">{lang === "ar" ? "اضغط للاطلاع" : "Tap to view"}</div>
-            <div className="relative text-sm opacity-90 mt-1">{x.n} {lang === "ar" ? "ملف" : "files"}</div>
-          </motion.button>
-        ))}
-      </div>
+      <BotsAround leftMode="archive" rightMode="typing" size={84}>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {DR_DOCS.map(([name, cat], i) => (
+            <motion.button key={i} onClick={() => setOpen(i)} whileHover={{ y: -4, scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 8) * 0.03 }}
+              className="p-3 rounded-xl text-white text-right shadow-md min-h-[64px]" style={{ background: DR_CAT[cat].color }}>
+              <div className="text-[10px] opacity-80">{lang === "ar" ? DR_CAT[cat].ar : DR_CAT[cat].en}</div>
+              <div className="text-xs font-bold leading-snug mt-1">{name}</div>
+            </motion.button>
+          ))}
+        </div>
+      </BotsAround>
       <AnimatePresence>
         {sel && (
           <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4" onClick={() => setOpen(null)}>
-            <motion.div initial={{ scale: 0.8, opacity: 0, y: 30 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.8, opacity: 0 }} transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden" style={{ background: sel.c.color }}>
-              <div className="text-4xl mb-2">{sel.c.icon}</div>
-              <h3 className="text-2xl font-bold mb-1">{lang === "ar" ? sel.c.ar : sel.c.en}</h3>
-              <p className="text-sm opacity-90 mb-4">{sel.n} {lang === "ar" ? "ملف" : "files"}</p>
-              <div className="flex flex-wrap gap-2">
-                {sel.body.map((b, k) => (
-                  <motion.span key={k} initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 * k }} className="px-3 py-1.5 rounded-lg bg-white/20 text-xs font-semibold">{b}</motion.span>
-                ))}
-              </div>
-              <button onClick={() => setOpen(null)} className="mt-6 px-5 py-2 rounded-xl bg-white text-black font-bold text-sm">{lang === "ar" ? "إغلاق" : "Close"}</button>
+            <motion.div initial={{ scale: 0.85, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.85, opacity: 0 }} transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl p-7 text-white shadow-2xl" style={{ background: DR_CAT[sel[1]].color }}>
+              <div className="text-3xl mb-2">{DR_CAT[sel[1]].icon}</div>
+              <h3 className="text-xl font-bold mb-1 break-words">{sel[0]}</h3>
+              <p className="text-sm opacity-90 mb-3">{lang === "ar" ? DR_CAT[sel[1]].ar : DR_CAT[sel[1]].en}</p>
+              <p className="text-sm opacity-90 leading-relaxed">{lang === "ar" ? "ملف مفهرس في غرفة البيانات. التفاصيل تُتاح حسب مستوى الوصول المحدد." : "Indexed data room document. Details are shared according to the required access level."}</p>
+              <button onClick={() => setOpen(null)} className="mt-5 px-5 py-2 rounded-xl bg-white text-black font-bold text-sm">{lang === "ar" ? "إغلاق" : "Close"}</button>
             </motion.div>
           </motion.div>
         )}
