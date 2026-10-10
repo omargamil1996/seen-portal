@@ -9,6 +9,16 @@ export const translations = {
     },
     actions: { explore: "استكشف", download: "تحميل", viewDetails: "عرض التفاصيل", collaborate: "تعاون معنا", startReview: "ابدأ المراجعة", requestAccess: "طلب وصول", contactUs: "تواصل معنا" },
   },
+  ms: {
+    common: { livePlan: "Pelan Langsung", investorBriefcase: "Fail Pelabur", tagline: "Automasi. Peningkatan. Halal.", preSeed: "Pra-Benih", investmentReady: "Sedia untuk Pelaburan" },
+    menu: { dashboard: "Papan Pemuka", financials: "Model Kewangan", businessPlan: "Pelan Perniagaan", sectors: "Sektor", roadmap: "Perjalanan Projek", risks: "Risiko", hardware: "Stesen Kerja", theAsk: "Permintaan Pelaburan", dataRoom: "Bilik Data", team: "Pasukan", security: "Keselamatan", settings: "Tetapan" },
+    briefcases: {
+      investorKit: { title: "Fail Pelabur", subtitle: "Kit Pitching Pelabur", description: "Koleksi dokumen dan data yang direka khas untuk meyakinkan pelabur dan memberi gambaran penuh tentang peluang pelaburan.", cta: "Terokai fail", items: ["Dek Pitching", "Model Kewangan", "Pelan Perniagaan", "Analisis Pasaran"] },
+      dueDiligence: { title: "Dokumen Sedia Pelaburan", subtitle: "Dokumentasi Sedia Pelaburan", description: "Semua dokumen undang-undang dan kewangan sedia untuk semakan Due Diligence, tanpa permintaan tambahan.", cta: "Mula semakan", items: ["NDA", "MSA", "SOW", "SLA", "DPA"] },
+      portfolio: { title: "Profil Perniagaan Menyeluruh", subtitle: "Portfolio Perniagaan Menyeluruh", description: "Gambaran lengkap tentang cerita, visi, pasukan dan peluang, semua dalam satu tempat.", cta: "Baca cerita penuh", items: ["Cerita", "Visi", "Pasukan", "Peluang"] },
+    },
+    actions: { explore: "Terokai", download: "Muat turun", viewDetails: "Lihat butiran", collaborate: "Bekerjasama", startReview: "Mula semakan", requestAccess: "Minta akses", contactUs: "Hubungi kami" },
+  },
   en: {
     common: { livePlan: "Live Plan", investorBriefcase: "Investor Briefcase", tagline: "Automate. Elevate. Halal.", preSeed: "Pre-Seed", investmentReady: "Investment-Ready" },
     menu: { dashboard: "Dashboard", financials: "Financial Model", businessPlan: "Business Plan", sectors: "Sectors", roadmap: "Journey", risks: "Risks", hardware: "Workstation", theAsk: "The Ask", dataRoom: "Data Room", team: "Team", security: "Security", settings: "Settings" },

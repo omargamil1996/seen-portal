@@ -305,8 +305,8 @@ export default function Home() {
               <button onClick={() => setDark(!dark)} className="p-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted transition-all">
                 {dark ? <Sun size={18} className="text-gold" /> : <Moon size={18} className="text-emerald" />}
               </button>
-              <button onClick={() => setLang(lang === "ar" ? "en" : "ar")} className="px-4 py-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted text-sm font-semibold flex items-center gap-2 transition-all">
-                <Globe size={14} /> {lang === "ar" ? "EN" : "عربي"}
+              <button onClick={() => setLang(lang === "ar" ? "en" : lang === "en" ? "ms" : "ar")} className="px-4 py-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted text-sm font-semibold flex items-center gap-2 transition-all">
+                <Globe size={14} /> {lang === "ar" ? "EN" : lang === "en" ? "BM" : "عربي"}
               </button>
             </div>
           </div>
@@ -2145,6 +2145,7 @@ function SettingsView({ t, lang, dark, setDark, setLang }: any) {
           <div className="flex gap-2">
             <button onClick={() => setLang("ar")} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", lang === "ar" ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>العربية</button>
             <button onClick={() => setLang("en")} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", lang === "en" ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>English</button>
+            <button onClick={() => setLang("ms")} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", lang === "ms" ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>Bahasa Melayu</button>
           </div>
         </Card>
         <Card className="p-6">
