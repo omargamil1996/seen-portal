@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer,
-  AreaChart, Area, PieChart, Pie, Cell
+  AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar, Legend
 } from "recharts";
 import { SankeyChart, TreemapChart, SunburstChart, RadarChart, BubbleChart, GanttChart, ChordDiagram } from "@/components/AdvancedCharts";
 
@@ -79,7 +79,6 @@ export default function Home() {
     { id: "data-room", label: t.menu.dataRoom, icon: Briefcase },
     { id: "team", label: t.menu.team, icon: Users },
     { id: "security", label: t.menu.security, icon: Shield },
-    { id: "advanced-analytics", label: lang === "ar" ? "التحليلات المتقدمة" : "Advanced Analytics", icon: BarChart3 },
     { id: "settings", label: t.menu.settings, icon: Settings },
   ];
   return (
@@ -130,7 +129,6 @@ export default function Home() {
               {activeTab === "data-room" && <DataRoomView t={t} lang={lang} />}
               {activeTab === "team" && <TeamView t={t} lang={lang} />}
               {activeTab === "security" && <SecurityView t={t} lang={lang} />}
-              {activeTab === "advanced-analytics" && <AdvancedAnalyticsView t={t} lang={lang} />}
               {activeTab === "settings" && <SettingsView t={t} lang={lang} dark={dark} setDark={setDark} setLang={setLang} />}
             </motion.div>
           </AnimatePresence>
@@ -173,10 +171,14 @@ const Badge = ({ children, color = "emerald" }: any) => {
 };
 
 function KpiCard({ kpi, lang, delay }: any) {
-  const { count, ref } = useCounter(parseFloat(kpi.value), 1500, 0);
+  const scale = /K$/i.test(String(kpi.value)) ? 1000 : 1;
+  const { count, ref } = useCounter(parseFloat(kpi.value) * scale, 1500, 0);
+  const override = kpi.label_en === "LTV:CAC" ? "12–19x" : null;
   return (
     <Card delay={delay} className="p-6 text-center">
-      <div ref={ref} className="text-3xl md:text-4xl font-bold text-emerald dark:text-gold font-amiri mb-2">{count}{kpi.unit}</div>
+      <div ref={ref} className="text-3xl md:text-4xl font-bold text-emerald dark:text-gold font-amiri mb-2">
+        {override ?? `${count.toLocaleString()} ${kpi.unit}`}
+      </div>
       <div className="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-medium">{lang === "ar" ? kpi.label_ar : kpi.label_en}</div>
     </Card>
   );
@@ -386,6 +388,35 @@ function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData,
           </table>
         </div>
       </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart3 size={18} className="text-emerald dark:text-gold" />
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "الإيراد والتكاليف والربح (Y1–Y3)" : "Revenue, Costs & Profit (Y1–Y3)"}</h3>
+          </div>
+          <div className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={["y1", "y2", "y3"].map((k) => ({ year: k.toUpperCase(), revenue: (DATA.financials.projections as any)[k].revenue, costs: (DATA.financials.projections as any)[k].costs, profit: (DATA.financials.projections as any)[k].profit }))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" />
+                <XAxis dataKey="year" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <RechartsTooltip />
+                <Legend />
+                <Bar dataKey="revenue" name={lang === "ar" ? "الإيراد" : "Revenue"} fill="#0F5132" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="costs" name={lang === "ar" ? "التكاليف" : "Costs"} fill="#6B7280" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="profit" name={lang === "ar" ? "صافي الربح" : "Net Profit"} fill="#D4AF37" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+        <Card className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp size={18} className="text-emerald dark:text-gold" />
+            <h3 className="text-lg font-bold text-emerald dark:text-gold">{lang === "ar" ? "تدفق الإيرادات (Sankey)" : "Revenue Flow (Sankey)"}</h3>
+          </div>
+          <SankeyChart lang={lang} />
+        </Card>
+      </div>
     </div>
   );
 }
@@ -458,6 +489,10 @@ function SectorsView({ t, lang }: any) {
           </motion.button>
         ))}
       </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6"><BubbleChart lang={lang} /></Card>
+        <Card className="p-6"><ChordDiagram lang={lang} /></Card>
+      </div>
       {selected && <SectorModal sector={selected} lang={lang} onClose={() => setSelected(null)} />}
     </div>
   );
@@ -489,6 +524,7 @@ function RoadmapView({ t, lang }: any) {
           ))}
         </div>
       </div>
+      <Card className="p-6"><GanttChart lang={lang} /></Card>
     </div>
   );
 }
@@ -515,6 +551,7 @@ function RisksView({ t, lang }: any) {
           </Card>
         ))}
       </div>
+      <Card className="p-6"><SunburstChart lang={lang} /></Card>
     </div>
   );
 }
@@ -578,6 +615,106 @@ function HardwareView({ t, lang }: any) {
           </table>
         </div>
       </Card>
+      <Card className="p-6">
+        <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "مقارنة أسعار Mini PC" : "Mini PC Price Range"}</h3>
+        <PriceRangeChart items={DATA.hardware.minipc} />
+        <div className="mt-6"><TreemapChart lang={lang} /></div>
+      </Card>
+
+      <Card className="overflow-hidden">
+        <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-emerald/5 to-transparent">
+          <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><Cpu size={18} /> {lang === "ar" ? "اللابتوبات: المنافسون والفئات" : "Laptops: Competitors & Categories"}</h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50 dark:bg-dark-muted/50">
+              <tr><th className="p-4 text-right">{lang === "ar" ? "الفئة" : "Category"}</th><th className="p-4 text-right">{lang === "ar" ? "المواصفات" : "Specs"}</th><th className="p-4 text-right">{lang === "ar" ? "السعر" : "Price"}</th><th className="p-4 text-right">AI</th></tr>
+            </thead>
+            <tbody>
+              {DATA.hardware.laptops.map((l: any, i: number) => {
+                const isSelected = l.category.includes("Unified");
+                return (
+                  <tr key={i} className={cn("border-b border-border/50 dark:border-dark-border/50 hover:bg-muted/20 transition-colors", isSelected && "bg-gold/10 font-bold")}>
+                    <td className="p-4 font-semibold text-emerald dark:text-gold">{l.category}</td>
+                    <td className="p-4 text-gray-600 dark:text-gray-400">{l.specs}</td>
+                    <td className="p-4 text-accent font-bold">{l.price}</td>
+                    <td className="p-4">{l.ai}</td>
+                  </tr>
+                );
+              })}
+              <tr className="bg-gold/10 font-bold">
+                <td className="p-4 text-gold-dark dark:text-gold">{lang === "ar" ? "المختار" : "Selected"}</td>
+                <td className="p-4">{DATA.hardware.scenario.laptop}</td>
+                <td className="p-4 text-accent">${DATA.hardware.scenario.laptop_price.toLocaleString()}</td>
+                <td className="p-4">70B-120B</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="p-6">
+          <PriceRangeChart items={DATA.hardware.laptops} />
+          <div className="mt-6"><RadarChart lang={lang} /></div>
+        </div>
+      </Card>
+
+      <Card className="overflow-hidden">
+        <div className="p-4 border-b border-border dark:border-dark-border bg-gradient-to-l from-emerald/5 to-transparent">
+          <h3 className="font-bold text-emerald dark:text-gold flex items-center gap-2"><Layers size={18} /> {lang === "ar" ? "الشاشات والإكسسوارات" : "Displays & Accessories"}</h3>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50 dark:bg-dark-muted/50">
+              <tr><th className="p-4 text-right">{lang === "ar" ? "البند" : "Item"}</th><th className="p-4 text-right">{lang === "ar" ? "السعر" : "Price"}</th></tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-border/50 dark:border-dark-border/50">
+                <td className="p-4 font-semibold text-emerald dark:text-gold">{lang === "ar" ? DATA.hardware.scenario.accessories : DATA.hardware.scenario.accessories_en}</td>
+                <td className="p-4 text-accent font-bold">${DATA.hardware.scenario.accessories_price.toLocaleString()}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div className="p-6">
+          <div className="h-72 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={[
+                { name: lang === "ar" ? "اللابتوب" : "Laptop", value: DATA.hardware.scenario.laptop_price },
+                { name: "Mini PC", value: DATA.hardware.scenario.minipc_price },
+                { name: lang === "ar" ? "الإكسسوارات" : "Accessories", value: DATA.hardware.scenario.accessories_price },
+                { name: lang === "ar" ? "المتبقي" : "Remaining", value: DATA.hardware.scenario.remaining },
+              ]}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <RechartsTooltip />
+                <Bar dataKey="value" name="USD" fill="#0F5132" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+const parseLow = (s: string) => parseFloat(s.split("-")[0].replace(/[^0-9.]/g, "")) || 0;
+const parseHigh = (s: string) => { const p = s.split("-"); return parseFloat((p[1] ?? p[0]).replace(/[^0-9.]/g, "")) || 0; };
+
+function PriceRangeChart({ items }: any) {
+  const data = items.map((i: any) => ({ name: String(i.category).replace(/⭐/g, "").trim(), min: parseLow(i.price), max: parseHigh(i.price) }));
+  return (
+    <div className="h-72 w-full">
+      <ResponsiveContainer width="100%" height="100%">
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" />
+          <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+          <YAxis tick={{ fontSize: 12 }} />
+          <RechartsTooltip />
+          <Legend />
+          <Bar dataKey="min" name="Min USD" fill="#0F5132" radius={[6, 6, 0, 0]} />
+          <Bar dataKey="max" name="Max USD" fill="#D4AF37" radius={[6, 6, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }
@@ -655,15 +792,22 @@ function DataRoomView({ t, lang }: any) {
 }
 
 function TeamView({ t, lang }: any) {
+  const stats = [
+    { key: "years", label: lang === "ar" ? "سنوات خبرة" : "Years Exp", value: 5 },
+    { key: "files", label: lang === "ar" ? "ملف" : "Files", value: 49 },
+    { key: "attacks", label: lang === "ar" ? "هجمة" : "Attacks", value: 25 },
+    { key: "sectors", label: lang === "ar" ? "قطاعات" : "Sectors", value: 5 },
+  ];
+  const [active, setActive] = useState<string>("files");
+  const activeStat = stats.find((s) => s.key === active) ?? stats[0];
   return (
     <div className="space-y-6">
-      <SectionHeader icon={Users} title={t.menu.team} subtitle={""} />
+      <SectionHeader icon={Users} title={t.menu.team} subtitle="" />
       <Card className="p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
           <div className="shrink-0 relative">
             <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-emerald via-emerald-dark to-gold flex items-center justify-center text-white text-6xl font-amiri font-bold shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 opacity-30" />
               <span className="relative z-10">{DATA.company.founder.name[0]}</span>
             </div>
             <div className="absolute -bottom-2 -right-2 w-14 h-14 rounded-full bg-gold flex items-center justify-center text-2xl shadow-lg border-4 border-card dark:border-dark-card">⭐</div>
@@ -677,14 +821,34 @@ function TeamView({ t, lang }: any) {
             <p className="text-xl text-accent font-bold mb-4">{lang === "ar" ? DATA.company.founder.role_ar : DATA.company.founder.role_en}</p>
             <p className="text-gray-700 dark:text-gray-300 leading-[1.9] text-base mb-6">{lang === "ar" ? DATA.company.founder.bio_ar : DATA.company.founder.bio_en}</p>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-emerald font-amiri">5+</div><div className="text-xs text-gray-500">{lang === "ar" ? "سنوات خبرة" : "Years Exp"}</div></div>
-              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-gold font-amiri">49</div><div className="text-xs text-gray-500">{lang === "ar" ? "ملف" : "Files"}</div></div>
-              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-accent font-amiri">25</div><div className="text-xs text-gray-500">{lang === "ar" ? "هجمة" : "Attacks"}</div></div>
-              <div className="bg-muted/50 dark:bg-dark-muted/50 p-3 rounded-xl text-center"><div className="text-2xl font-bold text-emerald font-amiri">5</div><div className="text-xs text-gray-500">{lang === "ar" ? "قطاعات" : "Sectors"}</div></div>
+              {stats.map((s) => (
+                <button key={s.key} onClick={() => setActive(s.key)} className={cn("p-3 rounded-xl text-center transition-all border", active === s.key ? "bg-emerald text-white border-gold shadow-md scale-105" : "bg-muted/50 dark:bg-dark-muted/50 border-transparent hover:border-emerald/40")}>
+                  <div className="text-2xl font-bold font-amiri">{s.value}{s.key === "years" ? "+" : ""}</div>
+                  <div className="text-xs opacity-80">{s.label}</div>
+                </button>
+              ))}
             </div>
+            <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">{activeStat.label}: <span className="font-bold text-emerald dark:text-gold">{activeStat.value}</span></div>
           </div>
         </div>
       </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="p-6">
+          <h3 className="font-bold text-emerald dark:text-gold mb-4">{lang === "ar" ? "أرقام المؤسس" : "Founder Metrics"}</h3>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={stats.map((s) => ({ name: s.label, value: s.value }))}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#E7E5E4" />
+                <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 12 }} />
+                <RechartsTooltip />
+                <Bar dataKey="value" fill="#0F5132" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
+        <Card className="p-6"><RadarChart lang={lang} /></Card>
+      </div>
     </div>
   );
 }
