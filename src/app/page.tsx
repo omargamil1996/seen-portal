@@ -296,7 +296,7 @@ export default function Home() {
               <div>
                 <h1 className="text-lg font-bold text-emerald dark:text-gold font-amiri">
                   {lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}
-                  <span className="text-xs bg-emerald/10 text-emerald px-2 py-1 rounded-full ml-2">V5.2.0</span>
+                  <span className="text-xs bg-emerald/10 text-emerald px-2 py-1 rounded-full ml-2">V5.3.0</span>
                 </h1>
                 <p className="text-xs text-gray-500">{t.common.investorBriefcase}</p>
               </div>
