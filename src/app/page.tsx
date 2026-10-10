@@ -461,10 +461,10 @@ function OfficeBot({ lang }: any) {
 
         {msgs.map((m, i) => (
           <g key={i}>
-            <rect x="150" y="30" width="170" height="36" rx="10" fill="#F5F5F4" stroke="#D4AF37" strokeWidth="2" opacity="0">
+            <rect x="30" y="30" width="180" height="36" rx="10" fill="#F5F5F4" stroke="#D4AF37" strokeWidth="2" opacity="0">
               <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.4;0.5;1" dur="6s" begin={`${i * 2}s`} repeatCount="indefinite" />
             </rect>
-            <text x="235" y="53" textAnchor="middle" fontSize="13" fill="#0F5132" opacity="0">{m}
+            <text x="120" y="53" textAnchor="middle" fontSize="13" fill="#0F5132" opacity="0">{m}
               <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.4;0.5;1" dur="6s" begin={`${i * 2}s`} repeatCount="indefinite" />
             </text>
           </g>
@@ -765,7 +765,7 @@ const SECTOR_LANES = [
 
 function SectorAutomationPanel({ sector, lang }: any) {
   return (
-    <Card className="p-6 space-y-6" hover={false}>
+    <Card className="p-6 space-y-4 [&_svg]:max-h-24 [&_svg]:w-auto" hover={false}>
       <h3 className="text-xl font-bold text-emerald dark:text-gold">{lang === "ar" ? `أتمتة قطاع: ${sector.name_ar}` : `Automation for: ${sector.name_en}`}</h3>
       {SECTOR_LANES.map((lane, i) => {
         const title = lang === "ar" ? lane.ar : lane.en;
@@ -850,8 +850,8 @@ function DashboardView({ t, lang, model }: any) {
           : "These figures represent the conservative scenario (the floor). Actual returns may be higher with clients paying larger setup fees. The financial model is fully open for adjusting every input."}
       </Card>
       <div className="grid md:grid-cols-2 gap-4">
-        <Card className="p-6"><TickerRail lang={lang} /></Card>
-        <Card className="p-6"><Heartbeat lang={lang} /></Card>
+        <Card className="p-5 [&_svg]:max-h-60 [&_svg]:w-auto [&_svg]:mx-auto"><TickerRail lang={lang} /></Card>
+        <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Heartbeat lang={lang} /></Card>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {kpisFromModel(model).map((kpi: any, i: number) => (
@@ -1102,7 +1102,7 @@ function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileText} title={t.menu.businessPlan} subtitle={""} />
-      <Card className="p-6"><PagesStack lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><PagesStack lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">{DATA.businessPlan.length}</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div></Card>
         <Card className="p-4 text-center bg-gold/5 border-gold/20"><div className="text-3xl font-bold text-gold font-amiri">AR + EN</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "ثنائي اللغة" : "Bilingual"}</div></Card>
@@ -1158,7 +1158,7 @@ function SectorsView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Target} title={t.menu.sectors} subtitle={""} />
-      <Card className="p-6"><SectorWheel lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><SectorWheel lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s: any, i: number) => (
           <motion.button key={s.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }} whileHover={{ y: -6, scale: 1.01 }} onClick={() => setSelected(s)} className={cn("text-right bg-card dark:bg-dark-card rounded-2xl border shadow-card overflow-hidden transition-all", s.status === "active" ? "border-emerald/40 dark:border-emerald/60 shadow-glow" : "border-border dark:border-dark-border")}>
@@ -1202,7 +1202,7 @@ function RoadmapView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle={""} />
-      <Card className="p-6"><TimelineWave stages={lang === "ar" ? ["فكرة", "عتاد", "إطلاق", "أول عميل", "توسع"] : ["Idea", "Hardware", "Launch", "First client", "Scale"]} lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><TimelineWave stages={lang === "ar" ? ["فكرة", "عتاد", "إطلاق", "أول عميل", "توسع"] : ["Idea", "Hardware", "Launch", "First client", "Scale"]} lang={lang} /></Card>
       <div className="relative">
         <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
         <div className="space-y-6">
@@ -1266,7 +1266,7 @@ function RisksView({ t, lang }: any) {
     <div className="space-y-6">
       <SectionHeader icon={AlertTriangle} title={t.menu.risks} subtitle={""} />
       <Card className="p-6"><HangingWeight lang={lang} /></Card>
-      <Card className="p-6"><RiskHeatmap lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><RiskHeatmap lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {DATA.risks.map((risk: any, i: number) => (
           <Card key={i} delay={i * 50} className="p-8 min-h-[260px] border-2 hover:border-gold/60">
@@ -1296,7 +1296,7 @@ function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
-      <Card className="p-6"><IsoBlocks lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><IsoBlocks lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
         <div className="relative z-10 text-white">
@@ -1487,7 +1487,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
-      <Card className="p-6"><GrowthBars lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><GrowthBars lang={lang} /></Card>
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
           <div className="flex items-center gap-3">
@@ -1529,12 +1529,75 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   );
 }
 
+const DR_GROUPS = [
+  { key: "shared", ar: "ملفات مشتركة", en: "Shared documents", color: "#2563eb", count: 19, items: ["ONE PAGER", "PITCH DECK", "MARKET SIZING", "MARKET POSITIONING", "COMPETITOR INTELLIGENCE", "CUSTOMER PERSONAS", "SERVICES OFFERS", "PRICING VALIDATION", "FOUNDER PROFILE", "BRAND IDENTITY", "LANDING PAGE COPY", "GLOSSARY", "DATA ROOM INDEX", "PROJECT TRUTH", "HARDWARE SPECIFICATIONS", "DELIVERY PROCESS", "SALES PROCESS", "SOURCE REGISTER", "MAIN WEBSITE SPECIFICATION"] },
+  { key: "nda", ar: "قانوني ومالي (بعد NDA)", en: "Legal & financial (after NDA)", color: "#dc2626", count: 20, items: [] },
+  { key: "internal", ar: "داخلي غير مشترك", en: "Internal, not shared", color: "#6b7280", count: 10, items: [] },
+];
+const DR_CATS = [
+  { ar: "مستندات المستثمر", en: "Investor Documents", color: "#16a34a", icon: "📂" },
+  { ar: "القانوني والمالي", en: "Legal & Finance", color: "#dc2626", icon: "⚖️" },
+  { ar: "العمليات والجودة", en: "Operations & Quality", color: "#2563eb", icon: "⚙️" },
+  { ar: "الأمن (مقيّد)", en: "Security (Restricted)", color: "#7c3aed", icon: "🛡️" },
+  { ar: "التسويق والمبيعات", en: "Sales & Marketing", color: "#f97316", icon: "📣" },
+  { ar: "مواد داخلية", en: "Internal Materials", color: "#6b7280", icon: "🗂️" },
+];
+
+function DataRoomCards({ lang }: any) {
+  const [open, setOpen] = useState<number | null>(null);
+  const cats = [
+    { c: DR_CATS[0], n: 19, body: ["ONE PAGER", "PITCH DECK", "MARKET SIZING", "COMPETITOR INTELLIGENCE", "SERVICES OFFERS", "PRICING VALIDATION", "FOUNDER PROFILE", "HARDWARE SPECIFICATIONS", "DELIVERY PROCESS"] },
+    { c: DR_CATS[1], n: 10, body: ["CAP TABLE", "INVESTOR STRUCTURE", "MUDARABAH AGREEMENT", "NDA TEMPLATE", "MSA TEMPLATE", "SOW TEMPLATE", "SLA TEMPLATE", "DPA TEMPLATE", "PARTNER AGREEMENT", "SUPPORT SLA"] },
+    { c: DR_CATS[2], n: 6, body: ["SOPS LIBRARY", "QUALITY CONTROL", "INTERVIEW PROTOCOL", "SALES PROCESS", "TEST CASES", "OPERATIONAL COMMANDS"] },
+    { c: DR_CATS[3], n: 4, body: [lang === "ar" ? "متاحة بعد NDA فقط" : "Available after NDA only"] },
+    { c: DR_CATS[4], n: 4, body: ["SALES SCRIPTS", "EMAIL TEMPLATES", "LANDING PAGE COPY", "BRAND IDENTITY"] },
+    { c: DR_CATS[5], n: 10, body: [lang === "ar" ? "غير مشتركة مع المستثمرين" : "Not shared with investors"] },
+  ];
+  const sel = open !== null ? cats[open] : null;
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {cats.map((x, i) => (
+          <motion.button key={i} onClick={() => setOpen(i)} whileHover={{ y: -6, scale: 1.03 }} whileTap={{ scale: 0.97 }}
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}
+            className="relative p-6 rounded-2xl text-white text-right shadow-lg overflow-hidden" style={{ background: x.c.color }}>
+            <div className="absolute -top-6 -left-6 w-24 h-24 rounded-full bg-white/10" />
+            <div className="absolute -bottom-8 -right-4 w-20 h-20 rounded-full bg-white/10" />
+            <div className="relative text-3xl">{x.c.icon}</div>
+            <div className="relative mt-3 font-bold text-lg">{lang === "ar" ? x.c.ar : x.c.en}</div>
+            <div className="relative text-xs opacity-80 mt-1">{lang === "ar" ? "اضغط للاطلاع" : "Tap to view"}</div>
+            <div className="relative text-sm opacity-90 mt-1">{x.n} {lang === "ar" ? "ملف" : "files"}</div>
+          </motion.button>
+        ))}
+      </div>
+      <AnimatePresence>
+        {sel && (
+          <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center p-4" onClick={() => setOpen(null)}>
+            <motion.div initial={{ scale: 0.8, opacity: 0, y: 30 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.8, opacity: 0 }} transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden" style={{ background: sel.c.color }}>
+              <div className="text-4xl mb-2">{sel.c.icon}</div>
+              <h3 className="text-2xl font-bold mb-1">{lang === "ar" ? sel.c.ar : sel.c.en}</h3>
+              <p className="text-sm opacity-90 mb-4">{sel.n} {lang === "ar" ? "ملف" : "files"}</p>
+              <div className="flex flex-wrap gap-2">
+                {sel.body.map((b, k) => (
+                  <motion.span key={k} initial={{ opacity: 0, scale: 0.7 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.05 * k }} className="px-3 py-1.5 rounded-lg bg-white/20 text-xs font-semibold">{b}</motion.span>
+                ))}
+              </div>
+              <button onClick={() => setOpen(null)} className="mt-6 px-5 py-2 rounded-xl bg-white text-black font-bold text-sm">{lang === "ar" ? "إغلاق" : "Close"}</button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
-      <Card className="p-6"><FileCards lang={lang} /></Card>
-      <DataRoomVault lang={lang} />
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><FileCards lang={lang} /></Card>
+      <DataRoomCards lang={lang} />
     </div>
   );
 }
@@ -1551,7 +1614,7 @@ function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Users} title={t.menu.team} subtitle="" />
-      <Card className="p-6"><Constellation lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Constellation lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
@@ -1606,7 +1669,7 @@ function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
-      <Card className="p-6"><Heartbeat lang={lang} /></Card>
+      <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Heartbeat lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 text-center border-emerald/30">
           <div className="w-16 h-16 rounded-2xl bg-emerald/10 flex items-center justify-center mx-auto mb-4"><Shield size={32} className="text-emerald" /></div>
