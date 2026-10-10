@@ -15,13 +15,15 @@ import {
   BarChart3, Activity, CheckCircle2, XCircle, ArrowUpRight,
   Layers, Server, Lock, Eye, Download, Settings, BookOpen,
   Briefcase, Calendar, CreditCard, ShieldCheck, Zap, Sparkles,
-  Volume2, Bell, Save, Trash2, Info, Sun, Moon, ArrowRight
+  Volume2, Bell, Save, Trash2, Info, Sun, Moon, ArrowRight,
+  PieChart as PieChartIcon
 } from "lucide-react";
 
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   AreaChart, Area, PieChart, Pie, Cell
 } from "recharts";
+
 
 
 const AppContext = createContext<any>({});
