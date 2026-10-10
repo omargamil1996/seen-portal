@@ -4,7 +4,7 @@
   "devCommand": "npx --yes next@14.2.0 dev",
   "installCommand": "npm install --legacy-peer-deps",
   "framework": "nextjs",
-  "outputDirectory": "out",
+  "outputDirectory": ".next",
   "cleanUrls": true,
   "headers": [
     {
