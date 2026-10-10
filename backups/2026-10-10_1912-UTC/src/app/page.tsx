@@ -442,63 +442,67 @@ function CircuitPulse({ lang }: any) {
 }
 
 
-function BotAvatar({ mode = "typing", size = 150 }: any) {
-  const icon = mode === "guard" ? "🛡️" : mode === "archive" ? "🗂️" : mode === "present" ? "📊" : "⚡";
-  const id = `bot-${mode}`;
-  return (
-    <svg viewBox="0 0 200 220" width={size} height={size * 1.1} role="img" aria-label="AI assistant">
-      <defs>
-        <linearGradient id={`${id}-body`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFFFF" /><stop offset="1" stopColor="#E7E5E4" /></linearGradient>
-        <linearGradient id={`${id}-visor`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#0F5132" /><stop offset="1" stopColor="#0a3d25" /></linearGradient>
-        <radialGradient id={`${id}-halo`}><stop offset="0" stopColor="#F97316" stopOpacity="0.35" /><stop offset="1" stopColor="#F97316" stopOpacity="0" /></radialGradient>
-      </defs>
-      <circle cx="100" cy="112" r="92" fill={`url(#${id}-halo)`}><animate attributeName="r" values="88;96;88" dur="4s" repeatCount="indefinite" /></circle>
-      <ellipse cx="100" cy="206" rx="54" ry="7" fill="#000" opacity="0.15" />
-      <g>
-        <animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="3.2s" repeatCount="indefinite" />
-        <line x1="100" y1="30" x2="100" y2="14" stroke="#6b7280" strokeWidth="3" />
-        <circle cx="100" cy="11" r="6" fill="#F97316"><animate attributeName="r" values="5;8;5" dur="1.4s" repeatCount="indefinite" /></circle>
-        <rect x="56" y="30" width="88" height="68" rx="24" fill={`url(#${id}-body)`} stroke="#D4AF37" strokeWidth="2.5" />
-        <rect x="46" y="52" width="9" height="26" rx="4.5" fill="#D4AF37" />
-        <rect x="145" y="52" width="9" height="26" rx="4.5" fill="#D4AF37" />
-        <rect x="66" y="46" width="68" height="34" rx="14" fill={`url(#${id}-visor)`} />
-        <circle cx="84" cy="63" r="6" fill="#F97316"><animate attributeName="ry" values="6;1;6" dur="4s" repeatCount="indefinite" /></circle>
-        <circle cx="116" cy="63" r="6" fill="#F97316"><animate attributeName="ry" values="6;1;6" dur="4s" repeatCount="indefinite" /></circle>
-        <circle cx="86" cy="61" r="1.8" fill="#fff" /><circle cx="118" cy="61" r="1.8" fill="#fff" />
-        <rect x="84" y="86" width="32" height="4" rx="2" fill="#D4AF37"><animate attributeName="opacity" values="0.35;1;0.35" dur="1.2s" repeatCount="indefinite" /></rect>
-        <rect x="90" y="98" width="20" height="8" fill="#6b7280" />
-        <rect x="64" y="106" width="72" height="64" rx="20" fill={`url(#${id}-body)`} stroke="#D4AF37" strokeWidth="2.5" />
-        <circle cx="100" cy="136" r="15" fill="#0F5132" />
-        <text x="100" y="142" textAnchor="middle" fontSize="15">{icon}</text>
-        <g>
-          <animateTransform attributeName="transform" type="rotate" values="-5 66 118;5 66 118;-5 66 118" dur={mode === "typing" ? "0.7s" : "3s"} repeatCount="indefinite" />
-          <rect x="46" y="116" width="16" height="50" rx="8" fill="#0F5132" />
-          <circle cx="54" cy="170" r="7" fill="#D4AF37" />
-        </g>
-        <g>
-          <animateTransform attributeName="transform" type="rotate" values="5 134 118;-5 134 118;5 134 118" dur={mode === "typing" ? "0.7s" : "3s"} begin="0.35s" repeatCount="indefinite" />
-          <rect x="138" y="116" width="16" height="50" rx="8" fill="#0F5132" />
-          <circle cx="146" cy="170" r="7" fill="#D4AF37" />
-        </g>
-        <rect x="80" y="170" width="40" height="18" rx="7" fill="#6b7280" />
-      </g>
-    </svg>
-  );
-}
-
 function OfficeBot({ lang }: any) {
   const msgs = lang === "ar"
-    ? ["✅ تم إرسال الرسالة", "📊 تم تحديث الشيت", "🗂️ تمت أرشفة الفاتورة"]
-    : ["✅ Message sent", "📊 Sheet updated", "🗂️ Invoice archived"];
+    ? ["✅ أرسلت الرسالة", "📊 حدّثت الشيت", "🗂️ أرشفت الفاتورة"]
+    : ["✅ Message sent", "📊 Sheet updated", "🗂️ Invoice filed"];
+  const papers = [0, 1, 2];
   return (
-    <div className="w-full mt-4 flex items-center justify-center gap-6 flex-wrap">
-      <style>{`@keyframes botMsg{0%,100%{opacity:0;transform:translateY(8px)}10%,40%{opacity:1;transform:translateY(0)}50%{opacity:0}}`}</style>
-      <div className="relative w-64 h-24">
+    <div className="w-full flex justify-center mt-2">
+      <svg viewBox="0 0 600 230" className="w-full max-w-2xl h-auto" role="img" aria-label="office automation agent">
+        <rect x="60" y="170" width="480" height="12" rx="6" fill="#6B7280" fillOpacity="0.5" />
+        <rect x="40" y="126" width="64" height="44" rx="6" fill="#D4AF37" />
+        <path d="M40,126 L72,108 L104,126" fill="#b8962e" />
+        <rect x="440" y="120" width="92" height="50" rx="5" fill="#1f2937" />
+        <rect x="448" y="126" width="76" height="36" rx="3" fill="#0F5132">
+          <animate attributeName="fill-opacity" values="0.6;1;0.6" dur="1.6s" repeatCount="indefinite" />
+        </rect>
+        <rect x="430" y="168" width="110" height="6" rx="3" fill="#374151" />
+
         {msgs.map((m, i) => (
-          <div key={i} className="absolute inset-0 flex items-center justify-center rounded-2xl bg-white dark:bg-dark-card border border-gold/40 shadow-md text-sm font-semibold text-emerald dark:text-gold" style={{ animation: `botMsg 6s ease-in-out ${i * 2}s infinite`, opacity: 0 }}>{m}</div>
+          <g key={i}>
+            <rect x="30" y="30" width="180" height="36" rx="10" fill="#F5F5F4" stroke="#D4AF37" strokeWidth="2" opacity="0">
+              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.4;0.5;1" dur="6s" begin={`${i * 2}s`} repeatCount="indefinite" />
+            </rect>
+            <text x="120" y="53" textAnchor="middle" fontSize="13" fill="#0F5132" opacity="0">{m}
+              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.4;0.5;1" dur="6s" begin={`${i * 2}s`} repeatCount="indefinite" />
+            </text>
+          </g>
         ))}
-      </div>
-      <BotAvatar mode="typing" size={130} />
+
+        <line x1="300" y1="40" x2="300" y2="24" stroke="#6B7280" strokeWidth="2" />
+        <circle cx="300" cy="20" r="6" fill="#D4AF37">
+          <animate attributeName="r" values="5;8;5" dur="1.4s" repeatCount="indefinite" />
+        </circle>
+        <rect x="262" y="40" width="76" height="66" rx="16" fill="#F5F5F4" stroke="#D4AF37" strokeWidth="2" />
+        <circle cx="285" cy="70" r="7" fill="#0F5132">
+          <animate attributeName="ry" values="7;1;7" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="315" cy="70" r="7" fill="#0F5132">
+          <animate attributeName="ry" values="7;1;7" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <rect x="282" y="88" width="36" height="5" rx="2.5" fill="#D4AF37" />
+
+        <rect x="268" y="110" width="64" height="52" rx="12" fill="#0F5132" stroke="#D4AF37" strokeWidth="2" />
+
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="-6 270 120;6 270 120;-6 270 120" dur="0.9s" repeatCount="indefinite" />
+          <line x1="268" y1="122" x2="405" y2="150" stroke="#0F5132" strokeWidth="10" strokeLinecap="round" />
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="6 330 120;-6 330 120;6 330 120" dur="0.9s" begin="0.45s" repeatCount="indefinite" />
+          <line x1="332" y1="122" x2="440" y2="150" stroke="#0F5132" strokeWidth="10" strokeLinecap="round" />
+        </g>
+
+        {papers.map((p) => (
+          <rect key={p} width="22" height="16" rx="2" fill="#F5F5F4" stroke="#D4AF37">
+            <animateMotion dur="3s" begin={`${p * 1}s`} repeatCount="indefinite" path="M250,140 L120,140" />
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="3s" begin={`${p * 1}s`} repeatCount="indefinite" />
+          </rect>
+        ))}
+
+        <text x="300" y="222" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "وكيل أتمتة يعمل الآن" : "Automation agent at work"}</text>
+      </svg>
     </div>
   );
 }
@@ -762,7 +766,7 @@ const SECTOR_LANES = [
 function SectorAutomationPanel({ sector, lang }: any) {
   return (
     <Card className="p-6 space-y-4 [&_svg]:max-h-24 [&_svg]:w-auto" hover={false}>
-      <div className="flex items-center justify-between gap-4"><h3 className="text-xl font-bold text-emerald dark:text-gold">{lang === "ar" ? `أتمتة قطاع: ${sector.name_ar}` : `Automation for: ${sector.name_en}`}</h3><BotAvatar mode="typing" size={80} /></div>
+      <h3 className="text-xl font-bold text-emerald dark:text-gold">{lang === "ar" ? `أتمتة قطاع: ${sector.name_ar}` : `Automation for: ${sector.name_en}`}</h3>
       {SECTOR_LANES.map((lane, i) => {
         const title = lang === "ar" ? lane.ar : lane.en;
         const items = lang === "ar" ? lane.itemsAr : lane.itemsEn;
@@ -1483,7 +1487,6 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
-      <div className="flex justify-center"><BotAvatar mode="present" size={120} /></div>
       <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><GrowthBars lang={lang} /></Card>
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
@@ -1593,7 +1596,6 @@ function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
-      <div className="flex justify-center"><BotAvatar mode="archive" size={120} /></div>
       <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><FileCards lang={lang} /></Card>
       <DataRoomCards lang={lang} />
     </div>
@@ -1667,7 +1669,6 @@ function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
-      <div className="flex justify-center"><BotAvatar mode="guard" size={130} /></div>
       <Card className="p-5 [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><Heartbeat lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 text-center border-emerald/30">
