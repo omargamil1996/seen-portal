@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, FileText, Calendar, X, AlertTriangle, Eye, Shield } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Card component
 const Card = ({ children, className = "", hover = true }: any) => (
