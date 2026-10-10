@@ -1483,7 +1483,6 @@ function HardwareView({ t, lang }: any) {
     <div className="space-y-6">
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
       <AutomationScene kind="chip" lang={lang} />
-      <div className="flex justify-center"><BotAvatar mode="typing" size={120} /></div>
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
         <div className="relative z-10 text-white">
@@ -1851,7 +1850,7 @@ function DataRoomCards({ lang }: any) {
           </button>
         ))}
       </div>
-      <BotsAround leftMode="archive" rightMode="typing" size={84}>
+      <div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
           {items.map(({ d, idx }) => {
             const [name, cat] = d;
@@ -1876,7 +1875,7 @@ function DataRoomCards({ lang }: any) {
             );
           })}
         </div>
-      </BotsAround>
+      </div>
       <AnimatePresence>
         {sel && c && (
           <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={() => setOpen(null)}>
