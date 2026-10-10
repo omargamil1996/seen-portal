@@ -1,0 +1,18 @@
+# Changelog
+
+## [5.2.0] - 2026-10-10
+- Added 7 advanced charts (Sankey, Treemap, Sunburst, Radar, Bubble, Gantt, Chord)
+- Added ECharts and D3.js integration
+- Version V5.2.0 in header
+- Advanced Analytics tab
+
+## [5.1.0] - 2026-10-09
+- Full interactive briefcase (12 sections)
+- Financial modeling with sliders
+- Sector modals
+- Data room (49 files)
+- Team section
+- Settings with preferences
+
+## [5.0.0] - 2026-10-08
+- Initial release
