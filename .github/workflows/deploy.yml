@@ -29,20 +29,40 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build with verbose output
+      - name: Build with detailed logging
         run: |
-          echo "Starting build..."
-          npm run build 2>&1 || {
-            echo "Build failed! Showing npm logs..."
-            npm run build --verbose
+          echo "=== Starting build ==="
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo ""
+          echo "=== Running npm run build ==="
+          npm run build > build.log 2>&1
+          BUILD_EXIT_CODE=$?
+          echo ""
+          echo "=== Build exit code: $BUILD_EXIT_CODE ==="
+          echo ""
+          echo "=== Build log (last 100 lines) ==="
+          tail -n 100 build.log
+          echo ""
+          echo "=== Full build log saved ==="
+          if [ $BUILD_EXIT_CODE -ne 0 ]; then
+            echo "Build failed!"
             exit 1
-          }
-          echo "Build completed successfully!"
+          fi
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
 
       - name: Setup Pages
+        if: success()
         uses: actions/configure-pages@v4
 
       - name: Upload artifact
+        if: success()
         uses: actions/upload-pages-artifact@v3
         with:
           path: './out'
