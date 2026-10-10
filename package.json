@@ -1,6 +1,6 @@
 {
   "name": "seen-investor-briefcase",
-  "version": "5.0.0",
+  "version": "5.2.0",
   "private": true,
   "scripts": {
     "dev": "npx --yes next dev",
@@ -17,6 +17,10 @@
     "recharts": "^2.12.2",
     "clsx": "^2.1.0",
     "tailwind-merge": "^2.2.1"
+    "echarts": "^5.5.0",
+    "echarts-for-react": "^3.0.2",
+    "d3": "^7.9.0",
+    "@types/d3": "^7.4.3"
   },
   "devDependencies": {
     "typescript": "^5.3.3",
