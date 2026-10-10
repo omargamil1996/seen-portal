@@ -23,21 +23,6 @@ import {
   AreaChart, Area, PieChart, Pie, Cell
 } from "recharts";
 
-  LayoutDashboard, Wallet, FileText, Target, MapIcon,
-  AlertTriangle, Cpu, FileCheck, Globe, SkipBack,
-  SkipForward, ChevronDown, TrendingUp, Shield, Users,
-  Clock, DollarSign, BarChart3, PieChart, Activity,
-  CheckCircle2, XCircle, ArrowUpRight, Layers, Server,
-  Lock, Eye, Download, Settings, BookOpen,
-  Briefcase, Calendar, CreditCard, ShieldCheck, Zap,
-  Sparkles, Volume2, Bell, Save, Trash2,
-  Info, Sun, Moon, ArrowRight, Target,
-  FileCheck,
-} from "lucide-react";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  AreaChart, Area, PieChart, Pie, Cell,
-} from "recharts";
 
 const AppContext = createContext<any>({});
 
