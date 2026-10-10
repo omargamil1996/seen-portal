@@ -930,10 +930,13 @@ function AnimatedHero({ t, lang }: any) {
             <SeenLogo size={76} />
             <span className="font-amiri text-4xl md:text-5xl font-bold leading-tight">{lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}</span>
           </div>
-          <div className="relative h-16 w-72 md:w-96 flex items-center justify-center text-gold font-semibold text-lg md:text-xl">
-            {(lang === "ar" ? ["أتمت مشروعك", "أتمت عملك", "أتمت حياتك"] : ["Let's automate your business", "Let's automate your work", "Let's automate your personal life"]).map((ph, i) => (
-              <span key={i} className="absolute inset-0 flex items-center justify-center" style={{ animation: `heroPhrase 9s ease-in-out ${i * 3}s infinite`, opacity: 0 }}>{ph}</span>
-            ))}
+          <div className="text-lg md:text-xl font-semibold text-white/90 whitespace-nowrap flex items-center gap-2 flex-wrap justify-center">
+            <span>{lang === "ar" ? "أتمت" : "We can automate your"}</span>
+            <span className="inline-grid">
+              {(lang === "ar" ? ["مشروعك", "عملك", "حياتك"] : ["business", "work", "personal life"]).map((w, i) => (
+                <span key={i} className="font-bold" style={{ gridArea: "1 / 1", color: ["#D4AF37", "#F97316", "#34d399"][i], animation: `heroPhrase 9s ease-in-out ${i * 3}s infinite`, opacity: 0 }}>{w}</span>
+              ))}
+            </span>
           </div>
         </div>
         <p className="text-xl text-gold font-semibold mb-4 font-amiri">{lang === "ar" ? DATA.company.tagline_ar : DATA.company.tagline_en}</p>
