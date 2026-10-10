@@ -914,26 +914,28 @@ function AnimatedHero({ t, lang }: any) {
         @keyframes heroPulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(2.2);opacity:0}}
         @keyframes heroFade{0%,100%{opacity:.35;transform:translateY(6px)}20%,80%{opacity:1;transform:translateY(0)}}
         @keyframes heroSpin{to{transform:rotate(360deg)}}
+        @keyframes heroPhrase{0%{opacity:0;transform:translateY(8px)}8%,28%{opacity:1;transform:translateY(0)}36%,100%{opacity:0;transform:translateY(-8px)}}
         @keyframes heroGlow{0%,100%{box-shadow:0 0 0 rgba(212,175,55,0)}50%{box-shadow:0 0 40px rgba(212,175,55,.5)}}
       `}</style>
       <div className="absolute inset-0 bg-gradient-to-br from-emerald via-emerald-dark to-slate-900" />
       {floats.map((f, i) => (
         <div key={i} className="absolute rounded-full bg-gold/15" style={{ left: `${f.x}%`, top: `${f.y}%`, width: f.s, height: f.s, animation: `heroFloat ${4 + i}s ease-in-out ${f.d}s infinite` }} />
       ))}
-      <div className="relative mx-auto mb-6 w-32 h-32 md:w-40 md:h-40">
-        {[0, 1, 2].map((i) => (
-          <span key={i} className="absolute inset-0 rounded-full border-2 border-gold/50" style={{ animation: `heroPulse 2.4s ease-out ${i * 0.8}s infinite` }} />
-        ))}
-        <div className="absolute inset-6 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-2xl" style={{ animation: "heroGlow 2.4s ease-in-out infinite" }}><SeenLogo size={56} /></div>
-        <div className="absolute inset-0" style={{ animation: "heroSpin 12s linear infinite" }}>
-          <span className="absolute -top-1.5 left-1/2 w-3 h-3 rounded-full bg-gold" />
-        </div>
-      </div>
       <div className="relative z-20 max-w-3xl mx-auto text-white drop-shadow-md text-center flex flex-col items-center">
         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold border border-white/20 mb-6">
           <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}
         </div>
-        <h1 className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4">{lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}</h1>
+        <div dir={lang === "ar" ? "rtl" : "ltr"} className="w-full flex flex-col md:flex-row items-center justify-between gap-6 mb-6">
+          <div className="flex items-center gap-4">
+            <SeenLogo size={76} />
+            <span className="font-amiri text-4xl md:text-5xl font-bold leading-tight">{lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}</span>
+          </div>
+          <div className="relative h-16 w-72 md:w-96 flex items-center justify-center text-gold font-semibold text-lg md:text-xl">
+            {(lang === "ar" ? ["أتمت مشروعك", "أتمت عملك", "أتمت حياتك"] : ["Let's automate your business", "Let's automate your work", "Let's automate your personal life"]).map((ph, i) => (
+              <span key={i} className="absolute inset-0 flex items-center justify-center" style={{ animation: `heroPhrase 9s ease-in-out ${i * 3}s infinite`, opacity: 0 }}>{ph}</span>
+            ))}
+          </div>
+        </div>
         <p className="text-xl text-gold font-semibold mb-4 font-amiri">{lang === "ar" ? DATA.company.tagline_ar : DATA.company.tagline_en}</p>
         <p className="text-lg text-white/80 leading-relaxed max-w-2xl mx-auto mb-6">{lang === "ar" ? DATA.company.vision_ar : DATA.company.vision_en}</p>
         <div className="flex flex-wrap justify-center gap-3">
