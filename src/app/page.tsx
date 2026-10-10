@@ -181,6 +181,27 @@ function kpisFromModel(model: any) {
   ];
 }
 
+function SiteBackground() {
+  const blobs = [
+    { c: "bg-emerald/15", s: 420, x: "-10%", y: "-5%", d: 22 },
+    { c: "bg-gold/20", s: 360, x: "70%", y: "10%", d: 28 },
+    { c: "bg-emerald/10", s: 300, x: "30%", y: "60%", d: 25 },
+    { c: "bg-gold/15", s: 240, x: "85%", y: "70%", d: 18 },
+  ];
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+      <style>{`
+        @keyframes siteDrift{0%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.06)}66%{transform:translate(-30px,25px) scale(.96)}100%{transform:translate(0,0) scale(1)}}
+        @keyframes siteGrid{0%{background-position:0 0}100%{background-position:48px 48px}}
+      `}</style>
+      <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]" style={{ backgroundImage: "linear-gradient(#0F5132 1px, transparent 1px), linear-gradient(90deg, #0F5132 1px, transparent 1px)", backgroundSize: "48px 48px", animation: "siteGrid 20s linear infinite" }} />
+      {blobs.map((b, i) => (
+        <div key={i} className={`absolute rounded-full blur-3xl ${b.c}`} style={{ width: b.s, height: b.s, left: b.x, top: b.y, animation: `siteDrift ${b.d}s ease-in-out infinite` }} />
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   const [lang, setLang] = useState<Lang>("ar");
   const [dark, setDark] = useState(false);
@@ -217,7 +238,8 @@ export default function Home() {
   return (
     <CurrencyContext.Provider value={{ cur, setCur }}>
     <AppContext.Provider value={{ lang, setLang, dark, setDark }}>
-      <div className="min-h-screen bg-background dark:bg-dark-bg text-foreground dark:text-white font-cairo transition-colors duration-300">
+      <div className="relative min-h-screen bg-background dark:bg-dark-bg text-foreground dark:text-white font-cairo transition-colors duration-300 overflow-hidden">
+        <SiteBackground />
         <header className="sticky top-0 z-50 bg-card/90 dark:bg-dark-card/90 backdrop-blur-xl border-b border-border dark:border-dark-border shadow-lg">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -249,7 +271,7 @@ export default function Home() {
             </div>
           </div>
         </header>
-        <main className="max-w-7xl mx-auto px-4 py-8">
+        <main className="relative z-10 max-w-7xl mx-auto px-4 py-8">
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.4, ease: "easeOut" }}>
               {activeTab === "dashboard" && <DashboardView t={t} lang={lang} model={model} />}
