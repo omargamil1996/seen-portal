@@ -1703,60 +1703,79 @@ const DR_DOCS: [string, string, string, string][] = [
 
 
 const DR_CAT: any = {
-  shared: { badge_ar: "مسموح", badge_en: "Allowed", label_ar: "مشترك مع المستثمر", label_en: "Shared with investors", color: "rgba(22,163,74,0.88)",
+  shared: { text: "text-white", badge_ar: "مسموح", badge_en: "Allowed", label_ar: "مشترك مع المستثمر", label_en: "Shared with investors", color: "rgba(22,163,74,0.9)",
     rule_ar: "مسموح للمستثمر الاطلاع عليه مباشرة.", rule_en: "Investors may view it directly.",
     why_ar: "لا يحتوي تفاصيل حساسة، ولذلك يُعرض بدون شروط إضافية.", why_en: "It contains no sensitive details, so it is shown without extra conditions.",
     how_ar: "يُعرض مباشرة من غرفة البيانات.", how_en: "Shown directly from the data room." },
-  nda: { badge_ar: "مشدد", badge_en: "Restricted", label_ar: "سري: يُتاح بعد NDA", label_en: "Restricted: after NDA", color: "rgba(220,38,38,0.88)",
+  nda: { text: "text-gray-900", badge_ar: "مشدد", badge_en: "Restricted", label_ar: "سري: يُتاح بعد NDA", label_en: "Restricted: after NDA", color: "rgba(234,179,8,0.92)",
     rule_ar: "مشدد: لا يُعرض إلا بعد توقيع اتفاقية عدم الإفصاح.", rule_en: "Restricted: shown only after a signed NDA.",
     why_ar: "يحتوي تفاصيل قانونية أو مالية أو أمنية تحتاج حماية.", why_en: "It holds legal, financial or security details that need protection.",
     how_ar: "اطلب الوصول من المؤسس، ووقّع NDA ثم يُتاح الملف.", how_en: "Request access from the founder, sign the NDA, then the file is shared." },
-  internal: { badge_ar: "ممنوع", badge_en: "Not shared", label_ar: "داخلي: غير مشترك", label_en: "Internal: not shared", color: "rgba(127,29,29,0.92)",
+  internal: { text: "text-white", badge_ar: "ممنوع", badge_en: "Not shared", label_ar: "داخلي: غير مشترك", label_en: "Internal: not shared", color: "rgba(220,38,38,0.92)",
     rule_ar: "ممنوع: لا يُعرض على أي مستثمر.", rule_en: "Not allowed: never shown to investors.",
     why_ar: "مادة تشغيلية أو ذاكرة عمل داخلية، ولا علاقة لها بالمستثمر مباشرة.", why_en: "Operational or internal working material, not directly relevant to investors.",
     how_ar: "لا يُتاح ولا يُشارك خارج الفريق الداخلي.", how_en: "Not available and not shared outside the internal team." },
 };
 
 function DataRoomCards({ lang }: any) {
+  const [group, setGroup] = useState<string>("shared");
   const [open, setOpen] = useState<number | null>(null);
+  const groups = [
+    { k: "shared", ar: "مسموح", en: "Allowed" },
+    { k: "nda", ar: "مشدد", en: "Restricted" },
+    { k: "internal", ar: "ممنوع", en: "Forbidden" },
+  ];
+  const items = DR_DOCS.map((d, idx) => ({ d, idx })).filter((x) => x.d[1] === group);
   const sel: any = open !== null ? DR_DOCS[open] : null;
   const c: any = sel ? DR_CAT[sel[1]] : null;
   return (
     <div className="space-y-6">
+      <div className="flex flex-wrap justify-center gap-3">
+        {groups.map((g) => (
+          <button key={g.k} onClick={() => setGroup(g.k)} className={cn("px-5 py-2.5 rounded-2xl font-bold text-sm border transition-all", group === g.k ? "text-white shadow-lg scale-105 border-white/40" : "bg-white dark:bg-dark-card border-border text-gray-600 dark:text-gray-300")}
+            style={group === g.k ? { background: DR_CAT[g.k].color } : undefined}>
+            {lang === "ar" ? g.ar : g.en} <span className="opacity-80">({DR_DOCS.filter((x) => x[1] === g.k).length})</span>
+          </button>
+        ))}
+      </div>
       <BotsAround leftMode="archive" rightMode="typing" size={84}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {DR_DOCS.map(([name, cat, ar, en], i) => (
-            <motion.button key={i} onClick={() => setOpen(i)} whileHover={{ y: -6, scale: 1.03 }} whileTap={{ scale: 0.97 }}
-              initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 9) * 0.03 }}
-              className="relative p-5 min-h-[150px] rounded-3xl text-white text-right shadow-xl overflow-hidden backdrop-blur-md border border-white/30"
-              style={{ background: DR_CAT[cat].color }}>
-              <div className="flex items-center justify-between gap-2">
-                <span className="px-3 py-1 rounded-full bg-black/25 text-[11px] font-bold">{lang === "ar" ? DR_CAT[cat].badge_ar : DR_CAT[cat].badge_en}</span>
-                <span className="text-[11px] opacity-85">{String(i + 1).padStart(2, "0")}/49</span>
-              </div>
-              <div className="text-base font-bold leading-snug mt-4 break-words">{name}</div>
-              <svg viewBox="0 0 120 24" className="absolute bottom-2 left-2 w-24 h-6 opacity-80">
-                <path d="M0,12 L30,12 L38,4 L46,20 L54,12 L120,12" fill="none" stroke="#fff" strokeWidth="1.5" strokeDasharray="4 4">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-16" dur={`${1.2 + (i % 5) * 0.3}s`} repeatCount="indefinite" />
-                </path>
-                <circle r="2.5" fill="#fff"><animateMotion dur={`${2 + (i % 4) * 0.4}s`} repeatCount="indefinite" path="M0,12 L30,12 L38,4 L46,20 L54,12 L120,12" /></circle>
-              </svg>
-            </motion.button>
-          ))}
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
+          {items.map(({ d, idx }) => {
+            const [name, cat] = d;
+            const col = DR_CAT[cat];
+            return (
+              <motion.button key={idx} onClick={() => setOpen(idx)} whileHover={{ y: -5, scale: 1.04 }} whileTap={{ scale: 0.97 }}
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: (idx % 8) * 0.03 }}
+                className={cn("relative p-3 md:p-4 min-h-[120px] rounded-2xl shadow-lg overflow-hidden backdrop-blur-md border border-white/30 text-right", col.text)}
+                style={{ background: col.color }}>
+                <div className="flex items-center justify-between gap-1">
+                  <span className="px-2 py-0.5 rounded-full bg-black/20 text-[10px] font-bold">{lang === "ar" ? col.badge_ar : col.badge_en}</span>
+                  <span className="text-[10px] opacity-85">{idx + 1}/49</span>
+                </div>
+                <div className="text-xs md:text-sm font-bold leading-snug mt-3 break-words">{name}</div>
+                <svg viewBox="0 0 120 24" className="absolute bottom-1.5 left-1.5 w-16 h-4 opacity-80">
+                  <path d="M0,12 L30,12 L38,4 L46,20 L54,12 L120,12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-16" dur={`${1.2 + (idx % 5) * 0.3}s`} repeatCount="indefinite" />
+                  </path>
+                  <circle r="2.5" fill="currentColor"><animateMotion dur={`${2 + (idx % 4) * 0.4}s`} repeatCount="indefinite" path="M0,12 L30,12 L38,4 L46,20 L54,12 L120,12" /></circle>
+                </svg>
+              </motion.button>
+            );
+          })}
         </div>
       </BotsAround>
       <AnimatePresence>
         {sel && c && (
           <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={() => setOpen(null)}>
             <motion.div initial={{ scale: 0.85, opacity: 0, y: 24 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.85, opacity: 0 }} transition={{ type: "spring", stiffness: 260, damping: 22 }}
-              onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-3xl p-7 text-white shadow-2xl border border-white/30" style={{ background: c.color }}>
+              onClick={(e) => e.stopPropagation()} className={cn("w-full max-w-lg rounded-3xl p-7 shadow-2xl border border-white/30", c.text)} style={{ background: c.color }}>
               <div className="flex items-center justify-between mb-3">
-                <span className="px-3 py-1 rounded-full bg-black/30 text-xs font-bold">{lang === "ar" ? c.badge_ar : c.badge_en}</span>
+                <span className="px-3 py-1 rounded-full bg-black/25 text-xs font-bold">{lang === "ar" ? c.badge_ar : c.badge_en}</span>
                 <span className="text-xs opacity-85">{lang === "ar" ? c.label_ar : c.label_en}</span>
               </div>
               <h3 className="text-2xl font-bold mb-3 break-words">{sel[0]}</h3>
               <p className="text-base leading-relaxed mb-4">{lang === "ar" ? sel[2] : sel[3]}</p>
-              <div className="space-y-3 text-sm leading-relaxed border-t border-white/30 pt-4">
+              <div className="space-y-3 text-sm leading-relaxed border-t border-current/30 pt-4">
                 <p><span className="font-bold">{lang === "ar" ? "القاعدة: " : "Rule: "}</span>{lang === "ar" ? c.rule_ar : c.rule_en}</p>
                 <p><span className="font-bold">{lang === "ar" ? "السبب: " : "Why: "}</span>{lang === "ar" ? c.why_ar : c.why_en}</p>
                 <p><span className="font-bold">{lang === "ar" ? "طريقة الوصول: " : "How to access: "}</span>{lang === "ar" ? c.how_ar : c.how_en}</p>
