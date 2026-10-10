@@ -410,6 +410,71 @@ function CircuitPulse({ lang }: any) {
 }
 
 
+function OfficeBot({ lang }: any) {
+  const msgs = lang === "ar"
+    ? ["✅ أرسلت الرسالة", "📊 حدّثت الشيت", "🗂️ أرشفت الفاتورة"]
+    : ["✅ Message sent", "📊 Sheet updated", "🗂️ Invoice filed"];
+  const papers = [0, 1, 2];
+  return (
+    <div className="w-full flex justify-center mt-2">
+      <svg viewBox="0 0 600 230" className="w-full max-w-2xl h-auto" role="img" aria-label="office automation agent">
+        <rect x="60" y="170" width="480" height="12" rx="6" fill="#6B7280" fillOpacity="0.5" />
+        <rect x="40" y="126" width="64" height="44" rx="6" fill="#D4AF37" />
+        <path d="M40,126 L72,108 L104,126" fill="#b8962e" />
+        <rect x="440" y="120" width="92" height="50" rx="5" fill="#1f2937" />
+        <rect x="448" y="126" width="76" height="36" rx="3" fill="#0F5132">
+          <animate attributeName="fill-opacity" values="0.6;1;0.6" dur="1.6s" repeatCount="indefinite" />
+        </rect>
+        <rect x="430" y="168" width="110" height="6" rx="3" fill="#374151" />
+
+        {msgs.map((m, i) => (
+          <g key={i}>
+            <rect x="150" y="30" width="170" height="36" rx="10" fill="#F5F5F4" stroke="#D4AF37" strokeWidth="2" opacity="0">
+              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.4;0.5;1" dur="6s" begin={`${i * 2}s`} repeatCount="indefinite" />
+            </rect>
+            <text x="235" y="53" textAnchor="middle" fontSize="13" fill="#0F5132" opacity="0">{m}
+              <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;0.1;0.4;0.5;1" dur="6s" begin={`${i * 2}s`} repeatCount="indefinite" />
+            </text>
+          </g>
+        ))}
+
+        <line x1="300" y1="40" x2="300" y2="24" stroke="#6B7280" strokeWidth="2" />
+        <circle cx="300" cy="20" r="6" fill="#D4AF37">
+          <animate attributeName="r" values="5;8;5" dur="1.4s" repeatCount="indefinite" />
+        </circle>
+        <rect x="262" y="40" width="76" height="66" rx="16" fill="#F5F5F4" stroke="#D4AF37" strokeWidth="2" />
+        <circle cx="285" cy="70" r="7" fill="#0F5132">
+          <animate attributeName="ry" values="7;1;7" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <circle cx="315" cy="70" r="7" fill="#0F5132">
+          <animate attributeName="ry" values="7;1;7" dur="4s" repeatCount="indefinite" />
+        </circle>
+        <rect x="282" y="88" width="36" height="5" rx="2.5" fill="#D4AF37" />
+
+        <rect x="268" y="110" width="64" height="52" rx="12" fill="#0F5132" stroke="#D4AF37" strokeWidth="2" />
+
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="-6 270 120;6 270 120;-6 270 120" dur="0.9s" repeatCount="indefinite" />
+          <line x1="268" y1="122" x2="405" y2="150" stroke="#0F5132" strokeWidth="10" strokeLinecap="round" />
+        </g>
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="6 330 120;-6 330 120;6 330 120" dur="0.9s" begin="0.45s" repeatCount="indefinite" />
+          <line x1="332" y1="122" x2="440" y2="150" stroke="#0F5132" strokeWidth="10" strokeLinecap="round" />
+        </g>
+
+        {papers.map((p) => (
+          <rect key={p} width="22" height="16" rx="2" fill="#F5F5F4" stroke="#D4AF37">
+            <animateMotion dur="3s" begin={`${p * 1}s`} repeatCount="indefinite" path="M250,140 L120,140" />
+            <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.8;1" dur="3s" begin={`${p * 1}s`} repeatCount="indefinite" />
+          </rect>
+        ))}
+
+        <text x="300" y="222" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "وكيل أتمتة يعمل الآن" : "Automation agent at work"}</text>
+      </svg>
+    </div>
+  );
+}
+
 function TickerRail({ lang }: any) {
   const items = lang === "ar" ? ["واتساب", "n8n", "AI", "Supabase", "بريد", "Notion", "Sheets"] : ["WhatsApp", "n8n", "AI", "Supabase", "Email", "Notion", "Sheets"];
   const row = [...items, ...items];
@@ -422,6 +487,7 @@ function TickerRail({ lang }: any) {
         ))}
       </div>
       <div className="text-xs text-gray-500 mt-2 text-center">{lang === "ar" ? "أدوات التشغيل المتصلة" : "Connected operating tools"}</div>
+      <OfficeBot lang={lang} />
     </div>
   );
 }
