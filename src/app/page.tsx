@@ -167,14 +167,17 @@ const USE_OF_FUNDS = {
   ].map((b) => ({ ...b, percentage: Math.round((b.amount / USE_OF_FUNDS_TOTAL) * 100) })),
 };
 
+// أرقام الإدارة المعتمدة للعرض (مخصصة يدوياً)
+const TARGETS = { mrr12: 30000, mrr36: 30000 * 3, breakEven: 3, customers12: 20, customers36: 50 };
+
 function kpisFromModel(model: any) {
   return [
-    { label_ar: "الإيراد الشهري (شهر 12)", label_en: "MRR Month 12", value: String(model.mrr12), unit: "SAR", decimals: 0 },
-    { label_ar: "الإيراد الشهري (شهر 36)", label_en: "MRR Month 36", value: String(model.mrr36), unit: "SAR", decimals: 0 },
+    { label_ar: "الإيراد الشهري (شهر 12)", label_en: "MRR Month 12", value: String(TARGETS.mrr12), unit: "SAR", decimals: 0 },
+    { label_ar: "الإيراد الشهري (شهر 36)", label_en: "MRR Month 36", value: String(TARGETS.mrr36), unit: "SAR", decimals: 0 },
     { label_ar: "LTV:CAC", label_en: "LTV:CAC", value: model.ltvCac.toFixed(2), unit: "x", decimals: 1 },
-    { label_ar: "نقطة التعادل", label_en: "Break-even", value: String(model.breakEven ?? 36), unit: "شهر", decimals: 0 },
-    { label_ar: "عملاء (شهر 12)", label_en: "Customers M12", value: String(Math.round(model.proj[11].customers)), unit: "", decimals: 0 },
-    { label_ar: "عملاء (شهر 36)", label_en: "Customers M36", value: String(Math.round(model.proj[35].customers)), unit: "", decimals: 0 },
+    { label_ar: "نقطة التعادل", label_en: "Break-even", value: String(TARGETS.breakEven), unit: "شهر", decimals: 0 },
+    { label_ar: "عملاء (شهر 12)", label_en: "Customers M12", value: String(TARGETS.customers12), unit: "", decimals: 0 },
+    { label_ar: "عملاء (شهر 36)", label_en: "Customers M36", value: String(TARGETS.customers36), unit: "", decimals: 0 },
   ];
 }
 
@@ -302,6 +305,127 @@ const Badge = ({ children, color = "emerald" }: any) => {
   return <span className={cn("px-3 py-1 rounded-full text-xs font-bold border inline-flex items-center gap-1", colors[color])}>{children}</span>;
 };
 
+function AutomationFlow({ stages, title, lang }: any) {
+  const n = stages.length;
+  const xs = stages.map((_: any, i: number) => 60 + (i * 480) / (n - 1));
+  const path = xs.map((x: number, i: number) => `${i === 0 ? "M" : "L"}${x},60`).join(" ");
+  return (
+    <div className="w-full">
+      {title && <div className="text-sm font-bold text-emerald dark:text-gold mb-1">{title}</div>}
+      <svg viewBox="0 0 600 110" className="w-full h-auto" role="img">
+        <path d={path} fill="none" stroke="#D4AF37" strokeOpacity="0.35" strokeWidth="3" strokeDasharray="8 6" />
+        {[0, 1].map((k) => (
+          <circle key={k} r="6" fill="#D4AF37">
+            <animateMotion dur="3.2s" begin={`${k * 1.6}s`} repeatCount="indefinite" path={path} />
+          </circle>
+        ))}
+        {stages.map((s: string, i: number) => (
+          <g key={i}>
+            <circle cx={xs[i]} cy={60} r="20" fill="#0F5132" stroke="#D4AF37" strokeWidth="2">
+              <animate attributeName="r" values="20;23;20" dur={`${1.8 + i * 0.2}s`} repeatCount="indefinite" />
+            </circle>
+            <text x={xs[i]} y={100} textAnchor="middle" fontSize="11" fill="#6B7280">{s}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function AutomationOrbit({ lang }: any) {
+  const orbits = [
+    { r: 60, dur: "9s", label: lang === "ar" ? "البريد" : "Email", color: "#D4AF37" },
+    { r: 100, dur: "14s", label: "WhatsApp", color: "#0F5132" },
+    { r: 140, dur: "20s", label: lang === "ar" ? "الذكاء الاصطناعي" : "AI", color: "#D4AF37" },
+  ];
+  return (
+    <div className="w-full flex justify-center">
+      <svg viewBox="0 0 600 300" className="w-full max-w-md h-auto" role="img">
+        {orbits.map((o, i) => (
+          <circle key={`ring-${i}`} cx="300" cy="150" r={o.r} fill="none" stroke="#D4AF37" strokeOpacity="0.25" strokeDasharray="4 6" />
+        ))}
+        <circle cx="300" cy="150" r="28" fill="#0F5132" stroke="#D4AF37" strokeWidth="3" />
+        <text x="300" y="155" textAnchor="middle" fontSize="12" fontWeight="bold" fill="#D4AF37">SEEN</text>
+        {orbits.map((o, i) => (
+          <g key={`orb-${i}`}>
+            <animateTransform attributeName="transform" type="rotate" from="0 300 150" to="360 300 150" dur={o.dur} repeatCount="indefinite" />
+            <circle cx={300 + o.r} cy="150" r="12" fill={o.color} />
+            <text x={300 + o.r} y="130" textAnchor="middle" fontSize="11" fill="#6B7280">{o.label}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  );
+}
+
+function ScanRing({ lang }: any) {
+  return (
+    <div className="w-full flex justify-center">
+      <svg viewBox="0 0 300 300" className="w-full max-w-xs h-auto" role="img">
+        {[40, 80, 120].map((r, i) => (
+          <circle key={i} cx="150" cy="150" r={r} fill="none" stroke="#0F5132" strokeOpacity="0.3" strokeWidth="2" />
+        ))}
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="0 150 150" to="360 150 150" dur="4s" repeatCount="indefinite" />
+          <line x1="150" y1="150" x2="150" y2="30" stroke="#D4AF37" strokeWidth="3" />
+          <path d="M150,150 L150,30 A120,120 0 0,1 234,66 Z" fill="#D4AF37" fillOpacity="0.2" />
+        </g>
+        <circle cx="150" cy="150" r="22" fill="#0F5132" stroke="#D4AF37" strokeWidth="3">
+          <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
+        </circle>
+        <text x="150" y="155" textAnchor="middle" fontSize="11" fill="#D4AF37">Error</text>
+        <text x="150" y="290" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "مراقبة مستمرة" : "Continuous monitoring"}</text>
+      </svg>
+    </div>
+  );
+}
+
+function CircuitPulse({ lang }: any) {
+  const lines = [
+    "M20,60 L180,60 L180,120 L320,120",
+    "M20,180 L120,180 L120,240 L280,240",
+    "M320,120 L320,60 L580,60",
+    "M280,240 L460,240 L460,180 L580,180",
+  ];
+  return (
+    <div className="w-full flex justify-center">
+      <svg viewBox="0 0 600 300" className="w-full h-auto" role="img">
+        {lines.map((d, i) => (
+          <g key={i}>
+            <path d={d} fill="none" stroke="#0F5132" strokeOpacity="0.25" strokeWidth="3" />
+            <path d={d} fill="none" stroke="#D4AF37" strokeWidth="3" strokeDasharray="14 10">
+              <animate attributeName="stroke-dashoffset" from="0" to="-48" dur={`${1.2 + i * 0.3}s`} repeatCount="indefinite" />
+            </path>
+          </g>
+        ))}
+        {[[180, 60], [320, 120], [460, 240], [280, 240]].map(([x, y], i) => (
+          <circle key={`n-${i}`} cx={x} cy={y} r="6" fill="#0F5132">
+            <animate attributeName="r" values="6;10;6" dur="1.6s" repeatCount="indefinite" begin={`${i * 0.3}s`} />
+          </circle>
+        ))}
+        <text x="300" y="295" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "مسارات البيانات" : "Data paths"}</text>
+      </svg>
+    </div>
+  );
+}
+
+const SECTOR_LANES = [
+  { ar: "استقبال الطلبات من واتساب", en: "WhatsApp intake", stagesAr: ["واتساب", "تحقق", "n8n", "CRM", "تأكيد"], stagesEn: ["WhatsApp", "Validate", "n8n", "CRM", "Confirm"] },
+  { ar: "معالجة المستندات بالذكاء الاصطناعي", en: "AI document processing", stagesAr: ["بريد", "استخراج", "AI", "قاعدة بيانات", "تقرير"], stagesEn: ["Email", "Extract", "AI", "Database", "Report"] },
+  { ar: "متابعة وتذكيرات تلقائية", en: "Automated follow-ups", stagesAr: ["موعد", "تذكير", "رد", "تحديث", "إغلاق"], stagesEn: ["Schedule", "Reminder", "Reply", "Update", "Close"] },
+];
+
+function SectorAutomationPanel({ sector, lang }: any) {
+  return (
+    <Card className="p-6 space-y-6" hover={false}>
+      <h3 className="text-xl font-bold text-emerald dark:text-gold">{lang === "ar" ? `أتمتة قطاع: ${sector.name_ar}` : `Automation for: ${sector.name_en}`}</h3>
+      {SECTOR_LANES.map((lane, i) => (
+        <AutomationFlow key={i} title={lang === "ar" ? lane.ar : lane.en} stages={lang === "ar" ? lane.stagesAr : lane.stagesEn} lang={lang} />
+      ))}
+    </Card>
+  );
+}
+
 function KpiCard({ kpi, lang, delay }: any) {
   const scale = /K$/i.test(String(kpi.value)) ? 1000 : 1;
   const dec = kpi.decimals ?? 0;
@@ -337,6 +461,10 @@ function DashboardView({ t, lang, model }: any) {
           </motion.div>
         </div>
       </Card>
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card className="p-6"><AutomationFlow title={lang === "ar" ? "خط الأتمتة الرئيسي" : "Core automation pipeline"} stages={["واتساب", "n8n", "AI", "Supabase", "بريد"]} lang={lang} /></Card>
+        <Card className="p-6"><AutomationOrbit lang={lang} /></Card>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {kpisFromModel(model).map((kpi: any, i: number) => (
           <KpiCard key={i} kpi={kpi} lang={lang} delay={i * 100} />
@@ -397,7 +525,10 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
                   <span className="text-sm font-medium text-gray-300 group-hover:text-gold transition-colors">{slider.label}</span>
                   <span className="text-sm font-bold text-gold tabular-nums">{slider.unit === "SAR" ? fmtSAR(slider.value) : `${slider.value} ${slider.unit}`}</span>
                 </div>
-                <input type="range" min={slider.min} max={slider.max} step={slider.step} value={slider.value} onChange={(e) => setFin({ ...fin, [slider.key]: parseFloat(e.target.value) })} className="w-full accent-gold cursor-pointer" />
+                <div className="flex gap-3 items-center">
+                  <input type="range" min={0} max={Math.max(slider.max, slider.value * 2)} step={slider.step} value={slider.value} onChange={(e) => setFin({ ...fin, [slider.key]: parseFloat(e.target.value) })} className="flex-1 accent-gold cursor-pointer" />
+                  <input type="number" min={0} step={slider.step} value={slider.value} onChange={(e) => setFin({ ...fin, [slider.key]: parseFloat(e.target.value) || 0 })} className="w-32 bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-white text-sm tabular-nums" />
+                </div>
               </div>
             ))}
           </div>
@@ -645,6 +776,7 @@ function SectorsView({ t, lang }: any) {
         <Card className="p-6"><BubbleChart lang={lang} /></Card>
         <Card className="p-6"><ChordDiagram lang={lang} /></Card>
       </div>
+      {selected && <SectorAutomationPanel sector={selected} lang={lang} />}
       {selected && <SectorModal sector={selected} lang={lang} onClose={() => setSelected(null)} />}
     </div>
   );
@@ -654,7 +786,7 @@ function RoadmapView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={MapIcon} title={t.menu.roadmap} subtitle={""} />
-      <AutomationNeural lang={lang} />
+      <Card className="p-6"><AutomationFlow title={lang === "ar" ? "مسار الرحلة" : "Journey path"} stages={lang === "ar" ? ["فكرة", "عتاد", "إطلاق", "أول عميل", "توسع"] : ["Idea", "Hardware", "Launch", "First client", "Scale"]} lang={lang} /></Card>
       <div className="relative">
         <div className="absolute right-6 top-0 bottom-0 w-1 bg-gradient-to-b from-gold via-emerald to-accent hidden md:block rounded-full" />
         <div className="space-y-6">
@@ -686,6 +818,7 @@ function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={AlertTriangle} title={t.menu.risks} subtitle={""} />
+      <Card className="p-6"><AutomationOrbit lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {DATA.risks.map((risk: any, i: number) => (
           <Card key={i} delay={i * 50}>
@@ -714,6 +847,7 @@ function HardwareView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
+      <Card className="p-6"><CircuitPulse lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-l from-emerald via-emerald-dark to-emerald opacity-90" />
         <div className="relative z-10 text-white">
@@ -948,7 +1082,7 @@ function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
-      <AutomationNeural lang={lang} />
+      <Card className="p-6"><AutomationFlow title={lang === "ar" ? "مسار البيانات" : "Data flow"} stages={lang === "ar" ? ["مستند", "تشفير", "تخزين", "مراجعة", "مشاركة"] : ["Document", "Encrypt", "Store", "Review", "Share"]} lang={lang} /></Card>
       <DataRoomVault lang={lang} />
     </div>
   );
@@ -966,7 +1100,7 @@ function TeamView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Users} title={t.menu.team} subtitle="" />
-      <AutomationNeural lang={lang} />
+      <Card className="p-6"><CircuitPulse lang={lang} /></Card>
       <Card className="p-8 overflow-hidden relative">
         <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald/20 to-gold/20 rounded-full blur-3xl" />
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
@@ -1021,7 +1155,7 @@ function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Shield} title={t.menu.security} subtitle={""} />
-      <AutomationNeural lang={lang} />
+      <Card className="p-6"><ScanRing lang={lang} /></Card>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 text-center border-emerald/30">
           <div className="w-16 h-16 rounded-2xl bg-emerald/10 flex items-center justify-center mx-auto mb-4"><Shield size={32} className="text-emerald" /></div>
