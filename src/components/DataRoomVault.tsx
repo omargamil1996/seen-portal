@@ -3,6 +3,13 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, FileText, Calendar, X, AlertTriangle, Eye, Shield } from "lucide-react";
 
+// Card component
+const Card = ({ children, className = "", hover = true }: any) => (
+  <div className={`bg-card dark:bg-dark-card rounded-2xl border border-border dark:border-dark-border shadow-card ${hover ? "hover-lift" : ""} ${className}`}>
+    {children}
+  </div>
+);
+
 export const DATA_ROOM_FILES = [
   { id: "000", name: "MASTER_INDEX.md", date: "2026-10-09", summary: "فهرس المستودع الشامل", category: "الأساسيات", sensitive: false, description: "ملف فهرس يربط جميع ملفات المستودع ويوفر نظرة عامة على البنية الكاملة. يساعد الموظفين الجدد والذكاء الاصطناعي على التنقل بسرعة.", reason: "ملف تنظيمي داخلي، لا يحتوي على معلومات حساسة لكن لا يُعرض علنياً للحفاظ على التنظيم." },
   { id: "010", name: "PROJECT_TRUTH.md", date: "2026-10-09", summary: "الحقيقة الحالية للمشروع", category: "الأساسيات", sensitive: false, description: "يحتوي على القرارات النهائية والأرقام المعتمدة (MRR، العملاء المستهدفون، هيكل المضاربة). هذا هو 'مصدر الحقيقة الوحيد' لجميع الملفات الأخرى.", reason: "ملف مرجعي داخلي مهم. الأرقام العامة معروضة بالفعل في الموقع، لكن الوثيقة الكاملة محمية." },
