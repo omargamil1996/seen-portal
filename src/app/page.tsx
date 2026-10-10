@@ -1871,12 +1871,49 @@ function DataRoomCards({ lang }: any) {
   );
 }
 
+function DataVaultScene({ lang }: any) {
+  const path = "M40,130 C120,60 200,200 262,130";
+  return (
+    <svg viewBox="0 0 600 270" className="w-full max-w-2xl h-auto mx-auto" role="img" aria-label="data vault automation">
+      <defs>
+        <radialGradient id="vault-glow"><stop offset="0" stopColor="#D4AF37" stopOpacity="0.35" /><stop offset="1" stopColor="#D4AF37" stopOpacity="0" /></radialGradient>
+      </defs>
+      <circle cx="300" cy="130" r="120" fill="url(#vault-glow)"><animate attributeName="r" values="110;124;110" dur="3s" repeatCount="indefinite" /></circle>
+      <circle cx="300" cy="130" r="100" fill="none" stroke="#D4AF37" strokeOpacity="0.5" strokeDasharray="6 8">
+        <animateTransform attributeName="transform" type="rotate" from="0 300 130" to="360 300 130" dur="14s" repeatCount="indefinite" />
+      </circle>
+      <rect x="236" y="92" width="128" height="100" rx="16" fill="#0F5132" stroke="#D4AF37" strokeWidth="3" />
+      <path d="M264,92 L264,72 A36,36 0 0 1 336,72 L336,92" fill="none" stroke="#D4AF37" strokeWidth="6" strokeLinecap="round" />
+      <g>
+        <animateTransform attributeName="transform" type="rotate" from="0 300 142" to="360 300 142" dur="6s" repeatCount="indefinite" />
+        <circle cx="300" cy="142" r="16" fill="none" stroke="#F97316" strokeWidth="3" />
+        <line x1="300" y1="142" x2="300" y2="128" stroke="#F97316" strokeWidth="3" strokeLinecap="round" />
+      </g>
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <rect key={i} x="-11" y="-14" width="22" height="28" rx="3" fill={i % 3 === 0 ? "#16a34a" : i % 3 === 1 ? "#eab308" : "#dc2626"}>
+          <animateMotion dur="3.6s" begin={`${i * 0.6}s`} repeatCount="indefinite" path={path} />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.8;1" dur="3.6s" begin={`${i * 0.6}s`} repeatCount="indefinite" />
+        </rect>
+      ))}
+      <rect x="0" y="20" width="3" height="230" fill="#D4AF37" opacity="0.7">
+        <animate attributeName="x" values="20;560;20" dur="5s" repeatCount="indefinite" />
+      </rect>
+      <g>
+        <circle cx="90" cy="40" r="6" fill="#16a34a" /><text x="104" y="45" fontSize="13" fill="#16a34a">{lang === "ar" ? "مسموح" : "Allowed"}</text>
+        <circle cx="90" cy="66" r="6" fill="#eab308" /><text x="104" y="71" fontSize="13" fill="#eab308">{lang === "ar" ? "مشدد" : "Restricted"}</text>
+        <circle cx="90" cy="92" r="6" fill="#dc2626" /><text x="104" y="97" fontSize="13" fill="#dc2626">{lang === "ar" ? "ممنوع" : "Forbidden"}</text>
+      </g>
+      <text x="300" y="258" textAnchor="middle" fontSize="13" fill="#D4AF37">{lang === "ar" ? "خزنة الوصول: 49 ملفاً مصنّفة" : "Access vault: 49 classified files"}</text>
+    </svg>
+  );
+}
+
 function DataRoomView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Briefcase} title={t.menu.dataRoom} subtitle={""} />
       <div className="flex justify-center"><BotAvatar mode="archive" size={120} /></div>
-      <Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><FileCards lang={lang} /></Card>
+      <DataVaultScene lang={lang} />
       <DataRoomCards lang={lang} />
     </div>
   );
