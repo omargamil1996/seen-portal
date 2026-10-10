@@ -263,6 +263,7 @@ function DashboardView({ t, lang }: any) {
 function FinancialsView({ fin, setFin, ltv, ltvCac, payback, be, projectionData, t, lang }: any) {
   const COLORS = ["#0F5132", "#D4AF37", "#F97316", "#6B7280", "#1a7a4c", "#b8962e", "#dc2626", "#3b82f6"];
   return (
+    }
     <div className="space-y-8">
       <SectionHeader icon={Wallet} title={t.financials.title} subtitle={t.financials.subtitle} />
       <Card className="p-8 overflow-hidden relative" hover={false}>
