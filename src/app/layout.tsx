@@ -5,7 +5,7 @@ const amiri = Amiri({ subsets: ["arabic"], weight: ["400","700"], variable: "--f
 const cairo = Cairo({ subsets: ["arabic","latin"], weight: ["300","400","500","600","700","800"], variable: "--font-cairo" });
 const inter = Inter({ subsets: ["latin"], weight: ["300","400","500","600","700"], variable: "--font-inter" });
 export const metadata: Metadata = {
-  title: "Seen Automation | Investor Briefcase v5.0",
+  title: "Seen Agentic | Investor Briefcase v5.0",
   description: "Interactive Investor Briefcase — Automate. Elevate. Halal.",
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {

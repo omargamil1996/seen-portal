@@ -1,7 +1,7 @@
 export const DATA = {
   company: {
-    name_ar: "سين أوتوميشن",
-    name_en: "Seen Automation",
+    name_ar: "سين إيجنتك",
+    name_en: "Seen Agentic",
     tagline_ar: "أتمتة. ارتقاء. حلال.",
     tagline_en: "Automate. Elevate. Halal.",
     vision_ar: "قيادة سوق أتمتة الذكاء الاصطناعي في العالم العربي عبر حلول مرئية مستقلة، حلال 100%.",
@@ -389,8 +389,8 @@ export const DATA = {
     {
       title_ar: "الملخص التنفيذي",
       title_en: "Executive Summary",
-      content_ar: "Seen Automation AI Agency وكالة أتمتة ذكاء اصطناعي متخصصة في القطاع الهندسي أولاً، ثم التوسع الأفقي إلى قطاعات أخرى بعد إثبات النموذج.\nنعمل بنموذج Zero-Friction: الأتمتة تعمل داخل الأدوات التي يستخدمها العميل يومياً، دون فرض منصة جديدة أو تدريب معقد.\nالطلب الاستثماري الحالي هو 15,000 دولار، موجه أساساً للعتاد والبحث والتطوير والتسويق، دون رواتب موظفين في هذه المرحلة.\nالميزة الأساسية ليست التقنية فقط، بل الفهم الميداني للاختناقات التشغيلية في المكاتب الهندسية من خلفية المؤسس الهندسية.\nالهدف الأول هو إغلاق أول عميل مدفوع في الربع الرابع من 2026 بعد بناء منتج قابل للتسليم وقياس الأثر.",
-      content_en: "Seen Automation AI Agency is an AI automation agency specialized first in engineering, then expanding horizontally to other sectors after proving the model.\nWe operate a Zero-Friction model: automation works inside the client's daily tools, without imposing a new platform or complex training.\nThe current investment ask is USD 15,000, directed mainly to hardware, R&D, and marketing, with no employee salaries at this stage.\nThe core advantage is not technology alone, but field understanding of operational bottlenecks in engineering firms from the founder's engineering background.\nThe first goal is to close the first paid client in Q4 2026 after building a deliverable product and measuring impact.",
+      content_ar: "Seen Agentic AI Agency وكالة أتمتة ذكاء اصطناعي متخصصة في القطاع الهندسي أولاً، ثم التوسع الأفقي إلى قطاعات أخرى بعد إثبات النموذج.\nنعمل بنموذج Zero-Friction: الأتمتة تعمل داخل الأدوات التي يستخدمها العميل يومياً، دون فرض منصة جديدة أو تدريب معقد.\nالطلب الاستثماري الحالي هو 15,000 دولار، موجه أساساً للعتاد والبحث والتطوير والتسويق، دون رواتب موظفين في هذه المرحلة.\nالميزة الأساسية ليست التقنية فقط، بل الفهم الميداني للاختناقات التشغيلية في المكاتب الهندسية من خلفية المؤسس الهندسية.\nالهدف الأول هو إغلاق أول عميل مدفوع في الربع الرابع من 2026 بعد بناء منتج قابل للتسليم وقياس الأثر.",
+      content_en: "Seen Agentic AI Agency is an AI automation agency specialized first in engineering, then expanding horizontally to other sectors after proving the model.\nWe operate a Zero-Friction model: automation works inside the client's daily tools, without imposing a new platform or complex training.\nThe current investment ask is USD 15,000, directed mainly to hardware, R&D, and marketing, with no employee salaries at this stage.\nThe core advantage is not technology alone, but field understanding of operational bottlenecks in engineering firms from the founder's engineering background.\nThe first goal is to close the first paid client in Q4 2026 after building a deliverable product and measuring impact.",
     },
     {
       title_ar: "مشكلة السوق",
@@ -508,7 +508,7 @@ export const DATA = {
     },
   ],
   pitchSlides: [
-    { title_ar: "الغلاف", title_en: "Cover", content_ar: "Seen Automation\nAutomate. Elevate. Halal.", content_en: "Seen Automation\nAutomate. Elevate. Halal." },
+    { title_ar: "الغلاف", title_en: "Cover", content_ar: "Seen Agentic\nAutomate. Elevate. Halal.", content_en: "Seen Agentic\nAutomate. Elevate. Halal." },
     { title_ar: "المشكلة", title_en: "Problem", content_ar: "7.6 ساعة/أسبوع مهدرة\n67.6% أخطاء رسومات", content_en: "7.6 hours/week wasted\n67.6% drawing errors" },
     { title_ar: "الحل", title_en: "Solution", content_ar: "AI Backend Pipelines\nZero-Friction", content_en: "AI Backend Pipelines\nZero-Friction" },
     { title_ar: "لماذا الآن", title_en: "Why Now", content_ar: "Vision 2030\n+56.25% AI spending", content_en: "Vision 2030\n+56.25% AI spending" },

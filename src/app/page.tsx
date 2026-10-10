@@ -22,6 +22,24 @@ import {
 } from "recharts";
 import { SankeyChart, TreemapChart, SunburstChart, RadarChart, BubbleChart, GanttChart, ChordDiagram } from "@/components/AdvancedCharts";
 
+function SeenLogo({ size = 48 }: any) {
+  return (
+    <svg viewBox="0 0 160 140" width={size} height={size * 0.875} role="img" aria-label="Seen Agentic logo">
+      <defs>
+        <linearGradient id="sa-grad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#0F5132" />
+          <stop offset="0.6" stopColor="#1a7a4c" />
+          <stop offset="1" stopColor="#F97316" />
+        </linearGradient>
+      </defs>
+      <path d="M14,58 C30,18 52,16 62,44 C72,16 94,16 104,44 C114,16 136,18 146,50" fill="none" stroke="url(#sa-grad)" strokeWidth="12" strokeLinecap="round" />
+      <path d="M18,78 C34,104 118,104 142,72" fill="none" stroke="#F97316" strokeWidth="6" strokeLinecap="round" opacity="0.9" />
+      <circle cx="136" cy="120" r="5" fill="#0F5132" />
+      <text x="80" y="136" textAnchor="middle" fontSize="20" fontWeight="700" fill="currentColor" style={{ fontFamily: "Cairo, sans-serif" }}>agentic</text>
+    </svg>
+  );
+}
+
 const AppContext = createContext<any>({});
 const PALETTE_CSS = `
 :root { --background-rgb: 250 250 248; --emerald-rgb: 15 81 50; --emerald-light-rgb: 26 122 76; --emerald-dark-rgb: 10 61 37; --gold-rgb: 212 175 55; --gold-light-rgb: 232 201 74; --gold-dark-rgb: 184 150 46; }
@@ -253,7 +271,7 @@ export default function Home() {
         <header className="sticky top-0 z-50 bg-card/90 dark:bg-dark-card/90 backdrop-blur-xl border-b border-border dark:border-dark-border shadow-lg">
           <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-gold flex items-center justify-center text-white font-bold text-xl shadow-lg">S</div>
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-gold flex items-center justify-center text-white font-bold shadow-lg overflow-hidden p-1"><SeenLogo size={36} /></div>
               <div>
                 <h1 className="text-lg font-bold text-emerald dark:text-gold font-amiri">
                   {lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}
@@ -814,7 +832,7 @@ function AnimatedHero({ t, lang }: any) {
         {[0, 1, 2].map((i) => (
           <span key={i} className="absolute inset-0 rounded-full border-2 border-gold/50" style={{ animation: `heroPulse 2.4s ease-out ${i * 0.8}s infinite` }} />
         ))}
-        <div className="absolute inset-6 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-2xl" style={{ animation: "heroGlow 2.4s ease-in-out infinite" }}>S</div>
+        <div className="absolute inset-6 rounded-full bg-gold/20 flex items-center justify-center text-gold font-bold text-2xl" style={{ animation: "heroGlow 2.4s ease-in-out infinite" }}><SeenLogo size={56} /></div>
         <div className="absolute inset-0" style={{ animation: "heroSpin 12s linear infinite" }}>
           <span className="absolute -top-1.5 left-1/2 w-3 h-3 rounded-full bg-gold" />
         </div>
