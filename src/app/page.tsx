@@ -224,7 +224,7 @@ export default function Home() {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald to-gold flex items-center justify-center text-white font-bold text-xl shadow-lg">S</div>
               <div>
                 <h1 className="text-lg font-bold text-emerald dark:text-gold font-amiri">
-                  {DATA.company.name_ar}
+                  {lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}
                   <span className="text-xs bg-emerald/10 text-emerald px-2 py-1 rounded-full ml-2">V5.2.0</span>
                 </h1>
                 <p className="text-xs text-gray-500">{t.common.investorBriefcase}</p>
@@ -411,7 +411,7 @@ function CircuitPulse({ lang }: any) {
 
 
 function TickerRail({ lang }: any) {
-  const items = ["واتساب", "n8n", "AI", "Supabase", "بريد", "Notion", "Sheets"];
+  const items = lang === "ar" ? ["واتساب", "n8n", "AI", "Supabase", "بريد", "Notion", "Sheets"] : ["WhatsApp", "n8n", "AI", "Supabase", "Email", "Notion", "Sheets"];
   const row = [...items, ...items];
   return (
     <div className="overflow-hidden w-full" dir="ltr">
@@ -685,7 +685,8 @@ function KpiCard({ kpi, lang, delay }: any) {
   const dec = kpi.decimals ?? 0;
   const { count, ref } = useCounter(parseFloat(kpi.value) * scale, 1500, dec);
   const { fmtSAR } = useMoney();
-  const display = kpi.unit === "SAR" ? fmtSAR(count) : `${count.toFixed(dec)}${kpi.unit === "x" ? "x" : kpi.unit ? " " + kpi.unit : ""}`;
+  const unitLabel = kpi.unit === "شهر" ? (lang === "ar" ? "شهر" : "mo") : kpi.unit;
+  const display = kpi.unit === "SAR" ? fmtSAR(count) : `${count.toFixed(dec)}${kpi.unit === "x" ? "x" : unitLabel ? " " + unitLabel : ""}`;
   return (
     <Card delay={delay} className="p-6 text-center">
       <div ref={ref} className="text-3xl md:text-4xl font-bold text-emerald dark:text-gold font-amiri mb-2">
@@ -697,7 +698,7 @@ function KpiCard({ kpi, lang, delay }: any) {
 }
 
 function AnimatedHero({ t, lang }: any) {
-  const tags = ["🕌 حلال 100%", "⚡ Zero-Friction", "🏰 قلعة + رماح", "🔒 بروتوكول أمني"];
+  const tags = lang === "ar" ? ["🕌 حلال 100%", "⚡ Zero-Friction", "🏰 قلعة + رماح", "🔒 بروتوكول أمني"] : ["🕌 100% Halal", "⚡ Zero-Friction", "🏰 Fortress + Spears", "🔒 Security Protocol"];
   const floats = [
     { x: 6, y: 18, s: 44, d: 0 }, { x: 78, y: 12, s: 26, d: 1.2 }, { x: 66, y: 68, s: 56, d: 0.6 },
     { x: 18, y: 72, s: 22, d: 1.8 }, { x: 90, y: 52, s: 34, d: 2.4 },
@@ -713,7 +714,7 @@ function AnimatedHero({ t, lang }: any) {
       `}</style>
       <div className="absolute inset-0 bg-gradient-to-br from-emerald via-emerald-dark to-slate-900" />
       {floats.map((f, i) => (
-        <div key={i} className="absolute rounded-full bg-gold/20 blur-sm" style={{ left: `${f.x}%`, top: `${f.y}%`, width: f.s, height: f.s, animation: `heroFloat ${4 + i}s ease-in-out ${f.d}s infinite` }} />
+        <div key={i} className="absolute rounded-full bg-gold/15" style={{ left: `${f.x}%`, top: `${f.y}%`, width: f.s, height: f.s, animation: `heroFloat ${4 + i}s ease-in-out ${f.d}s infinite` }} />
       ))}
       <div className="absolute right-10 top-1/2 -translate-y-1/2 w-40 h-40 hidden md:block">
         {[0, 1, 2].map((i) => (
@@ -724,13 +725,13 @@ function AnimatedHero({ t, lang }: any) {
           <span className="absolute -top-1.5 left-1/2 w-3 h-3 rounded-full bg-gold" />
         </div>
       </div>
-      <div className="relative z-10 max-w-3xl text-white">
-        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm border border-white/20 mb-6">
+      <div className="relative z-20 max-w-3xl text-white drop-shadow-md">
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold border border-white/20 mb-6">
           <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />{t.common.preSeed} • {t.common.investmentReady}
         </div>
-        <h1 className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4">{DATA.company.name_ar}</h1>
-        <p className="text-xl text-gold font-semibold mb-4 font-amiri">{DATA.company.tagline_ar}</p>
-        <p className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{DATA.company.vision_ar}</p>
+        <h1 className="text-4xl md:text-6xl font-amiri font-bold leading-tight mb-4">{lang === "ar" ? DATA.company.name_ar : DATA.company.name_en}</h1>
+        <p className="text-xl text-gold font-semibold mb-4 font-amiri">{lang === "ar" ? DATA.company.tagline_ar : DATA.company.tagline_en}</p>
+        <p className="text-lg text-white/80 leading-relaxed max-w-2xl mb-6">{lang === "ar" ? DATA.company.vision_ar : DATA.company.vision_en}</p>
         <div className="flex flex-wrap gap-3">
           {tags.map((tag, i) => (
             <span key={i} className="rounded-lg bg-white/10 border border-white/20 px-4 py-2 text-sm font-semibold backdrop-blur-sm" style={{ animation: `heroFade 6s ease-in-out ${i * 1.5}s infinite` }}>{tag}</span>
@@ -1547,7 +1548,7 @@ function SettingsView({ t, lang, dark, setDark, setLang }: any) {
         <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Wallet size={18} className="text-emerald" /> {lang === "ar" ? "العملة" : "Currency"}</h3>
         <div className="flex gap-2">
           {(["SAR", "USD", "MYR"] as const).map((c) => (
-            <button key={c} onClick={() => setCur(c)} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", cur === c ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>{c === "SAR" ? "ريال سعودي (SAR)" : c === "USD" ? "دولار (USD)" : "رنجت (MYR)"}</button>
+            <button key={c} onClick={() => setCur(c)} className={cn("flex-1 py-3 rounded-lg font-bold transition-all", cur === c ? "bg-emerald text-white shadow-md" : "bg-muted dark:bg-dark-muted hover:bg-muted/80")}>{c === "SAR" ? (lang === "ar" ? "ريال سعودي (SAR)" : "Saudi Riyal (SAR)") : c === "USD" ? (lang === "ar" ? "دولار (USD)" : "US Dollar (USD)") : (lang === "ar" ? "رنجت (MYR)" : "Malaysian Ringgit (MYR)")}</button>
           ))}
         </div>
         <p className="text-xs text-gray-500 mt-3">{lang === "ar" ? "أسعار التحويل تقريبية وتُحدَّث في الكود." : "Conversion rates are approximate and set in code."}</p>
