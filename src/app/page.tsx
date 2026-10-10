@@ -187,7 +187,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [slideIdx, setSlideIdx] = useState(0);
   const [fin, setFin] = useState<any>({
-    setup: 5000,
+    setup: 1500,
     sub: 2800,
     churn: DATA.financials.churn,
     cac: DATA.financials.cac,
@@ -771,13 +771,13 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
           <div className="space-y-6">
             {[
-              { label: lang === "ar" ? "رسوم التأسيس (لمرة واحدة)" : "Setup Fee (one-time)", value: fin.setup, min: 500, max: 5000, step: 100, unit: "SAR", key: "setup" },
-              { label: lang === "ar" ? "الاشتراك الشهري" : "Monthly Subscription", value: fin.sub, min: 100, max: 2000, step: 10, unit: "SAR", key: "sub" },
-              { label: lang === "ar" ? "نسبة التسرب الشهري (Churn)" : "Monthly Churn", value: fin.churn, min: 1, max: 20, step: 1, unit: "%", key: "churn" },
-              { label: "CAC", value: fin.cac, min: 500, max: 5000, step: 100, unit: "SAR", key: "cac" },
-              { label: lang === "ar" ? "عملاء جدد / شهر" : "New Customers / month", value: fin.newCust, min: 0.5, max: 10, step: 0.1, unit: "", key: "newCust" },
-              { label: lang === "ar" ? "هامش الربح الإجمالي" : "Gross Margin", value: fin.margin, min: 50, max: 90, step: 5, unit: "%", key: "margin" },
-              { label: lang === "ar" ? "التكاليف الثابتة / شهر" : "Fixed Costs / month", value: fin.fixed, min: 1000, max: 10000, step: 500, unit: "SAR", key: "fixed" },
+              { label: lang === "ar" ? "رسوم التأسيس (لمرة واحدة)" : "Setup Fee (one-time)", value: fin.setup, min: 0, max: 5000, step: 100, unit: "SAR", key: "setup" },
+              { label: lang === "ar" ? "الاشتراك الشهري" : "Monthly Subscription", value: fin.sub, min: 0, max: 5000, step: 10, unit: "SAR", key: "sub" },
+              { label: lang === "ar" ? "نسبة التسرب الشهري (Churn)" : "Monthly Churn", value: fin.churn, min: 0.1, max: 20, step: 1, unit: "%", key: "churn" },
+              { label: "CAC", value: fin.cac, min: 0, max: 5000, step: 100, unit: "SAR", key: "cac" },
+              { label: lang === "ar" ? "عملاء جدد / شهر" : "New Customers / month", value: fin.newCust, min: 0, max: 10, step: 0.1, unit: "", key: "newCust" },
+              { label: lang === "ar" ? "هامش الربح الإجمالي" : "Gross Margin", value: fin.margin, min: 0, max: 100, step: 5, unit: "%", key: "margin" },
+              { label: lang === "ar" ? "التكاليف الثابتة / شهر" : "Fixed Costs / month", value: fin.fixed, min: 0, max: 10000, step: 500, unit: "SAR", key: "fixed" },
                         ].map((slider, i) => (
               <div key={i} className="group">
                 <div className="flex justify-between items-center mb-2">
