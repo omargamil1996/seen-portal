@@ -1670,6 +1670,37 @@ const slideDesigns = [
   { bg: "from-slate-900 via-emerald-dark to-gold", icon: "🌟", accent: "gold" },
 ];
 
+function SlideFlow({ idx }: any) {
+  const base = 6 + (idx % 4);
+  const paths = [
+    "M-20,300 C160,180 300,380 460,240 S760,120 840,200",
+    "M-20,120 C180,220 340,40 520,140 S760,300 840,260",
+    "M-20,420 C200,330 380,460 560,360 S760,400 840,340",
+  ];
+  return (
+    <svg viewBox="0 0 800 500" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none opacity-60" aria-hidden="true">
+      {paths.map((p, i) => (
+        <g key={i}>
+          <path d={p} fill="none" stroke="#D4AF37" strokeOpacity="0.45" strokeWidth="2" strokeDasharray="8 10">
+            <animate attributeName="stroke-dashoffset" from="0" to="-72" dur={`${base + i}s`} repeatCount="indefinite" />
+          </path>
+          <circle r="6" fill={i === 1 ? "#F97316" : "#FFFFFF"}>
+            <animateMotion dur={`${base + i * 1.5}s`} repeatCount="indefinite" path={p} />
+          </circle>
+          <circle r="4" fill="#D4AF37">
+            <animateMotion dur={`${base + i * 1.5}s`} begin={`${base / 2}s`} repeatCount="indefinite" path={p} />
+          </circle>
+        </g>
+      ))}
+      {[[120, 90], [640, 110], [400, 430]].map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="9" fill="#0F5132" stroke="#D4AF37" strokeWidth="2">
+          <animate attributeName="r" values="8;13;8" dur={`${2 + i * 0.4}s`} repeatCount="indefinite" />
+        </circle>
+      ))}
+    </svg>
+  );
+}
+
 function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   const currentSlide = DATA.pitchSlides[slideIdx];
   const currentDesign = slideDesigns[slideIdx];
@@ -1677,7 +1708,6 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
-      <AutomationScene kind="shield" lang={lang} />
       <Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><GrowthBars lang={lang} /></Card>
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
@@ -1694,6 +1724,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
         <div className={cn("relative min-h-[400px] flex flex-col items-center justify-center p-10 overflow-hidden bg-gradient-to-br", currentDesign.bg)}>
           <div className="absolute inset-0 opacity-10"><div className="absolute top-10 left-10 text-[200px] leading-none">{currentDesign.icon}</div><div className="absolute bottom-10 right-10 text-[150px] leading-none opacity-50">{currentDesign.icon}</div></div>
           <div className="absolute top-4 left-4 text-gold text-xs font-mono bg-black/30 backdrop-blur-sm px-3 py-1 rounded-full border border-gold/30">SLIDE {slideIdx + 1} / {DATA.pitchSlides.length}</div>
+          <SlideFlow idx={slideIdx} />
           <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-gold/20 blur-3xl animate-pulse" />
           <div className="absolute -bottom-28 -left-16 w-80 h-80 rounded-full bg-white/10 blur-3xl animate-pulse" />
           <motion.div key={slideIdx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 text-center max-w-3xl">
