@@ -1008,6 +1008,7 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
   return (
     <div className="space-y-8">
       <SectionHeader icon={Wallet} title={t.menu.financials} subtitle={""} />
+      <AutomationScene kind="orbit" lang={lang} />
       <Card className="p-8 overflow-hidden relative" hover={false}>
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950" />
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-10 text-white">
@@ -1208,6 +1209,7 @@ function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileText} title={t.menu.businessPlan} subtitle={""} />
+      <AutomationScene kind="flow" lang={lang} />
       <BotsAround leftMode="typing" rightMode="archive" size={80}><Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><PagesStack lang={lang} /></Card></BotsAround>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <Card className="p-4 text-center bg-emerald/5 border-emerald/20"><div className="text-3xl font-bold text-emerald font-amiri">{DATA.businessPlan.length}</div><div className="text-xs text-gray-500 mt-1">{lang === "ar" ? "قسم شامل" : "Full Sections"}</div></Card>
@@ -1264,6 +1266,7 @@ function SectorsView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={Target} title={t.menu.sectors} subtitle={""} />
+      <AutomationScene kind="network" lang={lang} />
       <BotsAround leftMode="typing" rightMode="guard" size={84}><Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><SectorWheel lang={lang} /></Card></BotsAround>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {DATA.sectors.map((s: any, i: number) => (
@@ -1453,8 +1456,7 @@ function RisksView({ t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={AlertTriangle} title={t.menu.risks} subtitle={""} />
-      <BotsAround leftMode="guard" rightMode="typing" size={80}><Card className="p-6 bg-transparent border-transparent shadow-none"><HangingWeight lang={lang} /></Card></BotsAround>
-      <BotsAround leftMode="typing" rightMode="archive" size={80}><Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-56 [&_svg]:w-auto [&_svg]:mx-auto"><RiskHeatmap lang={lang} /></Card></BotsAround>
+      <AutomationScene kind="alarm" lang={lang} />
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {DATA.risks.map((risk: any, i: number) => (
           <Card key={i} delay={i * 50} className="p-8 min-h-[260px] border-2 hover:border-gold/60">
@@ -1675,6 +1677,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   return (
     <div className="space-y-6">
       <SectionHeader icon={FileCheck} title={t.menu.theAsk} subtitle={""} />
+      <AutomationScene kind="shield" lang={lang} />
       <Card className="p-5 bg-transparent border-transparent shadow-none hover:shadow-none [&_svg]:max-h-48 [&_svg]:w-auto [&_svg]:mx-auto"><GrowthBars lang={lang} /></Card>
       <Card className="overflow-hidden" hover={false}>
         <div className="p-4 border-b border-border dark:border-dark-border flex justify-between items-center bg-muted/30 dark:bg-dark-muted/30">
@@ -1904,6 +1907,58 @@ function DataVaultScene({ lang }: any) {
         <circle cx="90" cy="92" r="6" fill="#dc2626" /><text x="104" y="97" fontSize="13" fill="#dc2626">{lang === "ar" ? "ممنوع" : "Forbidden"}</text>
       </g>
       <text x="300" y="258" textAnchor="middle" fontSize="13" fill="#D4AF37">{lang === "ar" ? "خزنة الوصول: 49 ملفاً مصنّفة" : "Access vault: 49 classified files"}</text>
+    </svg>
+  );
+}
+
+function AutomationScene({ kind, lang }: any) {
+  const ar = lang === "ar";
+  if (kind === "flow") {
+    const p = "M40,110 C140,40 240,180 330,110 S470,40 560,110";
+    return (
+      <svg viewBox="0 0 600 220" className="w-full max-w-3xl h-auto mx-auto" role="img">
+        <path d={p} fill="none" stroke="#D4AF37" strokeOpacity="0.35" strokeWidth="2" strokeDasharray="6 8" />
+        {[0, 1, 2, 3].map((i) => (
+          <circle key={i} r="7" fill={i % 2 ? "#F97316" : "#0F5132"}>
+            <animateMotion dur="4.2s" begin={`${i * 1.05}s`} repeatCount="indefinite" path={p} />
+          </circle>
+        ))}
+        <circle cx="330" cy="110" r="30" fill="#0F5132" stroke="#D4AF37" strokeWidth="3"><animate attributeName="r" values="28;34;28" dur="2.4s" repeatCount="indefinite" /></circle>
+        <text x="330" y="116" textAnchor="middle" fontSize="13" fontWeight="700" fill="#D4AF37">{ar ? "معالجة" : "AI"}</text>
+        <text x="60" y="170" fontSize="12" fill="#6B7280">{ar ? "استقبال" : "Intake"}</text>
+        <text x="520" y="170" fontSize="12" fill="#6B7280">{ar ? "تسليم" : "Delivery"}</text>
+      </svg>
+    );
+  }
+  if (kind === "orbit") {
+    return (
+      <svg viewBox="0 0 600 240" className="w-full max-w-2xl h-auto mx-auto" role="img">
+        {[80, 120].map((r) => (<circle key={r} cx="300" cy="120" r={r} fill="none" stroke="#D4AF37" strokeOpacity="0.35" strokeDasharray="4 6" />))}
+        <circle cx="300" cy="120" r="34" fill="#0F5132" stroke="#D4AF37" strokeWidth="3" />
+        <text x="300" y="125" textAnchor="middle" fontSize="13" fontWeight="700" fill="#D4AF37">SEEN</text>
+        <g><animateTransform attributeName="transform" type="rotate" from="0 300 120" to="360 300 120" dur="10s" repeatCount="indefinite" /><circle cx="380" cy="120" r="12" fill="#F97316" /></g>
+        <g><animateTransform attributeName="transform" type="rotate" from="360 300 120" to="0 300 120" dur="16s" repeatCount="indefinite" /><circle cx="300" cy="0" r="10" fill="#16a34a" transform="translate(0,0)" /><circle cx="180" cy="120" r="10" fill="#D4AF37" /></g>
+        <text x="300" y="232" textAnchor="middle" fontSize="12" fill="#6B7280">{ar ? "الأرقام تدور حول المركز" : "Figures orbit the core"}</text>
+      </svg>
+    );
+  }
+  if (kind === "network") {
+    const pts = [[90, 60], [220, 30], [380, 50], [510, 70], [150, 150], [300, 130], [450, 160]];
+    const edges = [[0, 1], [1, 2], [2, 3], [0, 4], [4, 5], [5, 2], [5, 6], [6, 3]];
+    return (
+      <svg viewBox="0 0 600 200" className="w-full max-w-3xl h-auto mx-auto" role="img">
+        {edges.map(([a, b], i) => (<line key={i} x1={pts[a][0]} y1={pts[a][1]} x2={pts[b][0]} y2={pts[b][1]} stroke="#D4AF37" strokeOpacity="0.4" strokeWidth="1.5"><animate attributeName="stroke-opacity" values="0.15;0.7;0.15" dur={`${2 + i * 0.3}s`} repeatCount="indefinite" /></line>))}
+        {pts.map(([x, y], i) => (<circle key={i} cx={x} cy={y} r={i === 5 ? 10 : 7} fill={i % 2 ? "#D4AF37" : "#0F5132"}><animate attributeName="r" values={`${i === 5 ? 10 : 7};${i === 5 ? 14 : 10};${i === 5 ? 10 : 7}`} dur={`${1.6 + i * 0.2}s`} repeatCount="indefinite" /></circle>))}
+      </svg>
+    );
+  }
+  // alarm: radar pulse with a warning ring, transparent
+  return (
+    <svg viewBox="0 0 600 220" className="w-full max-w-2xl h-auto mx-auto" role="img">
+      {[0, 1, 2].map((i) => (<circle key={i} cx="300" cy="110" r="40" fill="none" stroke="#dc2626" strokeWidth="2"><animate attributeName="r" from="40" to="110" dur="3s" begin={`${i}s`} repeatCount="indefinite" /><animate attributeName="stroke-opacity" from="0.8" to="0" dur="3s" begin={`${i}s`} repeatCount="indefinite" /></circle>))}
+      <circle cx="300" cy="110" r="26" fill="#dc2626" fillOpacity="0.85"><animate attributeName="r" values="24;28;24" dur="1.4s" repeatCount="indefinite" /></circle>
+      <text x="300" y="117" textAnchor="middle" fontSize="18" fontWeight="700" fill="#fff">!</text>
+      <text x="300" y="206" textAnchor="middle" fontSize="12" fill="#6B7280">{ar ? "رصد مستمر للمخاطر" : "Continuous risk watch"}</text>
     </svg>
   );
 }
