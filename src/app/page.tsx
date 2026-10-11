@@ -1487,6 +1487,37 @@ function HardwareView({ t, lang }: any) {
   const { fmtUSD, fmtRange, fxUSD } = useMoney();
   return (
     <div className="space-y-6">
+      
+      <div className="rounded-3xl border-2 border-gold/60 bg-gradient-to-br from-gold/10 via-transparent to-emerald/10 p-6 space-y-4">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">⚡</span>
+          <h2 className="text-xl font-bold text-gold">{lang === "ar" ? "لماذا نحتاج هذا العتاد؟" : "Why do we need this hardware?"}</h2>
+        </div>
+        <p className={cn("text-base leading-relaxed", lang === "ar" ? "text-right" : "text-left")}>
+          {lang === "ar"
+            ? "كل ما تراه في هذا الموقع — الـ 12 صفحة، والنماذج التفاعلية، والوثائق الأربع، و 49 ملفاً مصنّفاً — بُنِيَ بتوفيق من الله سبحانه وتعالى، باستخدام جهاز Microsoft Surface Pro 6 من عام 2018 بطاريته معطوبة ومشبوك على الشاحن، كرسي خشبي بسيط بدون مكتب، وإنترنت من الجوال فقط. لا اشتراكات، لا سيرفر، لا أدوات مدفوعة."
+            : "Everything you see in this portal — 12 pages, interactive models, four investor documents, and 49 classified files — was built with God's grace using a 2018 Microsoft Surface Pro 6 with a dead battery (permanently plugged in), a basic wooden chair, no desk, and a mobile hotspot for internet. No subscriptions, no server, no paid tools."}
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {[
+            { icon: "🔋", ar: "Surface Pro 6 (2018) — البطارية معطوبة، يعمل فقط على الكهرباء", en: "Surface Pro 6 (2018) — dead battery, works only when plugged in" },
+            { icon: "📶", ar: "الإنترنت فقط من الجوال — لا خط ثابت", en: "Mobile hotspot only — no fixed internet line" },
+            { icon: "🪑", ar: "كرسي خشبي بسيط — لا مكتب ولا بيئة عمل ثابتة", en: "Basic wooden chair — no desk, no stable workspace" },
+            { icon: "🚫", ar: "صفر اشتراكات مدفوعة — كل شيء على الطبقة المجانية", en: "Zero paid subscriptions — everything on free tiers" },
+          ].map((item, i) => (
+            <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-black/10 dark:bg-white/5 border border-gold/20">
+              <span className="text-2xl shrink-0">{item.icon}</span>
+              <p className={cn("text-sm leading-relaxed text-gray-700 dark:text-gray-300", lang === "ar" ? "text-right" : "text-left")}>{lang === "ar" ? item.ar : item.en}</p>
+            </div>
+          ))}
+        </div>
+        <p className={cn("text-sm font-semibold text-emerald dark:text-gold", lang === "ar" ? "text-right" : "text-left")}>
+          {lang === "ar"
+            ? "الاستثمار المطلوب لا يُبنى على عدم وجود كفاءة — بل على إثبات وجودها في أصعب الظروف."
+            : "The investment ask is not built on a lack of capability — it proves that capability exists under the hardest conditions."}
+        </p>
+      </div>
+
       <SectionHeader icon={Cpu} title={t.menu.hardware} subtitle={""} />
       <AutomationScene kind="chip" lang={lang} />
       <Card className="p-8 overflow-hidden relative" hover={false}>
