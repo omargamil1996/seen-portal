@@ -1495,8 +1495,8 @@ function HardwareView({ t, lang }: any) {
         </div>
         <p className={cn("text-base leading-relaxed", lang === "ar" ? "text-right" : "text-left")}>
           {lang === "ar"
-            ? "كل ما تراه في هذا الموقع — الـ 12 صفحة، والنماذج التفاعلية، والوثائق الأربع، و 49 ملفاً مصنّفاً — بُنِيَ بتوفيق من الله سبحانه وتعالى، باستخدام جهاز Microsoft Surface Pro 6 من عام 2018 بطاريته معطوبة ومشبوك على الشاحن، كرسي خشبي بسيط بدون مكتب، وإنترنت من الجوال فقط. لا اشتراكات، لا سيرفر، لا أدوات مدفوعة."
-            : "Everything you see in this portal — 12 pages, interactive models, four investor documents, and 49 classified files — was built with God's grace using a 2018 Microsoft Surface Pro 6 with a dead battery (permanently plugged in), a basic wooden chair, no desk, and a mobile hotspot for internet. No subscriptions, no server, no paid tools."}
+            ? "كل ما تراه في هذا الموقع — 12 صفحة، نماذج تفاعلية، أربع وثائق استثمارية، و49 ملفاً مصنّفاً — بُنِيَ بتوفيق من الله ثم بجهاز Microsoft Surface Pro 6 من عام 2018 بطاريته معطوبة ولا يعمل إلا موصولاً بالكهرباء، وكرسي خشبي بسيط بلا مكتب ثابت، وإنترنت مقطوع من الجوال فحسب. في المنتصف تعطّلت بيئة Oracle Cloud المجانية بحظر مفاجئ وأُوقف الحساب تماماً، فعاد العمل إلى التصميم على الورق وبناء المنطق دون أي تشغيل فعلي. لا اشتراكات مدفوعة، لا أدوات تجارية، لا سيرفر — كل شيء على الطبقات المجانية."
+            : "Everything you see in this portal — 12 pages, interactive financial models, four investor documents, and 49 classified files — was built by the grace of God then with a 2018 Microsoft Surface Pro 6 whose battery is dead and only runs plugged in, a plain wooden chair with no fixed desk, and a mobile internet connection that cuts out. Midway through, a free Oracle Cloud account was blocked without warning and shut down entirely, pushing the work back to paper-based design and logic-building with no live environment. No paid subscriptions, no commercial tools, no server — everything on free tiers."}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
@@ -1513,8 +1513,8 @@ function HardwareView({ t, lang }: any) {
         </div>
         <p className={cn("text-sm font-semibold text-emerald dark:text-gold", lang === "ar" ? "text-right" : "text-left")}>
           {lang === "ar"
-            ? "الاستثمار المطلوب لا يُبنى على عدم وجود كفاءة — بل على إثبات وجودها في أصعب الظروف."
-            : "The investment ask is not built on a lack of capability — it proves that capability exists under the hardest conditions."}
+            ? "الاستثمار المطلوب ليس لإثبات الكفاءة — فهذا الموقع أثبتها. هو لرفع السقف: مكتب حقيقي، عتاد لائق، وانطلاقة لا تُوقفها قابس كهرباء."
+            : "The investment ask is not to prove capability — this portal already does that. It's to raise the ceiling: a real workspace, reliable hardware, and a launch that doesn't depend on a power socket."}
         </p>
       </div>
 
