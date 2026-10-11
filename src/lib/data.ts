@@ -539,7 +539,9 @@ export const DATA = {
 
 النتيجة: موقع استثماري كامل من 12 صفحة، نموذج مالي تفاعلي، أربع وثائق، و49 ملفاً مصنّفاً.
 
-هذا ليس شكوى. هذا دليل.`,
+هذا ليس شكوى. هذا دليل.
+
+وحين يتوفر الاستثمار: مكتب مستقل، عتاد احترافي، وقدرة تشغيلية حقيقية — لا سقف محدود.`,
       content_en: `Everything in this portal was built under conditions that would discourage any rational person from starting.
 
 Device: A 2018 Microsoft Surface Pro 6 with a completely dead battery, running only when plugged in. It overheats quickly and freezes for a full minute on any heavy task — opening a Word file, querying an AI model, running an Agent.
@@ -554,7 +556,9 @@ No real desk. No paid subscriptions. No adequate hardware.
 
 The result: a complete 12-page investor portal, interactive financial model, four documents, and 49 classified files.
 
-This is not a complaint. It is evidence.`,
+This is not a complaint. It is evidence.
+
+With investment: a dedicated workspace, professional hardware, and real operational capacity — no artificial ceiling.`,
     },
   ],
   securityHighlights: { attacks: 25, hallucinationTests: 100, encryption: "AES-256 + TLS 1.3" },

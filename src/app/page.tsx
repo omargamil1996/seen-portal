@@ -1513,8 +1513,8 @@ function HardwareView({ t, lang }: any) {
         </div>
         <p className={cn("text-sm font-semibold text-emerald dark:text-gold", lang === "ar" ? "text-right" : "text-left")}>
           {lang === "ar"
-            ? "الاستثمار المطلوب ليس لإثبات الكفاءة — فهذا الموقع أثبتها. هو لرفع السقف: مكتب حقيقي، عتاد لائق، وانطلاقة لا تُوقفها قابس كهرباء."
-            : "The investment ask is not to prove capability — this portal already does that. It's to raise the ceiling: a real workspace, reliable hardware, and a launch that doesn't depend on a power socket."}
+            ? "الاستثمار ليس لإثبات الكفاءة — فهذا الموقع أثبتها في أضيق الظروف. هو لرفع السقف: مكتب مستقل، عتاد احترافي، وطاقة تشغيلية كاملة بدلاً من العمل على هامش ما هو متاح."
+            : "The investment ask is not to prove capability — this portal already does. It is to raise the ceiling: a dedicated workspace, professional hardware, and full operational capacity instead of building on the margins of what is available."}
         </p>
       </div>
 
