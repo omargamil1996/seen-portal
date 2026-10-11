@@ -1687,20 +1687,21 @@ function PriceRangeChart({ items }: any) {
 }
 
 const slideDesigns = [
-  { bg: "from-emerald via-emerald-dark to-emerald", icon: "🏢", accent: "gold" },
-  { bg: "from-red-900 via-red-800 to-red-900", icon: "⚠️", accent: "white" },
-  { bg: "from-emerald via-emerald-dark to-gold", icon: "💡", accent: "gold" },
-  { bg: "from-blue-900 via-blue-800 to-blue-900", icon: "🚀", accent: "gold" },
-  { bg: "from-purple-900 via-purple-800 to-emerald", icon: "📊", accent: "gold" },
-  { bg: "from-gold-dark via-gold to-amber-600", icon: "", accent: "white" },
-  { bg: "from-emerald-dark via-emerald to-gold", icon: "✅", accent: "white" },
-  { bg: "from-slate-900 via-slate-800 to-emerald", icon: "🎯", accent: "gold" },
-  { bg: "from-gold via-amber-500 to-emerald", icon: "⭐", accent: "white" },
-  { bg: "from-blue-900 via-indigo-800 to-purple-900", icon: "📈", accent: "gold" },
-  { bg: "from-emerald via-emerald-dark to-slate-900", icon: "", accent: "gold" },
-  { bg: "from-gold-dark via-gold to-emerald", icon: "📊", accent: "white" },
-  { bg: "from-emerald via-emerald-dark to-gold", icon: "", accent: "gold" },
-  { bg: "from-slate-900 via-emerald-dark to-gold", icon: "🌟", accent: "gold" },
+  { color: "#0F5132", emoji: "💡" },
+  { color: "#1a7a4c", emoji: "🔎" },
+  { color: "#D4AF37", emoji: "🚀" },
+  { color: "#0F5132", emoji: "❗" },
+  { color: "#1a7a4c", emoji: "📊" },
+  { color: "#D4AF37", emoji: "🌍" },
+  { color: "#0F5132", emoji: "🏛️" },
+  { color: "#F97316", emoji: "💰" },
+  { color: "#1a7a4c", emoji: "🤖" },
+  { color: "#D4AF37", emoji: "🛡️" },
+  { color: "#0F5132", emoji: "👤" },
+  { color: "#F97316", emoji: "🗺️" },
+  { color: "#1a7a4c", emoji: "📦" },
+  { color: "#D4AF37", emoji: "📞" },
+  { color: "#0F5132", emoji: "🏁" },
 ];
 
 function SlideFlow({ idx }: any) {
@@ -1736,7 +1737,7 @@ function SlideFlow({ idx }: any) {
 
 function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   const currentSlide = DATA.pitchSlides[slideIdx];
-  const currentDesign = slideDesigns[slideIdx];
+  const currentDesign = slideDesigns[slideIdx] ?? slideDesigns[0];
   const lines = (lang === "ar" ? currentSlide.content_ar : currentSlide.content_en).split("\n").filter((l: string) => l.trim());
   return (
     <div className="space-y-6">
