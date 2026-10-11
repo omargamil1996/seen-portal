@@ -522,6 +522,40 @@ export const DATA = {
     { title_ar: "المالية", title_en: "Financials", content_ar: "Y3: SAR 936K\n80 عميل", content_en: "Y3: SAR 936K\n80 clients" },
     { title_ar: "الطلب", title_en: "Ask", content_ar: "SAR 82,500\nمضاربة شرعية", content_en: "SAR 82,500\nSharia Mudarabah" },
     { title_ar: "الرؤية", title_en: "Vision", content_ar: "Y5: 200+ عميل\n$2M+ ARR", content_en: "Y5: 200+ clients\n$2M+ ARR" },
+    {
+      title_ar: "التحديات الحقيقية — قصة التأسيس",
+      title_en: "Real Challenges — The Founding Story",
+      content_ar: `كل ما في هذا الموقع وُلد في ظروف لا تشجع أي عاقل على البدء.
+
+الجهاز: Microsoft Surface Pro 6 من 2018، بطاريته معطوبة تماماً، يعمل فقط موصولاً بالكهرباء. يسخن بسرعة ويتجمد لدقيقة كاملة عند كل إجراء ثقيل — فتح ملف Word، التواصل مع نموذج ذكاء اصطناعي، تشغيل Agent.
+
+مكان العمل: طاولة طعام عليها كل شيء، وكرسي.
+
+الإنترنت: خط ثابت مشترك وبطيء جداً.
+
+الحل المؤقت: لتجاوز ضعف الجهاز، استُخدم Oracle Cloud المجاني كبيئة سحابية لتشغيل العمليات بعيداً عن الجهاز. في المنتصف حُجب الحساب دون إنذار وأُوقف تماماً، فعاد كل العمل إلى الجهاز المحلي.
+
+لا مكتب، لا اشتراكات مدفوعة، لا عتاد لائق.
+
+النتيجة: موقع استثماري كامل من 12 صفحة، نموذج مالي تفاعلي، أربع وثائق، و49 ملفاً مصنّفاً.
+
+هذا ليس شكوى. هذا دليل.`,
+      content_en: `Everything in this portal was built under conditions that would discourage any rational person from starting.
+
+Device: A 2018 Microsoft Surface Pro 6 with a completely dead battery, running only when plugged in. It overheats quickly and freezes for a full minute on any heavy task — opening a Word file, querying an AI model, running an Agent.
+
+Workspace: A dining table holding everything, and a chair.
+
+Internet: A shared, very slow fixed line.
+
+The workaround: To bypass the device's limitations, Oracle Cloud's free tier was used as a remote environment. Midway through, the account was blocked without warning and shut down entirely, pushing everything back to the local machine.
+
+No real desk. No paid subscriptions. No adequate hardware.
+
+The result: a complete 12-page investor portal, interactive financial model, four documents, and 49 classified files.
+
+This is not a complaint. It is evidence.`,
+    },
   ],
   securityHighlights: { attacks: 25, hallucinationTests: 100, encryption: "AES-256 + TLS 1.3" },
   checklists: {
