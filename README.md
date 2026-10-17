@@ -16,7 +16,7 @@ npm run dev       # http://localhost:3000
 npm run build     # production build (static export)
 ```
 
-> `--legacy-peer-deps` ضروري بسبب تعارض peer deps بين `echarts-for-react` و React 18.
+> `--legacy-peer-deps` ضروري بسبب تعارض peer deps في `echarts-for-react`.
 
 ---
 
@@ -25,7 +25,7 @@ npm run build     # production build (static export)
 | الطبقة | التقنية |
 | --- | --- |
 | الإطار | Next.js 14.2 (App Router) |
-| اللغة | TypeScript (strict) |
+| اللغة | TypeScript strict |
 | التنسيق | Tailwind CSS 3.4 + نظام تصميم مخصص |
 | الحركة | Framer Motion 11 |
 | الرسوم البيانية | Recharts 2.15 + ECharts 5 |
@@ -35,44 +35,50 @@ npm run build     # production build (static export)
 
 ## 📁 بنية المشروع — المسارات الحقيقية
 
-> ⚠️ لا يوجد مجلد `src/` في هذا المشروع. الملفات في جذر المستودع مباشرة.
-
 ```
 .
-├── app/
-│   ├── layout.tsx          # الخطوط (Amiri · Cairo · Inter) + metadata
-│   ├── page.tsx            # ⚠️ البوابة الرئيسية — 150 KB · 12 تبويب · ملف واحد
-│   └── globals.css         # متغيرات التصميم + أنماط الطباعة
-├── components/
-│   ├── DataRoomVault.tsx   # خزنة المستندات (49 مستند)
-│   ├── SectorModal.tsx     # نافذة تفاصيل القطاع
-│   └── AdvancedCharts.tsx  # رسوم ECharts المتقدمة
-├── lib/
-│   ├── data.ts             # كل محتوى البوابة (مالية · خطب · قطاعات · مخاطر)
-│   ├── translations.ts     # نصوص عربي / إنجليزي
-│   └── utils.ts            # cn() وتنسيق الأرقام
+├── src/
+│   ├── app/
+│   │   ├── globals.css       #   2.5 KB — متغيرات التصميم + أنماط الطباعة
+│   │   ├── layout.tsx        #   1.0 KB — الخطوط (Amiri · Cairo · Inter) + metadata
+│   │   └── page.tsx          # ⚠️ 147 KB — البوابة كاملة: 12 تبويبًا في ملف واحد
+│   ├── components/
+│   │   ├── AdvancedCharts.tsx  #   6.1 KB — رسوم ECharts
+│   │   ├── DataRoomVault.tsx   #  35.7 KB — خزنة المستندات (49 مستند)
+│   │   └── SectorModal.tsx     #   6.7 KB — نافذة تفاصيل القطاع
+│   └── lib/
+│       ├── data.ts             #  62.8 KB — كل محتوى البوابة (مالية · قطاعات · مخاطر)
+│       ├── translations.ts     #   3.7 KB — نصوص عربي / إنجليزي
+│       └── utils.ts            #   0.4 KB — cn() وتنسيق الأرقام
 ├── .github/workflows/
-│   └── deploy.yml          # GitHub Pages (غير مستخدم للإنتاج)
-├── next.config.mjs         # output: 'export' + إعدادات الصور
-├── tailwind.config.ts      # الألوان والخطوط المخصصة
-├── tsconfig.json           # strict · paths: @/* → ./src/*  ⚠️ قديم
-├── vercel.json             # رؤوس الأمان + CORS
-├── CHANGELOG.md            # سجل التغييرات
-├── BACKUP_LOG.md           # سجل النسخ الاحتياطية
-├── PROMPT.md               # مواصفات البناء الأصلية (v5.0)
-└── README.md               # هذا الملف
+│   └── deploy.yml            # GitHub Pages (احتياطي — معطّل)
+├── next.config.mjs           # output: 'export' + إعدادات الصور
+├── tailwind.config.ts        # الألوان والخطوط
+├── tsconfig.json             # strict · @/* → ./src/*
+├── vercel.json               # رؤوس الأمان + CORS
+├── CHANGELOG.md              # سجل التغييرات
+├── BACKUP_LOG.md             # سجل النسخ الاحتياطية
+├── PROMPT.md                 # مواصفات البناء الأصلية (v5.0)
+└── README.md                 # هذا الملف
 ```
 
-### أين أعدّل ماذا؟
+> `@/*` يُحلّ إلى `./src/*` — لذلك `import { DATA } from "@/lib/data"` يشير إلى `src/lib/data.ts`.
+
+---
+
+## 🗺️ أين أعدّل ماذا؟
 
 | أريد تغيير… | الملف |
 | --- | --- |
-| رقم مالي، عميل، سعر، خطر | `lib/data.ts` |
-| نص عربي أو إنجليزي | `lib/translations.ts` |
-| لون أو خط | `tailwind.config.ts` + `app/globals.css` |
-| ترتيب التبويبات أو تخطيطها | `app/page.tsx` |
-| مستندات Data Room | `components/DataRoomVault.tsx` |
-| الرسوم البيانية | `components/AdvancedCharts.tsx` |
+| رقم مالي، قطاع، سعر، خطر، عميل | `src/lib/data.ts` |
+| نص عربي أو إنجليزي | `src/lib/translations.ts` |
+| لون أو خط | `tailwind.config.ts` + `src/app/globals.css` |
+| ترتيب التبويبات أو تخطيطها | `src/app/page.tsx` |
+| مستندات Data Room | `src/components/DataRoomVault.tsx` |
+| الرسوم البيانية | `src/components/AdvancedCharts.tsx` |
+| نافذة تفاصيل القطاع | `src/components/SectorModal.tsx` |
+
+**قاعدة عملية:** أي تغيير في **أرقام أو نصوص** → `lib/` فقط، ولا تقترب من `page.tsx`. أغلب التعديلات المتوقعة لا تحتاج فتح الملف الكبير إطلاقًا.
 
 ---
 
@@ -90,14 +96,18 @@ npm run build     # production build (static export)
 
 ## 🌍 اللغات
 
-عربي (RTL) وإنجليزي (LTR) — تُدار من `lib/translations.ts`.
+عربي (RTL) وإنجليزي (LTR) — تُدار من `src/lib/translations.ts`.
 
 ---
 
 ## 🚀 النشر
 
-- **الإنتاج:** Vercel — تنشر تلقائيًا عند الدفع إلى `main`
-- **GitHub Pages:** عبر `.github/workflows/deploy.yml` (احتياطي — البناء فيه معطّل حاليًا)
+| المسار | الحالة |
+| --- | --- |
+| **Vercel** (الإنتاج) | ✅ ينشر تلقائيًا عند الدفع إلى `main` |
+| **GitHub Pages** | ❌ معطّل — `deploy.yml` يفشل عند `npm run build` |
+
+عند فشل بناء Vercel، **يبقى آخر نشر ناجح شغّالًا** — البوابة لا تسقط.
 
 ---
 
@@ -105,16 +115,19 @@ npm run build     # production build (static export)
 
 - `vercel.json` يضبط CSP صارمًا + `X-Frame-Options: DENY`
 - لا مفاتيح API داخل الكود أو المستودع
-- تفاصيل بروتوكول الأمان الداخلية **غير** مضمنة هنا (مستودع `seen--automation-os`)
+- بروتوكول الأمان الداخلي التفصيلي **غير** مضمن هنا (مستودع `seen--automation-os`)
 
 ---
 
 ## ⚠️ ديون تقنية معروفة
 
-1. **`app/page.tsx` ملف واحد بحجم 150 KB** — يحتوي الـ 12 تبويبًا معًا. أي تعديل عليه يحتاج حذرًا، وهو أول مرشح للتقسيم إلى `components/tabs/`.
-2. **`tsconfig.json`** يحوي `paths: { "@/*": ["./src/*"] }` و `include: ["src/**/*"]` — مسارات قديمة من نسخة سابقة بُنيت داخل `src/`. الملفات الحالية لا تستخدم `@/`.
-3. **GitHub Actions build معطّل** منذ 13 أكتوبر — لا يؤثر على Vercel، لكنه يعني غياب فحص CI للأنواع (type-check).
-4. **`next.config.mjs`** يستخدم `output: 'export'`، أي لا يمكن استخدام أي ميزة تحتاج خادمًا (Route Handlers، ISR، Middleware).
+1. **`src/app/page.tsx` = 147 KB في ملف واحد** — يحتوي التبويبات الاثني عشر معًا.
+   هذا هو العائق الأول أمام أي تعديل هيكلي. المرشح للتقسيم إلى
+   `src/components/tabs/*.tsx` بمكوّن واحد لكل تبويب.
+2. **`deploy.yml` معطّل** منذ 13 أكتوبر (فشل `next build`) — لا يؤثر على Vercel،
+   لكنه يعني غياب فحص CI للأنواع (type-check).
+3. **`next.config.mjs` يستخدم `output: 'export'`** — لا يمكن استخدام أي ميزة تحتاج
+   خادمًا (Route Handlers · ISR · Middleware).
 
 ---
 
@@ -123,6 +136,7 @@ npm run build     # production build (static export)
 - [CHANGELOG.md](./CHANGELOG.md) — سجل التغييرات
 - [BACKUP_LOG.md](./BACKUP_LOG.md) — سجل النسخ الاحتياطية
 - [PROMPT.md](./PROMPT.md) — مواصفات البناء الأصلية (v5.0)
+- `seen-backup-2026-10-17` — نسخة كاملة من المستودع قبل التنظيف (17 أكتوبر 2026)
 
 ---
 
