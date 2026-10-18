@@ -1687,21 +1687,21 @@ function PriceRangeChart({ items }: any) {
 }
 
 const slideDesigns = [
-  { color: "#0F5132", emoji: "💡" },
-  { color: "#1a7a4c", emoji: "🔎" },
-  { color: "#D4AF37", emoji: "🚀" },
-  { color: "#0F5132", emoji: "❗" },
-  { color: "#1a7a4c", emoji: "📊" },
-  { color: "#D4AF37", emoji: "🌍" },
-  { color: "#0F5132", emoji: "🏛️" },
-  { color: "#F97316", emoji: "💰" },
-  { color: "#1a7a4c", emoji: "🤖" },
-  { color: "#D4AF37", emoji: "🛡️" },
-  { color: "#0F5132", emoji: "👤" },
-  { color: "#F97316", emoji: "🗺️" },
-  { color: "#1a7a4c", emoji: "📦" },
-  { color: "#D4AF37", emoji: "📞" },
-  { color: "#0F5132", emoji: "🏁" },
+  { color: "#0F5132", bg: "from-emerald-dark to-emerald", accent: "gold", icon: "💡", emoji: "💡" },
+  { color: "#1a7a4c", bg: "from-emerald to-emerald-dark", accent: "green", icon: "🔎", emoji: "🔎" },
+  { color: "#1a2a4a", bg: "from-slate-900 to-slate-800", accent: "gold", icon: "🚀", emoji: "🚀" },
+  { color: "#3a1a0a", bg: "from-orange-950 to-stone-900", accent: "orange", icon: "❗", emoji: "❗" },
+  { color: "#0F5132", bg: "from-emerald-dark to-teal-900", accent: "gold", icon: "📊", emoji: "📊" },
+  { color: "#2a1a4a", bg: "from-violet-950 to-indigo-900", accent: "gold", icon: "🌍", emoji: "🌍" },
+  { color: "#1a2a1a", bg: "from-green-950 to-emerald-dark", accent: "green", icon: "🏛️", emoji: "🏛️" },
+  { color: "#2a1a00", bg: "from-amber-950 to-orange-900", accent: "gold", icon: "💰", emoji: "💰" },
+  { color: "#0a1a2a", bg: "from-sky-950 to-blue-900", accent: "green", icon: "🤖", emoji: "🤖" },
+  { color: "#1a0a2a", bg: "from-purple-950 to-violet-900", accent: "gold", icon: "🛡️", emoji: "🛡️" },
+  { color: "#0F5132", bg: "from-emerald-dark to-emerald", accent: "green", icon: "👤", emoji: "👤" },
+  { color: "#2a0a0a", bg: "from-rose-950 to-red-900", accent: "gold", icon: "🗺️", emoji: "🗺️" },
+  { color: "#0a2a2a", bg: "from-teal-950 to-cyan-900", accent: "green", icon: "📦", emoji: "📦" },
+  { color: "#2a2a0a", bg: "from-yellow-950 to-amber-900", accent: "gold", icon: "📞", emoji: "📞" },
+  { color: "#0F5132", bg: "from-emerald-dark to-slate-900", accent: "gold", icon: "🏁", emoji: "🏁" },
 ];
 
 function SlideFlow({ idx }: any) {
