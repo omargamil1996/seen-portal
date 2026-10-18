@@ -492,8 +492,7 @@ function ScanRing({ lang }: any) {
           <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
         </circle>
         <text x="150" y="155" textAnchor="middle" fontSize="11" fill="#D4AF37">Error</text>
-        <text x="150" y="290" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "مراقبة مستمرة" : "Continuous monitoring"}</text>
-      </svg>
+        </svg>
     </div>
   );
 }
@@ -521,8 +520,7 @@ function CircuitPulse({ lang }: any) {
             <animate attributeName="r" values="6;10;6" dur="1.6s" repeatCount="indefinite" begin={`${i * 0.3}s`} />
           </circle>
         ))}
-        <text x="300" y="295" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "مسارات البيانات" : "Data paths"}</text>
-      </svg>
+        </svg>
     </div>
   );
 }
@@ -618,8 +616,7 @@ function GearWorkshop({ lang }: any) {
         <polygon points={gear(230, 100, 40, 10)} fill="#F97316" />
         <circle cx="230" cy="100" r="12" fill="#F5F5F4" />
       </g>
-      <text x="180" y="186" textAnchor="middle" fontSize="11" fill="#6B7280">{lang === "ar" ? "أتمتة مترابطة كالتروس" : "Interlocking automation"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -637,8 +634,7 @@ function RadarSweep({ size = 320, lang }: any) {
       {[[200, 90], [95, 175], [185, 210]].map(([x, y], i) => (
         <circle key={i} cx={x} cy={y} r="5" fill="#F97316"><animate attributeName="r" values="3;7;3" dur={`${1.4 + i * 0.5}s`} repeatCount="indefinite" /></circle>
       ))}
-      <text x="150" y="296" textAnchor="middle" fontSize="11" fill="#6B7280">{lang === "ar" ? "مسح مستمر" : "Continuous scan"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -691,8 +687,7 @@ function Constellation({ lang }: any) {
           <animate attributeName="r" values={`${i === 2 ? 9 : 6};${i === 2 ? 12 : 8};${i === 2 ? 9 : 6}`} dur={`${1.5 + i * 0.2}s`} repeatCount="indefinite" />
         </circle>
       ))}
-      <text x="300" y="212" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "شبكة الفريق والمهارات" : "Team & skills network"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -704,8 +699,7 @@ function Heartbeat({ lang }: any) {
       <path d={d} fill="none" stroke="#D4AF37" strokeWidth="4" strokeLinecap="round" strokeDasharray="60 600">
         <animate attributeName="stroke-dashoffset" from="660" to="0" dur="2.6s" repeatCount="indefinite" />
       </path>
-      <text x="300" y="212" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "نبض النظام: مراقبة مستمرة" : "System heartbeat: continuous monitoring"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -722,8 +716,7 @@ function PagesStack({ lang }: any) {
           <line x1="225" y1="118" x2="365" y2="118" stroke="#6B7280" strokeOpacity="0.4" />
         </g>
       ))}
-      <text x="300" y="232" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "الملفات الاستراتيجية (49 ملف)" : "Strategic files (49)"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -744,8 +737,7 @@ function SectorWheel({ lang }: any) {
         ))}
       </g>
       <circle cx="150" cy="150" r="42" fill="#F5F5F4" />
-      <text x="150" y="155" textAnchor="middle" fontSize="13" fontWeight="bold" fill="#0F5132">{lang === "ar" ? "5 قطاعات" : "5 sectors"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -780,8 +772,7 @@ function RiskHeatmap({ lang }: any) {
           </rect>
         ))
       )}
-      <text x="180" y="325" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "مصفوفة الاحتمال × الأثر" : "Probability × Impact matrix"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -805,8 +796,7 @@ function IsoBlocks({ lang }: any) {
       <IsoBox x={60} y={80} color="#0F5132" delay={0} />
       <IsoBox x={160} y={60} color="#D4AF37" delay={0.5} />
       <IsoBox x={260} y={100} color="#1a7a4c" delay={1} />
-      <text x="200" y="195" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "العتاد: لابتوب + Mini PC + ملحقات" : "Hardware: laptop + Mini PC + accessories"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -1503,8 +1493,7 @@ function HangingWeight({ lang }: any) {
           <line x1="200" y1="0" x2="200" y2="90" stroke="#6B7280" strokeWidth="2" />
           <circle cx="200" cy="102" r="16" fill="#dc2626"><animate attributeName="r" values="16;19;16" dur="1.8s" repeatCount="indefinite" /></circle>
         </g>
-        <text x="200" y="136" textAnchor="middle" fontSize="12" fill="#6B7280">{lang === "ar" ? "المخاطر المعلّقة تحت المراقبة" : "Risks under watch"}</text>
-      </svg>
+        </svg>
     </div>
   );
 }
@@ -1570,14 +1559,14 @@ function HardwareView({ t, lang }: any) {
         </div>
         <p className={cn("text-base leading-relaxed", lang === "ar" ? "text-right" : "text-left")}>
           {lang === "ar"
-            ? "كل ما تراه في هذا الموقع — 12 صفحة، نماذج تفاعلية، أربع وثائق استثمارية، و49 ملفاً مصنّفاً — بُنِيَ بتوفيق من الله ثم بجهاز Microsoft Surface Pro 6 من عام 2018. الجهاز بطاريته معطوبة تماماً ولا يعمل إلا موصولاً بالكهرباء، ويسخن بسرعة فيتجمّد لدقيقة كاملة عند كل إجراء ثقيل — فتح ملف Word، التواصل مع نموذج ذكاء اصطناعي، تشغيل Agent. للتحايل على ذلك استُخدمت بيئة سحابية مجانية (Oracle Cloud) عوضاً عن التشغيل المحلي، لكنها حُجبت فجأة دون إنذار فعاد كل العمل إلى الجهاز المحلي من جديد. لا مكتب مخصص، خط إنترنت مشترك وبطيء، لا أي اشتراك مدفوع — كل شيء على الطبقات المجانية."
-            : "Everything you see in this portal — 12 pages, interactive financial models, four investor documents, and 49 classified files — was built by the grace of Allah and then with a very limited resources of 2018 Microsoft Surface Pro 6. The battery is completely dead and the machine only runs plugged in. It overheats quickly and freezes for a full minute on any heavy action — opening a Word file, querying an AI model, running an Agent. To work around that, a free cloud environment (Oracle Cloud) was used instead of running locally, but it was blocked without warning and shut down entirely, pushing everything back to the local machine. No dedicated desk, a shared slow internet line, no paid subscriptions — everything on free tiers."}
+            ? "كل ما تراه في هذا الموقع — 12 صفحة، نماذج تفاعلية، أربع وثائق استثمارية، و49 ملفاً مصنّفاً — بُنِيَ بتوفيق من الله ثم بجهاز Microsoft Surface Pro 6 من عام 2018. الجهاز بطاريته معطوبة تماماً ولا يعمل إلا موصولاً بالكهرباء، ويسخن بسرعة فيتجمّد لدقيقة كاملة عند كل إجراء ثقيل — فتح ملف Word، التواصل مع نموذج ذكاء اصطناعي، تشغيل Agent. للتحايل على ذلك استُخدمت بيئة سحابية مجانية (Oracle Cloud) عوضاً عن التشغيل المحلي، لكنها حُجبت فجأة دون إنذار فعاد كل العمل إلى الجهاز المحلي من جديد. لا مكتب مخصص، خط ثابت مشترك وبطيء، لا أي اشتراك مدفوع — كل شيء على الطبقات المجانية."
+            : "Everything you see in this portal — 12 pages, interactive financial models, four investor documents, and 49 classified files — was built by the grace of Allah and then with a very limited resources of 2018 Microsoft Surface Pro 6. The battery is completely dead and the machine only runs plugged in. It overheats quickly and freezes for a full minute on any heavy action — opening a Word file, querying an AI model, running an Agent. To work around that, a free cloud environment (Oracle Cloud) was used instead of running locally, but it was blocked without warning and shut down entirely, pushing everything back to the local machine. No dedicated desk, a shared very slow fixed line, no paid subscriptions — everything on free tiers."}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
             { icon: "🔋", ar: "Surface Pro 6 (2018) — البطارية ميتة، يعمل فقط على الكهرباء", en: "Surface Pro 6 (2018) — dead battery, works only when plugged in" },
-            { icon: "📶", ar: "الإنترنت فقط من الجوال — لا خط ثابت", en: "Mobile hotspot only — no fixed internet line" },
-            { icon: "🪑", ar: "طاولة طعام وكرسي — لا مكتب مخصص، طاولة الطعام هي مكان العمل", en: "A dining table and a chair — no dedicated desk, the dining table is the workstation" },
+            { icon: "📶", ar: "خط ثابت مشترك وبطيء جداً", en: "Shared, very slow fixed line" },
+            { icon: "🪑", ar: "كرسي وطاولة خشب — لا مكتب مخصص، والطاولة هي مكان العمل", en: "Wooden chair and table — no dedicated desk, the table is the workspace" },
             { icon: "🚫", ar: "صفر اشتراكات مدفوعة — كل شيء على الطبقة المجانية", en: "Zero paid subscriptions — everything on free tiers" },
           ].map((item, i) => (
             <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-black/10 dark:bg-white/5 border border-gold/20">
@@ -2056,8 +2045,7 @@ function DataVaultScene({ lang }: any) {
         <circle cx="90" cy="66" r="6" fill="#eab308" /><text x="104" y="71" fontSize="13" fill="#eab308">{lang === "ar" ? "مشدد" : "Restricted"}</text>
         <circle cx="90" cy="92" r="6" fill="#dc2626" /><text x="104" y="97" fontSize="13" fill="#dc2626">{lang === "ar" ? "ممنوع" : "Forbidden"}</text>
       </g>
-      <text x="300" y="258" textAnchor="middle" fontSize="13" fill="#D4AF37">{lang === "ar" ? "خزنة الوصول: 49 ملفاً مصنّفة" : "Access vault: 49 classified files"}</text>
-    </svg>
+      </svg>
   );
 }
 
@@ -2081,8 +2069,7 @@ function AutomationScene({ kind, lang }: any) {
             <circle cx={x} cy={ys[i]} r="18" fill="#0F5132" stroke="#D4AF37" strokeWidth="2">
               <animate attributeName="r" values="16;20;16" dur={`${1.6 + i * 0.2}s`} repeatCount="indefinite" />
             </circle>
-            <text x={x} y={ys[i] + 40} textAnchor="middle" fontSize="11" fill="#6B7280">{nodes[i]}</text>
-          </g>
+            </g>
         ))}
       </svg>
     );
@@ -2095,8 +2082,7 @@ function AutomationScene({ kind, lang }: any) {
         <text x="300" y="125" textAnchor="middle" fontSize="13" fontWeight="700" fill="#D4AF37">SEEN</text>
         <g><animateTransform attributeName="transform" type="rotate" from="0 300 120" to="360 300 120" dur="10s" repeatCount="indefinite" /><circle cx="380" cy="120" r="12" fill="#F97316" /></g>
         <g><animateTransform attributeName="transform" type="rotate" from="360 300 120" to="0 300 120" dur="16s" repeatCount="indefinite" /><circle cx="300" cy="0" r="10" fill="#16a34a" transform="translate(0,0)" /><circle cx="180" cy="120" r="10" fill="#D4AF37" /></g>
-        <text x="300" y="232" textAnchor="middle" fontSize="12" fill="#6B7280">{ar ? "الأرقام تدور حول المركز" : "Figures orbit the core"}</text>
-      </svg>
+        </svg>
     );
   }
   if (kind === "network") {
@@ -2136,8 +2122,7 @@ function AutomationScene({ kind, lang }: any) {
       {[0, 1, 2].map((i) => (<circle key={i} cx="300" cy="110" r="40" fill="none" stroke="#dc2626" strokeWidth="2"><animate attributeName="r" from="40" to="110" dur="3s" begin={`${i}s`} repeatCount="indefinite" /><animate attributeName="stroke-opacity" from="0.8" to="0" dur="3s" begin={`${i}s`} repeatCount="indefinite" /></circle>))}
       <circle cx="300" cy="110" r="26" fill="#dc2626" fillOpacity="0.85"><animate attributeName="r" values="24;28;24" dur="1.4s" repeatCount="indefinite" /></circle>
       <text x="300" y="117" textAnchor="middle" fontSize="18" fontWeight="700" fill="#fff">!</text>
-      <text x="300" y="206" textAnchor="middle" fontSize="12" fill="#6B7280">{ar ? "رصد مستمر للمخاطر" : "Continuous risk watch"}</text>
-    </svg>
+      </svg>
   );
 }
 

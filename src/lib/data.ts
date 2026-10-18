@@ -529,7 +529,7 @@ export const DATA = {
 
 الجهاز: Microsoft Surface Pro 6 من 2018، بطاريته معطوبة تماماً، يعمل فقط موصولاً بالكهرباء. يسخن بسرعة ويتجمد لدقيقة كاملة عند كل إجراء ثقيل — فتح ملف Word، التواصل مع نموذج ذكاء اصطناعي، تشغيل Agent.
 
-مكان العمل: طاولة طعام عليها كل شيء، وكرسي.
+مكان العمل: كرسي وطاولة خشب عليها كل شيء.
 
 الإنترنت: خط ثابت مشترك وبطيء جداً.
 
@@ -546,7 +546,7 @@ export const DATA = {
 
 Device: A 2018 Microsoft Surface Pro 6 with a completely dead battery, running only when plugged in. It overheats quickly and freezes for a full minute on any heavy task — opening a Word file, querying an AI model, running an Agent.
 
-Workspace: A dining table holding everything, and a chair.
+Workspace: A wooden chair and table holding everything.
 
 Internet: A shared, very slow fixed line.
 
