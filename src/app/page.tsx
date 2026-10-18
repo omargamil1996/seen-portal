@@ -1,4 +1,32 @@
+// ============================================================
+// SEEN AGENTIC — INVESTOR PORTAL  src/app/page.tsx
+// Next.js 14.2 | React 18 | TypeScript | Tailwind CSS 3.4
+// Framer Motion 11 | Recharts 2 | Lucide React
+//
+// FILE STRUCTURE (Ctrl+F §number to jump)
+//   §1  Imports & types
+//   §2  Constants & context (palette, currency, market data)
+//   §3  Utility hooks (useMoney, useCounter, runModel)
+//   §4  Shared UI components (Card, Badge, SectionHeader)
+//   §5  Animation components (bots, visuals, automation scenes)
+//   §6  Dashboard view  — لوحة التحكم
+//   §7  Financials view — النمذجة المالية
+//   §8  Business plan view — خطة العمل
+//   §9  Sectors view — القطاعات
+//   §10 Roadmap view — رحلة المشروع
+//   §11 Risks view — المخاطر
+//   §12 Hardware view — محطة العمل
+//   §13 The Ask view — طلب الاستثمار
+//   §14 Data Room view — غرفة البيانات
+//   §15 Team view — الفريق
+//   §16 Security view — الأمن
+//   §17 Settings view — الإعدادات
+//   §18 Root App component
+// ============================================================
+
+// §1 — IMPORTS & TYPES
 "use client";
+// §1 — IMPORTS (already marked above)
 import { useState, useEffect, useRef, useContext, createContext } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { DATA } from "@/lib/data";
@@ -40,6 +68,9 @@ function SeenLogo({ size = 48 }: any) {
 }
 
 const AppContext = createContext<any>({});
+
+// §2 — CONSTANTS & CONTEXT
+// Palette tokens, currency rates, market data, slide designs
 const PALETTE_CSS = `
 :root { --background-rgb: 250 250 248; --emerald-rgb: 15 81 50; --emerald-light-rgb: 26 122 76; --emerald-dark-rgb: 10 61 37; --gold-rgb: 212 175 55; --gold-light-rgb: 232 201 74; --gold-dark-rgb: 184 150 46; }
 :root[data-palette="warm"] { --background-rgb: 245 245 245; --emerald-rgb: 251 146 60; --emerald-light-rgb: 253 186 116; --emerald-dark-rgb: 234 88 12; }
@@ -66,6 +97,12 @@ const ACCESSORIES_EXTRA = [
   { name_ar: "UPS 1500VA (تقدير)", name_en: "UPS 1500VA (estimate)", price: "$120-200" },
 ];
 
+
+// §3 — UTILITY HOOKS
+// useMoney: formats SAR/USD/MYR amounts
+// useCounter: animated number counter
+// runModel: 36-month financial projection engine
+// kpisFromModel: derives KPI cards from model output
 function useMoney() {
   const { cur } = useContext(CurrencyContext);
   const c = (FX as any)[cur] ?? FX.SAR;
@@ -203,6 +240,10 @@ function kpisFromModel(model: any) {
   ];
 }
 
+
+// §5 — ANIMATION & VISUAL COMPONENTS
+// SiteBackground, BotAvatar, AutomationScene, SlideFlow
+// ConveyorLane, BranchFlow, TimerLoop, BotsAround, etc.
 function SiteBackground() {
   const blobs = [
     { c: "bg-emerald/15", s: 420, x: "-10%", y: "-5%", d: 22 },
@@ -224,6 +265,11 @@ function SiteBackground() {
   );
 }
 
+
+// §18 — ROOT APP COMPONENT
+// Fixed header with hide-on-scroll, 12-tab navigation
+// AppContext + CurrencyContext providers
+// Each tab renders its View component
 export default function Home() {
   const [lang, setLang] = useState<Lang>("ar");
   const [dark, setDark] = useState(false);
@@ -951,6 +997,10 @@ function AnimatedHero({ t, lang }: any) {
   );
 }
 
+
+// §6 — DASHBOARD VIEW  (لوحة التحكم)
+// Hero card with basmala, rotating automation phrases,
+// KPI grid, market size, ticker rail, office bot scene
 function DashboardView({ t, lang, model }: any) {
   return (
     <div className="space-y-8">
@@ -1000,6 +1050,10 @@ function DashboardView({ t, lang, model }: any) {
   );
 }
 
+
+// §7 — FINANCIALS VIEW  (النمذجة المالية)
+// Interactive 36-month model: sliders → LTV/CAC/break-even
+// Annual P&L table, unit economics, use-of-funds donut
 function FinancialsView({ fin, setFin, model, t, lang }: any) {
   const { ltv, ltvCac, payback, breakEven: be, proj: projectionData } = model;
   const sumYear = (y: number, key: string) => model.proj.slice((y - 1) * 12, y * 12).reduce((s: number, r: any) => s + r[key], 0);
@@ -1211,6 +1265,10 @@ function FinancialsView({ fin, setFin, model, t, lang }: any) {
   );
 }
 
+
+// §8 — BUSINESS PLAN VIEW  (خطة العمل)
+// 21 accordion sections from data.ts businessPlan array
+// Each section in AR/EN; section 21 = founding challenges
 function BusinessPlanView({ t, lang }: any) {
   return (
     <div className="space-y-6">
@@ -1266,6 +1324,10 @@ function MiniAutomation({ seed, lang }: any) {
   );
 }
 
+
+// §9 — SECTORS VIEW  (القطاعات)
+// 5 target sectors with automation lanes per sector
+// ConveyorLane/BranchFlow/TimerLoop per sector modal
 function SectorsView({ t, lang }: any) {
   const [selected, setSelected] = useState<any>(null);
   return (
@@ -1368,6 +1430,10 @@ const RM_YEARS = [
   ]},
 ];
 
+
+// §10 — ROADMAP VIEW  (رحلة المشروع)
+// 15 quarterly milestones 2026–2028, 3 years × 4 quarters
+// Scroll-activated lighting: past=lit, future=dimmed
 function RoadmapView({ t, lang }: any) {
   const [active, setActive] = useState(0);
   const rmRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -1424,6 +1490,10 @@ function RoadmapView({ t, lang }: any) {
   );
 }
 
+
+// §11 — RISKS VIEW  (المخاطر)
+// HangingWeight pendulum, RiskBars probability/impact
+// 12 risks from data.ts with mitigation plans
 function HangingWeight({ lang }: any) {
   return (
     <div className="w-full flex justify-center">
@@ -1483,6 +1553,11 @@ function RisksView({ t, lang }: any) {
   );
 }
 
+
+// §12 — HARDWARE VIEW  (محطة العمل)
+// Founding constraints banner (Surface Pro 6, Oracle Cloud)
+// Laptop comparison tables, Mini PC, selected config
+// Chip/AI animation scene
 function HardwareView({ t, lang }: any) {
   const { fmtUSD, fmtRange, fxUSD } = useMoney();
   return (
@@ -1735,6 +1810,11 @@ function SlideFlow({ idx }: any) {
   );
 }
 
+
+// §13 — THE ASK VIEW  (طلب الاستثمار)
+// 15 pitch slides with slide-level animation (SlideFlow)
+// slideDesigns: bg/accent/icon per slide
+// Growth bars chart below the deck
 function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
   const currentSlide = DATA.pitchSlides[slideIdx];
   const currentDesign = slideDesigns[slideIdx] ?? slideDesigns[0];
@@ -1939,6 +2019,11 @@ function DataRoomCards({ lang }: any) {
   );
 }
 
+
+// §14 — DATA ROOM VIEW  (غرفة البيانات)
+// DataVaultScene: animated gold vault lock at the top
+// 49 documents in 3 tabs: Allowed(19)/Restricted(20)/Forbidden(10)
+// Each card opens a popup with description, rule, access method
 function DataVaultScene({ lang }: any) {
   const path = "M40,130 C120,60 200,200 262,130";
   return (
@@ -2066,6 +2151,9 @@ function DataRoomView({ t, lang }: any) {
   );
 }
 
+
+// §15 — TEAM VIEW  (الفريق)
+// Founder profile, 4 KPI stats, interlocking gears animation
 function TeamView({ t, lang }: any) {
   const stats = [
     { key: "years", label: lang === "ar" ? "سنوات خبرة" : "Years Exp", value: 5 },
@@ -2130,6 +2218,10 @@ function TeamView({ t, lang }: any) {
   );
 }
 
+
+// §16 — SECURITY VIEW  (الأمن)
+// RadarSweep background, transparent heartbeat card
+// 3 semi-transparent stat cards (25 attacks, 100 tests, AES-256)
 function SecurityView({ t, lang }: any) {
   return (
     <div className="space-y-6 relative">
@@ -2159,6 +2251,9 @@ function SecurityView({ t, lang }: any) {
   );
 }
 
+
+// §17 — SETTINGS VIEW  (الإعدادات)
+// Language toggle AR/EN, dark/light mode, SAR/USD/MYR
 function SettingsView({ t, lang, dark, setDark, setLang }: any) {
   const { cur, setCur, palette, setPalette } = useContext(CurrencyContext);
   return (
