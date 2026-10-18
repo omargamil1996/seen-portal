@@ -51,18 +51,38 @@ import {
 import { SankeyChart, TreemapChart, SunburstChart, RadarChart, BubbleChart, GanttChart, ChordDiagram } from "@/components/AdvancedCharts";
 
 function SeenLogo({ size = 48 }: any) {
+  const nodes: [number, number][] = [[60, 11], [109, 60], [60, 109], [11, 60]];
   return (
-    <svg viewBox="0 0 160 140" width={size} height={size * 0.875} role="img" aria-label="Seen Agentic logo">
+    <svg viewBox="0 0 120 120" width={size} height={size} role="img" aria-label="Seen Agentic logo">
       <defs>
-        <linearGradient id="sa-grad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#0F5132" />
-          <stop offset="0.6" stopColor="#1a7a4c" />
-          <stop offset="1" stopColor="#F97316" />
+        <linearGradient id="sl-emerald" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#1a7a4c" />
+          <stop offset="1" stopColor="#0a3d25" />
         </linearGradient>
+        <linearGradient id="sl-gold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#F5D76E" />
+          <stop offset="0.5" stopColor="#D4AF37" />
+          <stop offset="1" stopColor="#B8962E" />
+        </linearGradient>
+        <radialGradient id="sl-glow">
+          <stop offset="0" stopColor="#D4AF37" stopOpacity="0.35" />
+          <stop offset="1" stopColor="#D4AF37" stopOpacity="0" />
+        </radialGradient>
       </defs>
-      <text x="80" y="92" textAnchor="middle" fontSize="92" fontWeight="800" fill="url(#sa-grad)" style={{ fontFamily: "Cairo, sans-serif" }}>س</text>
-      <path d="M18,104 C52,124 108,124 142,104" fill="none" stroke="#F97316" strokeWidth="6" strokeLinecap="round" />
-      <text x="80" y="136" textAnchor="middle" fontSize="15" fontWeight="700" fill="currentColor" style={{ fontFamily: "Cairo, sans-serif" }}>seen</text>
+      <circle cx="60" cy="60" r="60" fill="url(#sl-glow)" />
+      <circle cx="60" cy="60" r="54" fill="url(#sl-emerald)" stroke="url(#sl-gold)" strokeWidth="3" />
+      <circle cx="60" cy="60" r="44" fill="none" stroke="url(#sl-gold)" strokeWidth="1" strokeDasharray="2 5" opacity="0.7">
+        <animateTransform attributeName="transform" type="rotate" from="0 60 60" to="360 60 60" dur="24s" repeatCount="indefinite" />
+      </circle>
+      <text x="60" y="78" textAnchor="middle" fontSize="60" fontFamily="Amiri, serif" fontWeight="700" fill="url(#sl-gold)">س</text>
+      {nodes.map(([x, y], i) => (
+        <circle key={i} cx={x} cy={y} r="3.5" fill="#F5D76E">
+          <animate attributeName="r" values="3;5;3" dur={`${2 + i * 0.4}s`} repeatCount="indefinite" />
+        </circle>
+      ))}
+      <circle cx="92" cy="30" r="2.5" fill="#F97316">
+        <animate attributeName="opacity" values="0.3;1;0.3" dur="2.2s" repeatCount="indefinite" />
+      </circle>
     </svg>
   );
 }
@@ -1833,7 +1853,7 @@ function TheAskView({ slideIdx, setSlideIdx, t, lang }: any) {
           <div className="absolute -top-24 -right-20 w-72 h-72 rounded-full bg-gold/20 blur-3xl animate-pulse" />
           <div className="absolute -bottom-28 -left-16 w-80 h-80 rounded-full bg-white/10 blur-3xl animate-pulse" />
           <motion.div key={slideIdx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="relative z-10 text-center max-w-3xl">
-            <div className="text-6xl mb-6">{currentDesign.icon}</div>
+            {slideIdx === 0 ? <div className="mb-6 flex justify-center"><SeenLogo size={150} /></div> : <div className="text-6xl mb-6">{currentDesign.icon}</div>}
             <h2 className={cn("text-3xl md:text-5xl font-amiri font-bold mb-6", currentDesign.accent === "gold" ? "text-gold" : "text-white")}>{lang === "ar" ? currentSlide.title_ar : currentSlide.title_en}</h2>
             <div className="space-y-4">
               {lines.map((line: string, i: number) => (
@@ -2159,7 +2179,7 @@ function TeamView({ t, lang }: any) {
         <div className="relative z-10 flex flex-col md:flex-row items-start gap-8">
           <div className="shrink-0 relative">
             <div className="w-40 h-40 rounded-3xl bg-gradient-to-br from-emerald via-emerald-dark to-gold flex items-center justify-center text-white text-6xl font-amiri font-bold shadow-2xl relative overflow-hidden">
-              <span className="relative z-10">{DATA.company.founder.name[0]}</span>
+              <span className="relative z-10"><SeenLogo size={120} /></span>
             </div>
             <div className="absolute -bottom-2 -right-2 w-14 h-14 rounded-full bg-gold flex items-center justify-center text-2xl shadow-lg border-4 border-card dark:border-dark-card">⭐</div>
           </div>
