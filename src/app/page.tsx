@@ -351,8 +351,11 @@ export default function Home() {
               <button onClick={() => setDark(!dark)} className="p-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted transition-all">
                 {dark ? <Sun size={18} className="text-gold" /> : <Moon size={18} className="text-emerald" />}
               </button>
-              <button onClick={() => setLang(lang === "ar" ? "en" : "ar")} className="px-4 py-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted text-sm font-semibold flex items-center gap-2 transition-all">
-                <Globe size={14} /> {lang === "ar" ? "EN" : "عربي"}
+              <button onClick={() => setLang(lang === "ar" ? "en" : "ar")} className="px-4 py-2.5 rounded-xl border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted text-sm font-semibold transition-all">
+                {lang === "ar" ? "EN" : "عربي"}
+              </button>
+              <button onClick={() => setActiveTab("settings")} aria-label="Settings" title={lang === "ar" ? "الإعدادات" : "Settings"} className="p-2 rounded-lg border border-border dark:border-dark-border hover:bg-muted dark:hover:bg-dark-muted transition-all">
+                <Settings size={15} className="text-emerald dark:text-gold" />
               </button>
             </div>
           </div>
